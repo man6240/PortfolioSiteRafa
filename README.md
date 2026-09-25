@@ -1,11 +1,10 @@
 # rafavitriago.eu — v3
 
 Portfolio site for Rafael Vitriago: level design, environment art and technical art.
-One visual language across the page, built around the product-shot "scene": every section is a panel on a
-deep navy page, framed with crop marks and a monospace bar, with big Space Grotesk words, white bracketed
-callout tags and square white buttons. The hero and each featured project float a phone or screen at the
-centre of a scene tinted in their own colours; the other sections use the same frame. Content spans up to
-1920px so wide screens are filled.
+A calm, editorial page on deep navy: Space Grotesk, small Space Mono labels, hairline dividers and square
+white buttons. Flag Fiesta is the one showpiece: a full product-shot scene (floating phone, big words, callout
+tags, bunting). The other featured projects use a tidy split layout tinted with their own colour. Content spans
+up to 1760px.
 
 **Liquid Glass** is used for the floating controls throughout.
 
@@ -31,9 +30,9 @@ Per project:
 - `shots`: screenshots from `src/assets/shots/`, picked by filename prefix (`idunn-1.jpg`, `idunn-2.jpg`…). The first is the cover.
 - `frame`: for portrait shots, `'phone'` (shown in phone frames) or `'card'` (rounded prints). Leave it out for landscape shots.
 - `palette`: `[accent, light, deep]`, tints the card and the project sheet.
-- `scene` (featured projects): `words` (three, around the object), `tags` (three callouts), `colors`
-  (`base`, `deep`, `glow`) and `decor` (`'bunting'`, `'confetti'`, `'embers'` or `'motes'`). Phone projects
-  float a phone; landscape ones float a screen over a blurred backdrop of their own render.
+- `scene` (optional, featured projects): stages the project as a full product-shot scene: `words` (three,
+  around the object), `tags` (three callouts), `colors` (`base`, `deep`, `glow`) and `decor`. Only Flag Fiesta
+  uses it; without it a featured project gets the standard split layout.
 - `live: 'flag-fiesta'`: shows the animated placeholder phone (`src/flagFiesta.js`) until real captures exist.
 
 The hero slideshow is `HERO` in the same file (`[projectId, shotIndex]` pairs).
@@ -69,12 +68,12 @@ All motion is Anime.js v4, defined in `src/motion.js`:
 
 - `src/App.jsx`                 page order and project sheet state
 - `src/components/Nav.jsx`      floating glass bar; sliding selection capsule
-- `src/components/Hero.jsx`     hero scene (renders on a floating screen) and stats
-- `src/components/Work.jsx`     featured scenes and the "More work" grid
-- `src/components/Scene.jsx`    the scene system: crop marks, callout tags, decor, pointer depth, and the featured-project scene
+- `src/components/Hero.jsx`     headline, wide render slideshow, stats
+- `src/components/Work.jsx`     featured projects (split layout or scene) and the "More work" grid
+- `src/components/Scene.jsx`    the product-shot scene (Flag Fiesta): crop marks, callout tags, decor, pointer depth
 - `src/components/Devices.jsx`  phone frame, live Flag Fiesta screen, slideshow
 - `src/components/ProjectSheet.jsx` modal gallery (keyboard, swipe, thumbnails)
-- `src/components/Sections.jsx` services, experience, reviews, about, contact, footer (scene panels)
+- `src/components/Sections.jsx` services, experience, reviews, about, contact, footer
 - `src/motion.js`               Anime.js springs, word rise, count-up, capsule motion
 - `src/useReveal.js`            scroll-triggered entrances
 - `src/styles.css`              tokens, glass material, layout

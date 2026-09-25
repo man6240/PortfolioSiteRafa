@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { Glass } from '../glass/LiquidGlass.jsx';
-import { Plus, ChevronRight } from './Icons.jsx';
+import { Plus, ChevronRight, ArrowUpRight } from './Icons.jsx';
 import { PROJECTS } from '../content.js';
-import { PhoneFrame, LiveScreen } from './Devices.jsx';
-import Scene, { Crops } from './Scene.jsx';
+import { PhoneFrame, LiveScreen, Slideshow } from './Devices.jsx';
+import Scene from './Scene.jsx';
 
 const FEATURED = PROJECTS.filter((p) => p.featured);
 const MORE = PROJECTS.filter((p) => !p.featured);
@@ -54,7 +54,6 @@ function Card({ p, span, reduced, onOpen }) {
       style={{ '--span': span, '--accent': p.palette[0], '--light': p.palette[1], '--deep': p.palette[2] }}
     >
       <CardMedia p={p} reduced={reduced} />
-      <Crops />
       <span className="card-tag tag-box">{p.kind}</span>
       <Glass className="card-caption" refract={{ blur: 12, scale: 40, bezel: 18 }}>
         <div className="card-text">
@@ -64,6 +63,41 @@ function Card({ p, span, reduced, onOpen }) {
         <span className="card-plus" aria-hidden="true"><Plus size={18} stroke={2.2} /></span>
       </Glass>
       <button className="card-hit" onClick={() => onOpen(p, 0)} aria-label={`Open ${fullTitle(p)}`} />
+    </article>
+  );
+}
+
+/* The standard featured layout: the work on one side, the details on the other,
+   on a surface with a faint tint of the project's colour. Sides alternate. */
+function Feature({ p, index, total, reduced, onOpen }) {
+  const phone = portrait(p);
+  const flip = index % 2 === 1;
+  const count = p.shots.length;
+  return (
+    <article className={`feature ${flip ? 'flip' : ''} ${phone ? 'is-phone' : 'is-screen'} reveal`} style={{ '--accent': p.palette[0], '--deep': p.palette[2] }}>
+      <button className="feature-media" onClick={() => onOpen(p, 0)} aria-label={`Open ${fullTitle(p)} gallery`}>
+        {phone ? (
+          <span className="feature-phones">
+            {p.shots[1] && <PhoneFrame className="ph-back" src={p.shots[1]} />}
+            <PhoneFrame className="ph-front"><Slideshow shots={p.shots} reduced={reduced} /></PhoneFrame>
+          </span>
+        ) : (
+          <Slideshow shots={p.shots} reduced={reduced} interval={5200} />
+        )}
+      </button>
+      <div className="feature-info">
+        <p className="feature-index mono-label">{String(index + 1).padStart(2, '0')} / {String(total).padStart(2, '0')} · {p.kind}</p>
+        <h3 className="feature-title">{p.title}{p.subtitle && <span>{p.subtitle}</span>}</h3>
+        <p className="feature-summary">{p.summary}</p>
+        <dl className="feature-meta">
+          <div><dt>Status</dt><dd><i className={`status-dot ${p.status === 'In development' ? 'wip' : ''}`} aria-hidden="true" />{p.status}</dd></div>
+          <div><dt>Platforms</dt><dd>{p.platforms}</dd></div>
+          <div className="wide"><dt>My role</dt><dd>{p.role}</dd></div>
+        </dl>
+        <button className="box-btn" onClick={() => onOpen(p, 0)}>
+          {count > 1 ? `Open gallery · ${count}` : 'View project'}<ArrowUpRight size={15} stroke={2} />
+        </button>
+      </div>
     </article>
   );
 }
@@ -79,12 +113,15 @@ export default function Work({ reduced, onOpen }) {
     <section className="work section" id="work" data-tone="dark">
       <div className="wrap">
         <header className="sec-head reveal">
-          <div className="sec-bar"><span>Selected work</span><span>{String(FEATURED.length).padStart(2, '0')} featured · {String(MORE.length).padStart(2, '0')} more</span></div>
-          <h2 className="sec-title"><span>Worlds</span> <span className="dim">I’ve built</span></h2>
+          <p className="sec-label mono-label"><span>01</span>Selected work</p>
+          <h2 className="sec-title">Worlds I’ve built</h2>
+          <p className="sec-sub">Shipped games and VR and AR experiences for studios and clients. Five highlights, with more below.</p>
         </header>
 
         <div className="scenes">
-          {FEATURED.map((p, i) => <Scene key={p.id} p={p} index={i} total={FEATURED.length} reduced={reduced} onOpen={onOpen} />)}
+          {FEATURED.map((p, i) => p.scene
+            ? <Scene key={p.id} p={p} index={i} total={FEATURED.length} reduced={reduced} onOpen={onOpen} />
+            : <Feature key={p.id} p={p} index={i} total={FEATURED.length} reduced={reduced} onOpen={onOpen} />)}
         </div>
 
         <div className="more">

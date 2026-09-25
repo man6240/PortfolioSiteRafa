@@ -1,72 +1,56 @@
-import { useRef, useState } from 'react';
-import { Glass } from '../glass/LiquidGlass.jsx';
+import { useState } from 'react';
 import { LevelIcon, EnvironmentIcon, XrIcon, Star, Mail, Copy, Check, ArrowUpRight } from './Icons.jsx';
-import { SITE, DISCIPLINES, TOOLS, EXPERIENCE, REVIEWS, ABOUT, PROJECTS } from '../content.js';
-import { Crops, usePointerDepth } from './Scene.jsx';
+import { SITE, DISCIPLINES, TOOLS, EXPERIENCE, REVIEWS, ABOUT } from '../content.js';
 
 const ICONS = { level: LevelIcon, environment: EnvironmentIcon, xr: XrIcon };
-const shot = (id, i) => PROJECTS.find((p) => p.id === id).shots[i];
-const pad = (n) => String(n).padStart(2, '0');
 
-/* A section panel: the same frame as the project scenes (glow, grain, crop marks, mono bar). */
-function Panel({ id, colors, bar, className = '', backdrop, children }) {
-  const vars = { '--s-base': colors[0], '--s-deep': colors[1], '--s-glow': colors[2] };
+/* Every section opens the same way: a numbered mono label over a hairline, then a heading. */
+function Head({ n, label, title, sub }) {
   return (
-    <section className="section" id={id} data-tone="dark">
+    <header className="sec-head reveal">
+      <p className="sec-label mono-label"><span>{n}</span>{label}</p>
+      <h2 className="sec-title">{title}</h2>
+      {sub && <p className="sec-sub">{sub}</p>}
+    </header>
+  );
+}
+
+export function Services() {
+  return (
+    <section className="section" id="services" data-tone="dark">
       <div className="wrap">
-        <div className={`panel plain ${className} reveal`} style={vars}>
-          <div className="scene-bg" aria-hidden="true" />
-          {backdrop && <div className="scene-backdrop sharp" aria-hidden="true"><img src={backdrop} alt="" loading="lazy" decoding="async" /></div>}
-          <Crops />
-          <div className="scene-bar">
-            <span>{bar[0]}</span>
-            <span className="scene-bar-mid">{bar[1]}</span>
-            <span className="scene-bar-end">{bar[2]}</span>
-          </div>
-          {children}
+        <Head n="02" label="What I do" title="From blockout to final light" />
+        <div className="disc-grid reveal">
+          {DISCIPLINES.map((d) => {
+            const Icon = ICONS[d.icon];
+            return (
+              <article key={d.title} className="disc">
+                <span className="disc-icon"><Icon /></span>
+                <h3>{d.title}</h3>
+                <p>{d.body}</p>
+                <p className="disc-tools mono-label">{d.tools}</p>
+              </article>
+            );
+          })}
+        </div>
+        <div className="toolkit reveal">
+          <span className="mono-label">Toolkit</span>
+          <ul className="tag-list">{TOOLS.map((t) => <li key={t} className="tag-box ghost">{t}</li>)}</ul>
         </div>
       </div>
     </section>
   );
 }
 
-export function Services() {
-  return (
-    <Panel id="services" colors={['#1A2346', '#090D1D', '#7361E0']} bar={['What I do', `${pad(DISCIPLINES.length)} disciplines`, `${pad(TOOLS.length)} tools`]}>
-      <h2 className="panel-title"><span>From blockout</span> <span className="dim">to final light</span></h2>
-      <div className="disc-grid">
-        {DISCIPLINES.map((d, i) => {
-          const Icon = ICONS[d.icon];
-          return (
-            <article key={d.title} className="disc">
-              <div className="disc-top">
-                <span className="disc-num">{pad(i + 1)}</span>
-                <span className="disc-icon"><Icon /></span>
-              </div>
-              <h3>{d.title}</h3>
-              <p>{d.body}</p>
-              <ul className="tag-list">{d.tools.split(', ').map((t) => <li key={t} className="tag-box">{t}</li>)}</ul>
-            </article>
-          );
-        })}
-      </div>
-      <div className="toolkit">
-        <span className="mono-label">Toolkit</span>
-        <ul className="tag-list">{TOOLS.map((t) => <li key={t} className="tag-box ghost">{t}</li>)}</ul>
-      </div>
-    </Panel>
-  );
-}
-
 export function Experience() {
   return (
-    <Panel id="experience" colors={['#15303A', '#07121A', '#3FA3A0']} bar={['Experience', `${pad(EXPERIENCE.length)} roles`, 'Freelance · Studios · Clients']}>
-      <div className="exp-grid">
-        <h2 className="panel-title"><span>Studios,</span> <span>clients</span> <span className="dim">and shipped titles</span></h2>
-        <ol className="timeline">
-          {EXPERIENCE.map((e, i) => (
+    <section className="section" id="experience" data-tone="dark">
+      <div className="wrap split">
+        <Head n="03" label="Experience" title="Studios, clients and shipped titles" />
+        <ol className="timeline reveal">
+          {EXPERIENCE.map((e) => (
             <li key={e.where}>
-              <span className={`tag-box ${i === 0 ? '' : 'ghost'}`}>{e.when}</span>
+              <span className="mono-label">{e.when}</span>
               <div>
                 <h3>{e.role}</h3>
                 <p className="where">{e.where}</p>
@@ -76,58 +60,60 @@ export function Experience() {
           ))}
         </ol>
       </div>
-    </Panel>
+    </section>
   );
 }
 
 export function Reviews() {
   return (
-    <Panel id="reviews" className="reviews-panel" colors={['#3A2012', '#0E0704', '#E08A3C']} backdrop={shot('vr', 2)} bar={['Client reviews', 'Upwork', `${REVIEWS.score} / 5`]}>
-      <div className="score">
-        <strong>{REVIEWS.score}</strong>
-        <div>
-          <span className="stars" aria-label="5 out of 5 stars">{[0, 1, 2, 3, 4].map((k) => <Star key={k} size={22} />)}</span>
-          <p className="scene-copy">{REVIEWS.jobs}, every one rated five stars.</p>
+    <section className="section" id="reviews" data-tone="dark">
+      <div className="wrap">
+        <div className="reviews-head">
+          <Head n="04" label="Client reviews" title="What clients say" />
+          <div className="score reveal">
+            <strong>{REVIEWS.score}</strong>
+            <div>
+              <span className="stars" aria-label="5 out of 5 stars">{[0, 1, 2, 3, 4].map((k) => <Star key={k} size={18} />)}</span>
+              <p className="mono-label">{REVIEWS.jobs}</p>
+            </div>
+          </div>
+        </div>
+        <div className="review-grid">
+          {REVIEWS.items.map((r) => (
+            <figure key={r.project} className="review reveal">
+              <blockquote>“{r.quote}”</blockquote>
+              <figcaption className="mono-label">{r.project}</figcaption>
+            </figure>
+          ))}
         </div>
       </div>
-      <div className="review-grid">
-        {REVIEWS.items.map((r, i) => (
-          <Glass as="figure" key={r.project} className="review bracket reveal" refract={{ blur: 16, scale: 36, bezel: 20 }}>
-            <span className="review-idx">{pad(i + 1)}</span>
-            <blockquote>“{r.quote}”</blockquote>
-            <figcaption>{r.project}</figcaption>
-          </Glass>
-        ))}
-      </div>
-    </Panel>
+    </section>
   );
 }
 
 export function About() {
   return (
-    <Panel id="about" colors={['#2A1F3E', '#0C0914', '#B45C9C']} bar={['About', SITE.location, 'English · Spanish']}>
-      <div className="about-grid">
+    <section className="section" id="about" data-tone="dark">
+      <div className="wrap split">
         <div>
-          <h2 className="panel-title"><span>Spaces that carry</span> <span className="dim">the narrative</span></h2>
-          <div className="about-body">{ABOUT.body.map((t, i) => <p key={i}>{t}</p>)}</div>
+          <Head n="05" label="About" title="Spaces that carry the narrative" />
+          <div className="about-body reveal">{ABOUT.body.map((t, i) => <p key={i}>{t}</p>)}</div>
         </div>
-        <dl className="facts">
+        <dl className="facts reveal">
           {ABOUT.facts.map((f, k) => (
             <div key={k} className={f.label ? '' : 'cont'}>
-              <dt>{f.label}</dt>
+              <dt className="mono-label">{f.label}</dt>
               <dd>{f.value}{f.sub && <span>{f.sub}</span>}</dd>
             </div>
           ))}
         </dl>
       </div>
-    </Panel>
+    </section>
   );
 }
 
 export function Contact() {
   const [copied, setCopied] = useState(false);
-  const root = useRef(null);
-  usePointerDepth(root);
   const copy = async () => {
     try {
       await navigator.clipboard.writeText(SITE.email);
@@ -137,38 +123,20 @@ export function Contact() {
       window.location.href = `mailto:${SITE.email}`;
     }
   };
-  const vars = { '--s-base': '#3A1A0C', '--s-deep': '#0D0503', '--s-glow': '#E0612E' };
   return (
-    <section className="section" id="contact" data-tone="dark">
+    <section className="section contact" id="contact" data-tone="dark">
       <div className="wrap">
-        <div className="scene panel contact-scene reveal" style={vars} ref={root}>
-          <div className="scene-bg" aria-hidden="true" />
-          <div className="scene-backdrop sharp" aria-hidden="true"><img src={shot('trailer', 3)} alt="" loading="lazy" decoding="async" /></div>
-          <Crops />
-          <div className="scene-bar">
-            <span>Contact</span>
-            <span className="scene-bar-mid">Freelance & contract</span>
-            <span className="scene-bar-end"><i className="status-dot" aria-hidden="true" />Available now</span>
-          </div>
-
-          <p className="scene-word w1" aria-hidden="true">Let’s</p>
-          <p className="scene-word w2" aria-hidden="true">build</p>
-
-          <div className="contact-core">
-            <h2 className="contact-q">Have a level, a world or a VR build that needs a hand?</h2>
-            <a className="contact-email" href={`mailto:${SITE.email}`}>{SITE.email}</a>
+        <div className="contact-card reveal">
+          <p className="sec-label mono-label"><span>06</span>Contact</p>
+          <h2 className="contact-title">Have a level, a world or a VR build that needs a hand?</h2>
+          <a className="contact-email" href={`mailto:${SITE.email}`}>{SITE.email}<ArrowUpRight size={28} stroke={1.6} /></a>
+          <div className="contact-row">
             <div className="box-row">
               <a className="box-btn" href={`mailto:${SITE.email}`}><Mail size={16} />Email me</a>
               <button className="box-btn ghost" onClick={copy} aria-live="polite">
                 {copied ? <><Check size={16} />Copied</> : <><Copy size={16} />Copy address</>}
               </button>
             </div>
-          </div>
-
-          <p className="scene-word w3" aria-hidden="true">worlds</p>
-
-          <div className="scene-foot">
-            <p className="scene-copy">Remote, worldwide. English or Spanish.</p>
             <ul className="link-list">
               {SITE.links.map((l) => (
                 <li key={l.label}><a href={l.href} target="_blank" rel="noreferrer">{l.label}<ArrowUpRight size={13} stroke={2} /></a></li>

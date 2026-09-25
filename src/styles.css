@@ -1141,6 +1141,8 @@ svg .pop { transform-box: fill-box; transform-origin: center; transform: scale(c
 /* 2 · environment art: the render gets lit as you scroll */
 .ch-environment .unlit { filter: grayscale(1) brightness(0.45) contrast(0.9); }
 .ch-environment .lit { opacity: clamp(0, (var(--l) - 0.05) / 0.4, 1); }
+/* second half of the chapter: dissolve to the clearing with the deer */
+.ch-environment .deer { opacity: clamp(0, (var(--l) - 0.5) / 0.25, 1); }
 
 /* 3 · technical art: wireframe first, then the shaded render sweeps in */
 .ch-tech { --sh: clamp(0, (var(--l) - 0.1) / 0.45, 1); }

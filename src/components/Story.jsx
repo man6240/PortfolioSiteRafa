@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { Glass } from '../glass/LiquidGlass.jsx';
 import { Star, Mail, Copy, Check, ArrowUpRight } from './Icons.jsx';
+import envHill from '../assets/env-hill.jpg';
+import envDeer from '../assets/env-deer.jpg';
 import { SITE, DISCIPLINES, TOOLS, EXPERIENCE, REVIEWS, ABOUT, PROJECTS } from '../content.js';
 
 /* The second half of the page as one scroll-driven story.
@@ -11,7 +13,7 @@ import { SITE, DISCIPLINES, TOOLS, EXPERIENCE, REVIEWS, ABOUT, PROJECTS } from '
    drawing, all reversible. Phones and "Reduce motion": the chapters flow as ordinary
    full-height sections that animate in once, without pinning. */
 
-const H = 1.1; // scroll length of one chapter, in viewport heights
+const H = 1.9; // scroll length of one chapter, in viewport heights
 const START = 0.35; // local progress of the first chapter when the stage pins
 
 const shot = (id, i) => PROJECTS.find((p) => p.id === id).shots[i];
@@ -182,8 +184,9 @@ function ChapterEnvironment() {
   return (
     <>
       <div className="ch-bg zoom">
-        <img className="unlit" src={shot('idunn', 0)} alt="" loading="lazy" decoding="async" />
-        <img className="lit" src={shot('idunn', 0)} alt="" loading="lazy" decoding="async" />
+        <img className="unlit" src={envHill} alt="" loading="lazy" decoding="async" />
+        <img className="lit" src={envHill} alt="Ashes of Idunn environment: a misty hillside lit by god rays, by Rafael Vitriago" loading="lazy" decoding="async" />
+        <img className="deer" src={envDeer} alt="Ashes of Idunn environment: a forest clearing with a deer in the morning light, by Rafael Vitriago" loading="lazy" decoding="async" />
       </div>
       <div className="ch-shade left" />
       <div className="ch-copy">

@@ -115,6 +115,17 @@ export default function Scene({ p, index, total, onOpen }) {
   }, []);
 
   const title = `${p.title}${p.subtitle ? ` ${p.subtitle}` : ''}`;
+  const foot = (
+        <div className="scene-foot">
+          <h3 className="scene-title">{title}</h3>
+          <p className="scene-copy">{p.summary}</p>
+          <p className="scene-copy dim">My role: {p.role}</p>
+          <ul className="sr-only">{tags.map((t) => <li key={t}>{t}</li>)}</ul>
+          <button className="scene-btn" onClick={() => onOpen(p, 0)}>
+            {p.shots.length > 1 ? `Open gallery · ${p.shots.length}` : 'View project'}<ArrowUpRight size={15} stroke={2} />
+          </button>
+        </div>
+  );
   return (
     <article className={`scene v-${variant} reveal`} style={vars} ref={root}>
       <div className="scene-bg" aria-hidden="true" />
@@ -130,7 +141,10 @@ export default function Scene({ p, index, total, onOpen }) {
       </div>
 
       {variant === 'stack' ? (
-        <p className="scene-stack" aria-hidden="true">{words.map((w, i) => <span key={w} className={`s${i + 1}`}>{w}</span>)}</p>
+        <div className="stack-col">
+          <p className="scene-stack" aria-hidden="true">{words.map((w, i) => <span key={w} className={`s${i + 1}`}>{w}</span>)}</p>
+          {foot}
+        </div>
       ) : (
         <>
           <p className="scene-word w1" aria-hidden="true">{words[0]}</p>
@@ -161,15 +175,7 @@ export default function Scene({ p, index, total, onOpen }) {
         {CONFETTI.slice(6).map(([x, y, c, s], i) => <i key={i} className={`c${s}`} style={{ left: `${x}%`, top: `${y}%`, background: c, animationDelay: `${-i * 2.3}s` }} />)}
       </div>
 
-      <div className="scene-foot">
-        <h3 className="scene-title">{title}</h3>
-        <p className="scene-copy">{p.summary}</p>
-        <p className="scene-copy dim">My role: {p.role}</p>
-        <ul className="sr-only">{tags.map((t) => <li key={t}>{t}</li>)}</ul>
-        <button className="scene-btn" onClick={() => onOpen(p, 0)}>
-          {p.shots.length > 1 ? `Open gallery · ${p.shots.length}` : 'View project'}<ArrowUpRight size={15} stroke={2} />
-        </button>
-      </div>
+      {variant !== 'stack' && foot}
     </article>
   );
 }

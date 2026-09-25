@@ -33,20 +33,6 @@ export const SITE = {
 
 export const PROJECTS = [
   {
-    id: 'idunn',
-    featured: true,
-    title: 'Ashes of Idunn',
-    subtitle: 'Tales of Fimbulwinter',
-    kind: 'Level design',
-    category: 'games',
-    status: 'Shipped',
-    platforms: 'Steam',
-    role: 'Level and environment designer, lighting artist, Steam publishing',
-    summary: 'A third-person action adventure about the start of the Berserker’s journey after tragedy strikes his village. Developed and published by Mad Viking Games on Steam as a glimpse of the franchise to come.',
-    shots: pick('idunn'),
-    palette: ['#8FE3A0', '#D6F5DC', '#07130D'],
-  },
-  {
     id: 'flag-fiesta',
     featured: true,
     title: 'Flag Fiesta',
@@ -65,6 +51,20 @@ export const PROJECTS = [
       colors: { base: '#1B3452', deep: '#0B1828', glow: '#C2447C' },
       decor: 'bunting',
     },
+  },
+  {
+    id: 'idunn',
+    featured: true,
+    title: 'Ashes of Idunn',
+    subtitle: 'Tales of Fimbulwinter',
+    kind: 'Level design',
+    category: 'games',
+    status: 'Shipped',
+    platforms: 'Steam',
+    role: 'Level and environment designer, lighting artist, Steam publishing',
+    summary: 'A third-person action adventure about the start of the Berserker’s journey after tragedy strikes his village. Developed and published by Mad Viking Games on Steam as a glimpse of the franchise to come.',
+    shots: pick('idunn'),
+    palette: ['#8FE3A0', '#D6F5DC', '#07130D'],
   },
   {
     id: 'vr',

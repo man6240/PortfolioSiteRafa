@@ -524,11 +524,18 @@ a.glass:active, button.glass:active { transform: scale(0.96); --g-glow: rgba(255
 .scene-btn:active { transform: scale(0.96); }
 /* ---- the stacked variant (Sugoi): rounded type stacked on the left, two phones on the right,
    callouts listed down the right-hand side ---- */
+.v-stack { min-height: 780px; }
+/* words on top, details at the bottom, one column: they can never overlap */
+.v-stack .stack-col {
+  position: absolute; z-index: 6; left: 44px; top: 150px; bottom: 44px; max-width: 42%;
+  display: flex; flex-direction: column; justify-content: space-between; gap: 28px;
+}
+.v-stack .stack-col .scene-foot { position: static; }
 .v-stack .scene-stack {
-  position: absolute; z-index: 1; left: 44px; top: 150px; margin: 0;
+  position: relative; margin: 0;
   display: flex; flex-direction: column;
   font-family: 'Fredoka Variable', var(--font); font-weight: 600; text-transform: lowercase;
-  font-size: clamp(64px, 8.4vw, 168px); line-height: 0.86; letter-spacing: -0.02em;
+  font-size: clamp(52px, min(8.4vw, 12vh), 168px); line-height: 0.86; letter-spacing: -0.02em;
   transform: translate(calc(var(--mx) * -18px), calc(var(--my) * -10px));
   transition: transform 0.8s var(--ease-out);
 }
@@ -569,7 +576,9 @@ a.glass:active, button.glass:active { transform: scale(0.96); --g-glow: rgba(255
   .scene-word.w2 { right: 24px; top: calc(120px + 14vw); }
   .scene-word.w3 { right: 24px; top: calc(var(--stage) - 18vw); bottom: auto; }
   .scene-hero { top: 250px; height: 440px; }
-  .v-stack .scene-stack { left: 24px; top: 120px; font-size: clamp(52px, 15vw, 110px); }
+  .v-stack .stack-col { display: contents; }
+  .v-stack .scene-stack { position: absolute; left: 24px; top: 120px; font-size: clamp(52px, 15vw, 110px); }
+  .v-stack .stack-col .scene-foot { position: relative; }
   .v-stack .scene-hero { left: 60%; top: 290px; height: 400px; }
   .scene-tag { display: none; }
   .scene-foot { position: relative; left: auto; right: auto; bottom: auto; max-width: none; }

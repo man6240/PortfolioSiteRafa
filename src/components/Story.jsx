@@ -14,10 +14,10 @@ import { SITE, DISCIPLINES, TOOLS, EXPERIENCE, REVIEWS, ABOUT, PROJECTS } from '
    full-height sections that animate in once, without pinning. */
 
 // Scrolling per chapter, in viewport heights: ANIM plays the entrance (everything pops in),
-// then the finished chapter holds still for its HOLD before handing over to the next.
-// The chapters with more to take in hold longer.
+// then the finished chapter holds still for HOLD screens before handing over to the next.
+// A chapter can override it with its own `hold`.
 const ANIM = 1.6;
-const SHORT = 0.8, LONG = 2.4;
+const HOLD = 0.8;
 const DONE = 0.82; // local progress at which every element of a chapter has arrived
 const START = 0.35; // local progress of the first chapter when the stage pins
 
@@ -359,16 +359,17 @@ function ChapterContact() {
 }
 
 const CHAPTERS = [
-  { key: 'level', C: ChapterLevel, anchor: 'services', hold: SHORT },
-  { key: 'environment', C: ChapterEnvironment, hold: LONG },
-  { key: 'tech', C: ChapterTech, hold: LONG },
-  { key: 'experience', C: ChapterExperience, anchor: 'experience', hold: LONG },
-  { key: 'reviews', C: ChapterReviews, anchor: 'reviews', hold: SHORT },
-  { key: 'about', C: ChapterAbout, anchor: 'about', hold: LONG },
-  { key: 'contact', C: ChapterContact, anchor: 'contact', hold: SHORT },
+  { key: 'level', C: ChapterLevel, anchor: 'services' },
+  { key: 'environment', C: ChapterEnvironment },
+  { key: 'tech', C: ChapterTech },
+  { key: 'experience', C: ChapterExperience, anchor: 'experience' },
+  { key: 'reviews', C: ChapterReviews, anchor: 'reviews' },
+  { key: 'about', C: ChapterAbout, anchor: 'about' },
+  { key: 'contact', C: ChapterContact, anchor: 'contact' },
 ];
 const N = CHAPTERS.length;
 // scroll length of each chapter and where it starts
+CHAPTERS.forEach((c) => { c.hold ??= HOLD; });
 const LEN = CHAPTERS.map((c) => ANIM + c.hold);
 const STARTS = LEN.reduce((a, _, i) => [...a, i ? a[i - 1] + LEN[i - 1] : 0], []);
 

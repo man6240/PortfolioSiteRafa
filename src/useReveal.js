@@ -3,7 +3,7 @@ import { arrive, riseWords, countUp, prefersReduced } from './motion.js';
 
 /* Scroll reveals. Elements marked .reveal arrive as they enter the viewport; those entering
    together are staggered. A section headline inside one rises word by word, and stat values
-   count up. Also picks up elements mounted later (e.g. cards after a filter change). */
+   count up. Also picks up elements mounted later (e.g. cards when "More work" opens). */
 export default function useReveal() {
   useEffect(() => {
     if (prefersReduced()) {

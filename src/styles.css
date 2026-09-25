@@ -304,25 +304,73 @@ a.glass:active, button.glass:active { transform: scale(0.96); --g-glow: rgba(255
 /* =========================================================================
    Work
    ========================================================================= */
-.work { padding-top: clamp(64px, 8vw, 120px); }
-.work-filter { margin-bottom: 28px; }
-.segmented { display: inline-flex; padding: 4px; border-radius: 999px; max-width: 100%; overflow-x: auto; scrollbar-width: none; }
-.segmented::-webkit-scrollbar { display: none; }
-.segmented button {
-  position: relative; z-index: 2; flex: none;
-  height: 36px; padding: 0 18px;
-  border: 0; border-radius: 999px; background: none; cursor: pointer;
-  font-size: 14px; font-weight: 500; color: rgba(255, 255, 255, 0.7);
-  transition: color 0.25s;
+/* ---- showcases: one focal object rising out of a dark, grainy panel ---- */
+.showcases { display: grid; gap: clamp(112px, 14vw, 200px); }
+.show-head { max-width: 760px; margin: 0 auto clamp(28px, 3.5vw, 44px); text-align: center; }
+.show .show-kind { color: color-mix(in srgb, var(--accent) 72%, #000); }
+.show-title { margin-top: 6px; font-size: clamp(34px, 4.2vw, 54px); font-weight: 700; line-height: 1.04; letter-spacing: -0.035em; text-wrap: balance; }
+.show-title span { display: block; color: var(--on-light-3); }
+.show-summary { margin: 14px auto 24px; max-width: 52ch; font-size: clamp(17px, 1.5vw, 19px); line-height: 1.5; color: var(--on-light-2); }
+
+.show-stage { position: relative; }
+.show-panel {
+  position: absolute; inset: 36% 0 0; overflow: hidden;
+  border-radius: 32px;
+  background:
+    radial-gradient(46% 70% at 50% 0%, color-mix(in srgb, var(--accent) 50%, transparent), transparent 72%),
+    linear-gradient(160deg, color-mix(in srgb, var(--deep) 78%, var(--accent)) 0%, var(--deep) 70%);
 }
-.segmented button[aria-checked='true'] { color: #fff; }
-.segmented button:focus-visible { outline-offset: -2px; }
-.segmented-thumb {
-  position: absolute; z-index: 1; left: 0; top: 4px; bottom: 4px; border-radius: 999px;
-  background: rgba(255, 255, 255, 0.18);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3), 0 2px 8px rgba(0, 0, 0, 0.25);
-  opacity: 0;
+/* film grain and a soft diagonal light, like studio light falling across a backdrop */
+.show-panel::before, .show-panel::after { content: ''; position: absolute; inset: 0; pointer-events: none; }
+.show-panel::before {
+  opacity: 0.22; mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
+.show-panel::after { background: linear-gradient(118deg, transparent 52%, rgba(255, 255, 255, 0.09) 68%, transparent 86%); }
+
+.show-hero { display: block; padding: 0; border: 0; background: none; cursor: pointer; }
+.show-hero:focus-visible { outline-offset: 8px; border-radius: 28px; }
+.slides { position: relative; width: 100%; height: 100%; overflow: hidden; }
+.slides img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 1.1s ease; }
+.slides img.on { opacity: 1; }
+
+/* phone: rises out of the panel and is cut off by its bottom edge */
+.show-phone .show-stage { height: clamp(440px, 46vw, 580px); clip-path: inset(-400px -400px 0 -400px round 0 0 32px 32px); }
+.show-phone .show-hero { position: absolute; top: 0; left: 0; right: 0; margin-inline: auto; height: 116%; aspect-ratio: 9 / 19.5; }
+.show-phone .phone {
+  height: 100%;
+  background: linear-gradient(140deg, #6e6e73 0%, #2c2c2e 18%, #0b0b0c 52%, #2c2c2e 84%, #6e6e73 100%);
+  box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, 0.28), 0 0 0 1px rgba(0, 0, 0, 0.12), 0 40px 60px -30px rgba(0, 0, 0, 0.55);
+}
+/* the glass catches the light: a faint reflection across the screen */
+.show .phone-screen::after {
+  content: ''; position: absolute; inset: 0; pointer-events: none; z-index: 2;
+  background: linear-gradient(118deg, rgba(255, 255, 255, 0.16) 0%, rgba(255, 255, 255, 0.04) 30%, rgba(255, 255, 255, 0) 42%);
+}
+
+/* screen: a landscape frame of Liquid Glass sitting across the panel's top edge */
+.show-screen .show-stage { padding-bottom: clamp(28px, 5vw, 72px); clip-path: inset(-400px -400px 0 -400px round 0 0 32px 32px); }
+.show-screen .show-panel { inset: 40% 0 0; }
+.show-screen .show-hero { position: relative; width: min(78%, 900px); margin: 0 auto; }
+.screen {
+  aspect-ratio: 16 / 9; padding: 10px; border-radius: 28px;
+  --g-tint: rgba(255, 255, 255, 0.28);
+  --g-shadow: 0 40px 60px -30px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(0, 0, 0, 0.06);
+}
+.screen .slides { border-radius: 19px; }
+
+.show-chip { position: absolute; left: 22px; bottom: 22px; z-index: 2; }
+
+.btn-dark { background: var(--on-light); color: #fff; transition: background-color 0.2s, transform 0.35s var(--spring); }
+.btn-dark:hover { background: #000; }
+.btn-dark:active, .btn-soft:active { transform: scale(0.96); }
+.btn-soft { background: #e8e8ed; color: var(--on-light); transition: background-color 0.2s, transform 0.35s var(--spring); }
+.btn-soft:hover { background: #dcdce1; }
+
+.more { display: flex; justify-content: center; margin-top: clamp(96px, 12vw, 160px); }
+.more-chevron { transform: rotate(90deg); transition: transform 0.4s var(--spring); }
+.more-chevron.up { transform: rotate(-90deg); }
+.more-grid { margin-top: 40px; }
 
 .grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 20px; }
 .card {
@@ -596,6 +644,12 @@ a.glass:active, button.glass:active { transform: scale(0.96); --g-glow: rgba(255
   .hero-foot { justify-content: flex-start; }
   .review-grid { grid-template-columns: 1fr; }
   .review { padding: 26px; }
+  .show-chip { display: none; }
+  .show-panel { border-radius: 24px; }
+  .show-stage, .show-phone .show-stage, .show-screen .show-stage { clip-path: inset(-400px -400px 0 -400px round 0 0 24px 24px); }
+  .show-screen .show-hero { width: 92%; }
+  .screen { padding: 6px; border-radius: 18px; }
+  .screen .slides { border-radius: 13px; }
   .sheet { border-radius: 26px; }
   .sheet-body { grid-template-columns: 1fr; gap: 24px; padding: 24px 22px 28px; }
   .viewer { aspect-ratio: 4 / 3; }

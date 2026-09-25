@@ -1,6 +1,7 @@
 // Everything a visitor reads lives here. Edit, rebuild, done.
 //
-// category: 'games' | 'xr' | 'viz'   (drives the filter above the work grid)
+// featured: true shows the project as a full showcase; the rest sit behind "More work".
+// category: 'games' | 'xr' | 'viz'
 // shots:    screenshots, in order. The first one is the cover.
 // frame:    how portrait shots are shown on the card: 'phone' | 'card'. Omit for landscape shots.
 // palette:  [accent, light, deep] — tints the card and the project sheet.
@@ -25,16 +26,10 @@ export const SITE = {
   ],
 };
 
-export const CATEGORIES = [
-  { id: 'all', label: 'All' },
-  { id: 'games', label: 'Games' },
-  { id: 'xr', label: 'VR & AR' },
-  { id: 'viz', label: 'Cinematics & Viz' },
-];
-
 export const PROJECTS = [
   {
     id: 'idunn',
+    featured: true,
     title: 'Ashes of Idunn',
     subtitle: 'Tales of Fimbulwinter',
     kind: 'Level design',
@@ -48,6 +43,7 @@ export const PROJECTS = [
   },
   {
     id: 'flag-fiesta',
+    featured: true,
     title: 'Flag Fiesta',
     kind: 'Mobile game',
     category: 'games',
@@ -60,20 +56,8 @@ export const PROJECTS = [
     palette: ['#FF7A59', '#FFD9A8', '#3A1606'],
   },
   {
-    id: 'sugoi',
-    title: 'Sugoi Fruit Fusion Wonders',
-    kind: 'Mobile game',
-    category: 'games',
-    status: 'Shipped',
-    platforms: 'Google Play',
-    role: '2D artist, programmer, game and economy designer',
-    summary: 'A take on the Suika watermelon mechanic with a twist: merge the fruits and watch the score climb. A two-person project covering art, code and economy design.',
-    shots: pick('sugoi'),
-    frame: 'phone',
-    palette: ['#E0A040', '#F8E6C0', '#4A2A10'],
-  },
-  {
     id: 'vr',
+    featured: true,
     title: 'Mad Viking Games',
     subtitle: 'VR Experience',
     kind: 'Virtual reality',
@@ -86,19 +70,22 @@ export const PROJECTS = [
     palette: ['#E0A060', '#F3D9B8', '#140A05'],
   },
   {
-    id: 'kodex',
-    title: 'Kodex',
-    kind: 'Level design',
+    id: 'sugoi',
+    featured: true,
+    title: 'Sugoi Fruit Fusion Wonders',
+    kind: 'Mobile game',
     category: 'games',
-    status: 'Client work, Azulon Studios',
-    platforms: 'Mobile',
-    role: 'Level designer and environment artist',
-    summary: 'A mobile 2D platformer where every character has a unique ability. Each environment, from lush forests to ancient ruins and industrial depths, was built to show off those abilities.',
-    shots: pick('kodex'),
-    palette: ['#3FAF84', '#C8EEDA', '#0D1F2A'],
+    status: 'Shipped',
+    platforms: 'Google Play',
+    role: '2D artist, programmer, game and economy designer',
+    summary: 'A take on the Suika watermelon mechanic with a twist: merge the fruits and watch the score climb. A two-person project covering art, code and economy design.',
+    shots: pick('sugoi'),
+    frame: 'phone',
+    palette: ['#E0A040', '#F8E6C0', '#4A2A10'],
   },
   {
     id: 'ar',
+    featured: true,
     title: 'Mad Viking Games',
     subtitle: 'AR Experience',
     kind: 'Augmented reality',
@@ -110,6 +97,18 @@ export const PROJECTS = [
     shots: pick('ar'),
     frame: 'phone',
     palette: ['#7FA886', '#DCE7D8', '#10160F'],
+  },
+  {
+    id: 'kodex',
+    title: 'Kodex',
+    kind: 'Level design',
+    category: 'games',
+    status: 'Client work, Azulon Studios',
+    platforms: 'Mobile',
+    role: 'Level designer and environment artist',
+    summary: 'A mobile 2D platformer where every character has a unique ability. Each environment, from lush forests to ancient ruins and industrial depths, was built to show off those abilities.',
+    shots: pick('kodex'),
+    palette: ['#3FAF84', '#C8EEDA', '#0D1F2A'],
   },
   {
     id: 'vrtour',

@@ -18,7 +18,9 @@ React + Vite + Anime.js v4. No 3D runtime: the site ships ~85 kB of gzipped JS p
 All copy, links and project data live in `src/content.js`.
 
 Per project:
-- `category`: `'games' | 'xr' | 'viz'` (drives the filter above the grid)
+- `featured: true`: shown as a full showcase (a phone or a framed screen rising out of a tinted panel).
+  Projects without it sit in the grid behind the "More work" button. Order in `PROJECTS` is display order.
+- `category`: `'games' | 'xr' | 'viz'`
 - `shots`: screenshots from `src/assets/shots/`, picked by filename prefix (`idunn-1.jpg`, `idunn-2.jpg`…). The first is the cover.
 - `frame`: for portrait shots, `'phone'` (shown in phone frames) or `'card'` (rounded prints). Leave it out for landscape shots.
 - `palette`: `[accent, light, deep]`, tints the card and the project sheet.
@@ -49,7 +51,8 @@ All motion is Anime.js v4, defined in `src/motion.js`:
 - **Hero intro** (`Hero.jsx`): a timeline where the headline rises word by word from behind a mask (`splitText`), then the copy and buttons follow.
 - **Hero parallax**: `onScroll({ sync: true })` drifts the image and lifts the copy as the hero scrolls away.
 - **Scroll reveals** (`useReveal.js`): anything with `.reveal` arrives staggered; a `.headline` inside it rises word by word; `[data-count]` stats count up.
-- **Springs**: the nav selection capsule and the filter thumb spring between slots and briefly stretch like liquid (`moveCapsule`); the project sheet springs open.
+- **Showcase parallax**: each featured device drifts up slightly as its showcase scrolls in.
+- **Springs**: the nav selection capsule springs between slots and briefly stretch like liquid (`moveCapsule`); the project sheet springs open.
 - **Reduce motion** skips all of it and shows the final state.
 
 ## Files
@@ -57,7 +60,7 @@ All motion is Anime.js v4, defined in `src/motion.js`:
 - `src/App.jsx`                 page order and project sheet state
 - `src/components/Nav.jsx`      floating glass bar; re-tints over light sections, sliding selection capsule
 - `src/components/Hero.jsx`     full-bleed slideshow, headline, stats
-- `src/components/Work.jsx`     segmented filter, bento grid, phone frames
+- `src/components/Work.jsx`     featured showcases, "More work" grid, phone frames
 - `src/components/ProjectSheet.jsx` modal gallery (keyboard, swipe, thumbnails)
 - `src/components/Sections.jsx` services, experience, reviews, about, contact, footer
 - `src/motion.js`               Anime.js springs, word rise, count-up, capsule motion

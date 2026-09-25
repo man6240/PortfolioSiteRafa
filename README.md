@@ -1,9 +1,14 @@
 # rafavitriago.eu — v3
 
 Portfolio site for Rafael Vitriago: level design, environment art and technical art.
-Deep ink base with an acid-lime brand accent (plus coral and violet), Bricolage Grotesque
-display type over Inter, full-width featured project panels in each project's own colours,
-and **Liquid Glass** for the floating controls.
+Two halves:
+- **Hero and work**: deep ink base, lime accent, Bricolage Grotesque display type, and full-width
+  featured project panels in each project's own colours.
+- **Everything after the work** (What I do, Experience, Reviews, About, Contact, footer): the first
+  design, with SF/Inter type, light `#f5f5f7` and white sections, blue actions, and glass reviews and a
+  dark contact over renders. Those styles are scoped under `.classic` in `styles.css`.
+
+**Liquid Glass** is used for the floating controls throughout.
 
 React + Vite + Anime.js v4. No 3D runtime: the site ships ~85 kB of gzipped JS plus images.
 

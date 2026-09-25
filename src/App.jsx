@@ -21,13 +21,15 @@ export default function App() {
       <main>
         <Hero reduced={reduced} onOpen={open} />
         <Work reduced={reduced} onOpen={open} />
-        <Services />
-        <Experience />
-        <Reviews />
-        <About />
-        <Contact />
+        <div className="classic">
+          <Services />
+          <Experience />
+          <Reviews />
+          <About />
+          <Contact />
+        </div>
       </main>
-      <Footer />
+      <div className="classic"><Footer /></div>
       <ProjectSheet state={sheet} onClose={close} reduced={reduced} />
     </>
   );

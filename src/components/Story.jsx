@@ -13,9 +13,12 @@ import { SITE, DISCIPLINES, TOOLS, EXPERIENCE, REVIEWS, ABOUT, PROJECTS } from '
    drawing, all reversible. Phones and "Reduce motion": the chapters flow as ordinary
    full-height sections that animate in once, without pinning. */
 
-// Scroll length of each chapter, in viewport heights. The chapters with a slow reveal
-// (lighting, wireframe, drifting work, the journey map) get more room.
-const SHORT = 2.25, LONG = 4;
+// Scrolling per chapter, in viewport heights: ANIM plays the entrance (everything pops in),
+// then the finished chapter holds still for its HOLD before handing over to the next.
+// The chapters with more to take in hold longer.
+const ANIM = 1.6;
+const SHORT = 0.8, LONG = 2.4;
+const DONE = 0.82; // local progress at which every element of a chapter has arrived
 const START = 0.35; // local progress of the first chapter when the stage pins
 
 const shot = (id, i) => PROJECTS.find((p) => p.id === id).shots[i];
@@ -356,25 +359,31 @@ function ChapterContact() {
 }
 
 const CHAPTERS = [
-  { key: 'level', C: ChapterLevel, anchor: 'services', h: SHORT },
-  { key: 'environment', C: ChapterEnvironment, h: LONG },
-  { key: 'tech', C: ChapterTech, h: LONG },
-  { key: 'experience', C: ChapterExperience, anchor: 'experience', h: LONG },
-  { key: 'reviews', C: ChapterReviews, anchor: 'reviews', h: SHORT },
-  { key: 'about', C: ChapterAbout, anchor: 'about', h: LONG },
-  { key: 'contact', C: ChapterContact, anchor: 'contact', h: SHORT },
+  { key: 'level', C: ChapterLevel, anchor: 'services', hold: SHORT },
+  { key: 'environment', C: ChapterEnvironment, hold: LONG },
+  { key: 'tech', C: ChapterTech, hold: LONG },
+  { key: 'experience', C: ChapterExperience, anchor: 'experience', hold: LONG },
+  { key: 'reviews', C: ChapterReviews, anchor: 'reviews', hold: SHORT },
+  { key: 'about', C: ChapterAbout, anchor: 'about', hold: LONG },
+  { key: 'contact', C: ChapterContact, anchor: 'contact', hold: SHORT },
 ];
 const N = CHAPTERS.length;
-// where each chapter starts, in viewport heights of scrolling
-const STARTS = CHAPTERS.reduce((a, c, i) => [...a, i ? a[i - 1] + CHAPTERS[i - 1].h : 0], []);
-// total pinned scroll: until the last chapter has settled (local progress 0.6), plus one screen
-const TOTAL = STARTS[N - 1] + CHAPTERS[N - 1].h * (0.6 - START) + 1;
-// scroll (in screens) -> story progress g: each chapter covers one unit of g, at its own pace
+// scroll length of each chapter and where it starts
+const LEN = CHAPTERS.map((c) => ANIM + c.hold);
+const STARTS = LEN.reduce((a, _, i) => [...a, i ? a[i - 1] + LEN[i - 1] : 0], []);
+
+// scroll (in screens) -> story progress g: each chapter covers one unit of g,
+// and within it the scroll stands still at DONE for the length of the hold
+const P = (DONE - START) * ANIM;
 const progressAt = (y) => {
   let i = 0;
   while (i < N - 1 && y >= STARTS[i + 1]) i++;
-  return i + (y - STARTS[i]) / CHAPTERS[i].h;
+  const t = y - STARTS[i];
+  const a = t < P ? t : t < P + CHAPTERS[i].hold ? P : t - CHAPTERS[i].hold;
+  return i + a / ANIM;
 };
+// total pinned scroll: until the last chapter has arrived and held, plus one screen
+const TOTAL = STARTS[N - 1] + P + CHAPTERS[N - 1].hold + 1;
 
 export default function Story() {
   const root = useRef(null);
@@ -409,7 +418,7 @@ export default function Story() {
       // nav anchors: in pinned mode each sits where its chapter is fully on screen
       marks.forEach((m) => {
         const i = +m.dataset.i;
-        if (mode === 'pinned') { m.style.top = `${(STARTS[i] + 0.1 * CHAPTERS[i].h) * vh}px`; m.style.height = `${CHAPTERS[i].h * vh}px`; }
+        if (mode === 'pinned') { m.style.top = `${(STARTS[i] + 0.15 * ANIM) * vh}px`; m.style.height = `${LEN[i] * vh}px`; }
         else { m.style.top = `${layers[i].offsetTop}px`; m.style.height = `${layers[i].offsetHeight}px`; }
       });
       update();

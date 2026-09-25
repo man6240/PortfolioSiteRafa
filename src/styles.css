@@ -1051,7 +1051,7 @@ html.js:not(.no-motion) .reveal:not([data-watched]) { opacity: 0; }
 .story-stage { position: sticky; top: 0; height: 100vh; overflow: hidden; }
 
 .chapter {
-  --in: clamp(0, (var(--l) + 0.3) / 0.4, 1);
+  --in: clamp(0, (var(--l) + 0.15) / 0.3, 1);
   --out: clamp(0, (var(--l) - 0.85) / 0.35, 1);
   --pad: clamp(24px, 6vw, 120px);
   position: absolute; inset: 0; overflow: hidden; background: #05080f;

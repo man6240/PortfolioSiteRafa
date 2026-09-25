@@ -5,6 +5,7 @@
 // shots:    screenshots, in order. The first one is the cover.
 // frame:    how portrait shots are shown on the card: 'phone' | 'card'. Omit for landscape shots.
 // palette:  [accent, light, deep] — tints the card and the project sheet.
+// panel:    [from, to, text] — the saturated backdrop of a featured phone project and its text colour.
 // live:     'flag-fiesta' renders the animated placeholder phone (for projects without captures).
 
 const all = import.meta.glob('./assets/shots/*.jpg', { eager: true, import: 'default' });
@@ -39,7 +40,7 @@ export const PROJECTS = [
     role: 'Level and environment designer, lighting artist, Steam publishing',
     summary: 'A third-person action adventure about the start of the Berserker’s journey after tragedy strikes his village. Developed and published by Mad Viking Games on Steam as a glimpse of the franchise to come.',
     shots: pick('idunn'),
-    palette: ['#5E8C6A', '#C9DCCB', '#0C1510'],
+    palette: ['#8FE3A0', '#D6F5DC', '#07130D'],
   },
   {
     id: 'flag-fiesta',
@@ -53,7 +54,8 @@ export const PROJECTS = [
     summary: 'A fast, colourful flag quiz for phones. Currently in production.',
     shots: [],
     live: 'flag-fiesta',
-    palette: ['#FF7A59', '#FFD9A8', '#3A1606'],
+    palette: ['#FF5A3C', '#FFD9A8', '#2A0C02'],
+    panel: ['#FF5A3C', '#FFB23F', '#2A0C02'],
   },
   {
     id: 'vr',
@@ -67,7 +69,7 @@ export const PROJECTS = [
     role: 'Level and environment designer, lighting artist, Steam publishing',
     summary: 'A short, playable VR experience that puts you inside the Viking lifestyle: explore the mead hall, choose a hero and inhabit the world.',
     shots: pick('vr'),
-    palette: ['#E0A060', '#F3D9B8', '#140A05'],
+    palette: ['#FFA24C', '#FFE1C2', '#1A0A04'],
   },
   {
     id: 'sugoi',
@@ -81,7 +83,8 @@ export const PROJECTS = [
     summary: 'A take on the Suika watermelon mechanic with a twist: merge the fruits and watch the score climb. A two-person project covering art, code and economy design.',
     shots: pick('sugoi'),
     frame: 'phone',
-    palette: ['#E0A040', '#F8E6C0', '#4A2A10'],
+    palette: ['#FFC23D', '#FFF0C8', '#3A1C04'],
+    panel: ['#FFD84A', '#FF8A3D', '#3A1C04'],
   },
   {
     id: 'ar',
@@ -96,7 +99,8 @@ export const PROJECTS = [
     summary: 'An app for viewing the upcoming Mad Viking characters in high quality and placing them in the real world through augmented reality.',
     shots: pick('ar'),
     frame: 'phone',
-    palette: ['#7FA886', '#DCE7D8', '#10160F'],
+    palette: ['#5ED3A0', '#DDF7EA', '#062019'],
+    panel: ['#8BEBC1', '#2FA89A', '#062019'],
   },
   {
     id: 'kodex',

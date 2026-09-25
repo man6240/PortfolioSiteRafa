@@ -1,8 +1,9 @@
 # rafavitriago.eu — v3
 
 Portfolio site for Rafael Vitriago: level design, environment art and technical art.
-It follows Apple's current design language: SF Pro type, dark cinematic sections alternating
-with light `#f5f5f7` ones, and **Liquid Glass** for all the floating controls.
+Deep ink base with an acid-lime brand accent (plus coral and violet), Bricolage Grotesque
+display type over Inter, full-width featured project panels in each project's own colours,
+and **Liquid Glass** for the floating controls.
 
 React + Vite + Anime.js v4. No 3D runtime: the site ships ~85 kB of gzipped JS plus images.
 
@@ -18,8 +19,10 @@ React + Vite + Anime.js v4. No 3D runtime: the site ships ~85 kB of gzipped JS p
 All copy, links and project data live in `src/content.js`.
 
 Per project:
-- `featured: true`: shown as a full showcase (a phone or a framed screen rising out of a tinted panel).
+- `featured: true`: shown as a full-width panel, copy on one side and the work on the other, alternating.
   Projects without it sit in the grid behind the "More work" button. Order in `PROJECTS` is display order.
+- `panel`: `[from, to, text]` for featured phone projects: the saturated gradient behind the phones and the text colour on it.
+  Landscape projects use their screenshots as the panel instead.
 - `category`: `'games' | 'xr' | 'viz'`
 - `shots`: screenshots from `src/assets/shots/`, picked by filename prefix (`idunn-1.jpg`, `idunn-2.jpg`…). The first is the cover.
 - `frame`: for portrait shots, `'phone'` (shown in phone frames) or `'card'` (rounded prints). Leave it out for landscape shots.
@@ -51,16 +54,16 @@ All motion is Anime.js v4, defined in `src/motion.js`:
 - **Hero intro** (`Hero.jsx`): a timeline where the headline rises word by word from behind a mask (`splitText`), then the copy and buttons follow.
 - **Hero parallax**: `onScroll({ sync: true })` drifts the image and lifts the copy as the hero scrolls away.
 - **Scroll reveals** (`useReveal.js`): anything with `.reveal` arrives staggered; a `.headline` inside it rises word by word; `[data-count]` stats count up.
-- **Showcase parallax**: each featured device drifts up slightly as its showcase scrolls in.
+- **Panel parallax**: the phones in featured panels drift up slightly as the panel scrolls in.
 - **Springs**: the nav selection capsule springs between slots and briefly stretch like liquid (`moveCapsule`); the project sheet springs open.
 - **Reduce motion** skips all of it and shows the final state.
 
 ## Files
 
 - `src/App.jsx`                 page order and project sheet state
-- `src/components/Nav.jsx`      floating glass bar; re-tints over light sections, sliding selection capsule
-- `src/components/Hero.jsx`     full-bleed slideshow, headline, stats
-- `src/components/Work.jsx`     featured showcases, "More work" grid, phone frames
+- `src/components/Nav.jsx`      floating glass bar; re-tints over the lime contact section, sliding selection capsule
+- `src/components/Hero.jsx`     full-bleed slideshow, name, discipline ticker, stats
+- `src/components/Work.jsx`     featured panels, "More work" grid, phone frames
 - `src/components/ProjectSheet.jsx` modal gallery (keyboard, swipe, thumbnails)
 - `src/components/Sections.jsx` services, experience, reviews, about, contact, footer
 - `src/motion.js`               Anime.js springs, word rise, count-up, capsule motion

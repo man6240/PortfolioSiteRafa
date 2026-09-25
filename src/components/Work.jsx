@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { animate, createScope, onScroll } from 'animejs';
 import { Glass } from '../glass/LiquidGlass.jsx';
-import { Plus, ChevronRight } from './Icons.jsx';
+import { Plus, ChevronRight, ArrowUpRight } from './Icons.jsx';
 import { PROJECTS } from '../content.js';
 import { makeFlagFiestaScreen } from '../flagFiesta.js';
 import { prefersReduced } from '../motion.js';
@@ -70,39 +70,64 @@ function Slideshow({ shots, reduced, interval = 4200 }) {
   );
 }
 
-/* A featured project: centred copy, then one object (a phone or a framed screen) rising out
-   of a dark, grainy panel tinted with the project's palette. The object is the focal point. */
-function Showcase({ p, reduced, onOpen }) {
+/* A featured project fills the width: copy on one side, the work on the other, alternating.
+   Phone projects sit on a saturated panel in their own colours with the phones bleeding off
+   the bottom edge. Landscape projects put the screenshot itself behind the whole panel. */
+function Feature({ p, index, total, reduced, onOpen }) {
   const phone = portrait(p);
-  const open = () => onOpen(p, 0);
+  const flip = index % 2 === 1;
+  const vars = { '--accent': p.palette[0], '--light': p.palette[1], '--deep': p.palette[2] };
+  if (p.panel) Object.assign(vars, { '--from': p.panel[0], '--to': p.panel[1], '--on': p.panel[2] });
+  const [shot, setShot] = useState(0);
+  useEffect(() => {
+    if (phone || reduced || p.shots.length < 2) return;
+    const id = setInterval(() => setShot((v) => (v + 1) % p.shots.length), 5600);
+    return () => clearInterval(id);
+  }, [phone, reduced, p.shots.length]);
+
   return (
-    <article
-      className={`show ${phone ? 'show-phone' : 'show-screen'}`}
-      style={{ '--accent': p.palette[0], '--light': p.palette[1], '--deep': p.palette[2] }}
-    >
-      <header className="show-head reveal">
-        <p className="eyebrow show-kind">{p.kind}</p>
-        <h3 className="show-title">{p.title}{p.subtitle && <span>{p.subtitle}</span>}</h3>
-        <p className="show-summary">{p.summary}</p>
-        <button className="btn btn-dark" onClick={open}>
-          View project<ChevronRight size={16} stroke={2.4} />
+    <article className={`feat ${phone ? 'feat-phone' : 'feat-screen'} ${flip ? 'flip' : ''} reveal`} style={vars}>
+      {!phone && (
+        <div className="feat-bg" aria-hidden="true">
+          {p.shots.map((src, k) => <img key={k} src={src} className={k === shot ? 'on' : ''} alt="" loading="lazy" decoding="async" />)}
+        </div>
+      )}
+      <div className="feat-info">
+        <p className="feat-index"><span>{String(index + 1).padStart(2, '0')}</span> / {String(total).padStart(2, '0')}</p>
+        <p className="feat-kind">{p.kind}</p>
+        <h3 className="feat-title">{p.title}{p.subtitle && <span>{p.subtitle}</span>}</h3>
+        <p className="feat-summary">{p.summary}</p>
+        <dl className="feat-meta">
+          <div><dt>Status</dt><dd>{p.status}</dd></div>
+          <div><dt>Platforms</dt><dd>{p.platforms}</dd></div>
+          <div className="wide"><dt>My role</dt><dd>{p.role}</dd></div>
+        </dl>
+        <button className="btn btn-feat" onClick={() => onOpen(p, phone ? 0 : shot)}>
+          {p.shots.length ? `Open gallery · ${p.shots.length}` : 'View project'}<ArrowUpRight size={16} stroke={2.2} />
         </button>
-      </header>
-      <div className="show-stage reveal">
-        <div className="show-panel" aria-hidden="true" />
-        <button className="show-hero" onClick={open} aria-label={`Open ${fullTitle(p)} gallery`}>
-          {phone ? (
-            <PhoneFrame>{p.live ? <LiveScreen reduced={reduced} /> : <Slideshow shots={p.shots} reduced={reduced} />}</PhoneFrame>
-          ) : (
-            <Glass className="screen" variant="clear" refract={{ blur: 1, scale: 30, bezel: 12 }}>
-              <Slideshow shots={p.shots} reduced={reduced} interval={5200} />
-            </Glass>
-          )}
-        </button>
-        <Glass className="chip show-chip" variant="clear">
-          <span className={`status-dot ${p.status === 'In development' ? 'wip' : ''}`} aria-hidden="true" />
-          {p.status} · {p.platforms}
-        </Glass>
+      </div>
+
+      <div className="feat-media">
+        {phone ? (
+          <button className="feat-phones" onClick={() => onOpen(p, 0)} aria-label={`Open ${fullTitle(p)} gallery`}>
+            {p.live ? (
+              <PhoneFrame className="ph-main"><LiveScreen reduced={reduced} /></PhoneFrame>
+            ) : (
+              <>
+                <PhoneFrame className="ph-back" src={p.shots[1] || p.shots[0]} />
+                <PhoneFrame className="ph-main"><Slideshow shots={p.shots} reduced={reduced} /></PhoneFrame>
+              </>
+            )}
+          </button>
+        ) : (
+          <Glass className="feat-rail" variant="clear" refract={{ blur: 6, scale: 32, bezel: 14 }}>
+            {p.shots.map((src, k) => (
+              <button key={k} className={k === shot ? 'on' : ''} onClick={() => onOpen(p, k)} aria-label={`Open image ${k + 1} of ${p.shots.length}`}>
+                <img src={src} alt="" loading="lazy" decoding="async" />
+              </button>
+            ))}
+          </Glass>
+        )}
       </div>
     </article>
   );
@@ -155,15 +180,15 @@ export default function Work({ reduced, onOpen }) {
   const [more, setMore] = useState(false);
   const root = useRef(null);
 
-  // The focal object drifts up a little faster than the page as its showcase scrolls in.
+  // Phones drift up a little faster than the page as their panel scrolls in.
   useEffect(() => {
     if (prefersReduced()) return;
     const scope = createScope({ root }).add(() => {
-      root.current.querySelectorAll('.show-stage').forEach((stage) => {
-        animate(stage.querySelector('.show-hero'), {
-          translateY: [70, 0],
+      root.current.querySelectorAll('.feat-phone').forEach((feat) => {
+        animate(feat.querySelector('.feat-phones'), {
+          translateY: [90, 0],
           ease: 'linear',
-          autoplay: onScroll({ target: stage, enter: 'bottom top', leave: 'center center', sync: true }),
+          autoplay: onScroll({ target: feat, enter: 'bottom top', leave: 'center center', sync: true }),
         });
       });
     });
@@ -176,20 +201,22 @@ export default function Work({ reduced, onOpen }) {
   };
 
   return (
-    <section className="work section-white" id="work" data-tone="light" ref={root}>
+    <section className="work section" id="work" data-tone="dark" ref={root}>
       <div className="wrap">
-        <header className="section-head centered reveal">
-          <p className="eyebrow">Selected work</p>
-          <h2 className="headline">Five projects,<br />up close.</h2>
-          <p className="section-sub">Shipped games and VR and AR experiences, for studios and clients.</p>
+        <header className="section-head split reveal">
+          <div>
+            <p className="eyebrow">Selected work</p>
+            <h2 className="headline">Worlds I’ve built.</h2>
+          </div>
+          <p className="section-sub">Shipped games, VR and AR for studios and clients. Five highlights here, more below.</p>
         </header>
 
-        <div className="showcases">
-          {FEATURED.map((p) => <Showcase key={p.id} p={p} reduced={reduced} onOpen={onOpen} />)}
+        <div className="feats">
+          {FEATURED.map((p, i) => <Feature key={p.id} p={p} index={i} total={FEATURED.length} reduced={reduced} onOpen={onOpen} />)}
         </div>
 
         <div className="more">
-          <button id="more-toggle" className="btn btn-soft" aria-expanded={more} aria-controls="more-work" onClick={toggle}>
+          <button id="more-toggle" className="btn btn-outline" aria-expanded={more} aria-controls="more-work" onClick={toggle}>
             {more ? 'Show less' : `More work · ${MORE.length} projects`}
             <ChevronRight size={16} stroke={2.4} className={`more-chevron ${more ? 'up' : ''}`} />
           </button>

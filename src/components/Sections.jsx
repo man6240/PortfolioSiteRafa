@@ -8,18 +8,24 @@ const shot = (id, i) => PROJECTS.find((p) => p.id === id).shots[i];
 
 export function Services() {
   return (
-    <section className="services section-light" id="services" data-tone="light">
+    <section className="services section" id="services" data-tone="dark">
       <div className="wrap">
-        <header className="section-head reveal">
-          <p className="eyebrow">What I do</p>
-          <h2 className="headline">From blockout<br />to final light.</h2>
+        <header className="section-head split reveal">
+          <div>
+            <p className="eyebrow">What I do</p>
+            <h2 className="headline">From blockout<br />to final light.</h2>
+          </div>
+          <p className="section-sub">Three disciplines, one goal: places players believe in, running at frame rate on the hardware they own.</p>
         </header>
         <div className="tiles">
-          {DISCIPLINES.map((d) => {
+          {DISCIPLINES.map((d, i) => {
             const Icon = ICONS[d.icon];
             return (
               <article key={d.title} className="tile reveal">
-                <span className={`tile-icon ${d.icon}`}><Icon /></span>
+                <div className="tile-top">
+                  <span className="tile-icon"><Icon /></span>
+                  <span className="tile-num">{String(i + 1).padStart(2, '0')}</span>
+                </div>
                 <h3>{d.title}</h3>
                 <p>{d.body}</p>
                 <p className="tile-tools">{d.tools}</p>
@@ -38,7 +44,7 @@ export function Services() {
 
 export function Experience() {
   return (
-    <section className="experience section-white" id="experience" data-tone="light">
+    <section className="experience section section-alt" id="experience" data-tone="dark">
       <div className="wrap exp-grid">
         <header className="section-head reveal">
           <p className="eyebrow">Experience</p>
@@ -90,11 +96,11 @@ export function Reviews() {
 
 export function About() {
   return (
-    <section className="about section-light" id="about" data-tone="light">
+    <section className="about section" id="about" data-tone="dark">
       <div className="wrap about-grid">
         <div className="reveal">
           <p className="eyebrow">About</p>
-          <h2 className="headline">Spaces that carry<br />the narrative.</h2>
+          <h2 className="headline">Spaces that carry the narrative.</h2>
           <div className="about-body">{ABOUT.body.map((t, i) => <p key={i}>{t}</p>)}</div>
         </div>
         <dl className="inset-list reveal">
@@ -122,28 +128,33 @@ export function Contact() {
     }
   };
   return (
-    <section className="contact" id="contact" data-tone="dark">
-      <div className="contact-bg" aria-hidden="true"><img src={shot('trailer', 3)} alt="" loading="lazy" /></div>
+    <section className="contact" id="contact" data-tone="light">
       <div className="wrap contact-inner reveal">
         <p className="eyebrow">Contact</p>
         <h2 className="headline">Have a level, a world or a VR build that needs a hand?</h2>
-        <p className="section-sub">Available for freelance and contract work, remotely, in English or Spanish.</p>
-        <div className="actions center">
-          <a className="btn btn-primary" href={`mailto:${SITE.email}`}><Mail size={18} />Email me</a>
-          <Glass as="button" variant="clear" className="btn btn-glass" onClick={copy} aria-live="polite">
-            {copied ? <><Check size={18} />Copied</> : <><Copy size={18} />Copy address</>}
-          </Glass>
+        <div className="contact-grid">
+          <div>
+            <p className="section-sub">Available for freelance and contract work, remotely, in English or Spanish.</p>
+            <div className="actions">
+              <a className="btn btn-ink" href={`mailto:${SITE.email}`}><Mail size={18} />Email me</a>
+              <button className="btn btn-outline-ink" onClick={copy} aria-live="polite">
+                {copied ? <><Check size={18} />Copied</> : <><Copy size={18} />Copy address</>}
+              </button>
+            </div>
+          </div>
+          <div className="contact-right">
+            <a className="contact-email" href={`mailto:${SITE.email}`}>{SITE.email}</a>
+            <ul className="elsewhere">
+              {SITE.links.map((l) => (
+                <li key={l.label}>
+                  <a className="btn btn-outline-ink btn-sm" href={l.href} target="_blank" rel="noreferrer">
+                    {l.label}<ArrowUpRight size={15} stroke={2} />
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
-        <p className="contact-email">{SITE.email}</p>
-        <ul className="elsewhere">
-          {SITE.links.map((l) => (
-            <li key={l.label}>
-              <Glass as="a" variant="clear" className="btn btn-glass btn-sm" href={l.href} target="_blank" rel="noreferrer">
-                {l.label}<ArrowUpRight size={15} stroke={2} />
-              </Glass>
-            </li>
-          ))}
-        </ul>
       </div>
     </section>
   );
@@ -151,7 +162,7 @@ export function Contact() {
 
 export function Footer() {
   return (
-    <footer className="foot" data-tone="light">
+    <footer className="foot" data-tone="dark">
       <div className="wrap foot-inner">
         <p>Copyright © {new Date().getFullYear()} {SITE.name}. All rights reserved.</p>
         <p>{SITE.title} · {SITE.location}</p>

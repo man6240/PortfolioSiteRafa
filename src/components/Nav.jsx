@@ -72,7 +72,7 @@ export default function Nav() {
             <a key={l.id} href={`#${l.id}`} aria-current={active === l.id ? 'true' : undefined}>{l.label}</a>
           ))}
         </nav>
-        <a className="btn btn-primary btn-sm nav-cta" href="#contact">Contact</a>
+        <a className="box-btn nav-cta" href="#contact">Start a project</a>
         <button className="nav-toggle" aria-label={open ? 'Close menu' : 'Open menu'} aria-expanded={open} onClick={() => setOpen((v) => !v)}>
           {open ? <Close /> : <Menu />}
         </button>

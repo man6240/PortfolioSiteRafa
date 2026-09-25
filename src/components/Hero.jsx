@@ -1,89 +1,108 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { animate, createTimeline, createScope, onScroll, stagger, utils } from 'animejs';
-import { Glass } from '../glass/LiquidGlass.jsx';
-import { splitWords, prefersReduced } from '../motion.js';
+import { createTimeline, stagger, utils } from 'animejs';
 import { SITE, PROJECTS, HERO, STATS } from '../content.js';
+import { prefersReduced } from '../motion.js';
+import { Crops, Decor, Tag, useCallouts, usePointerDepth } from './Scene.jsx';
+import { ArrowUpRight } from './Icons.jsx';
 
 const byId = Object.fromEntries(PROJECTS.map((p) => [p.id, p]));
 const SLIDES = HERO.map(([id, i]) => ({ p: byId[id], i, src: byId[id].shots[i] }));
+const VARS = { '--s-base': '#1B2A44', '--s-deep': '#070E1A', '--s-glow': '#5F82C9' };
 
+/* The hero is a scene of its own: the renders cycle on a floating screen at the centre,
+   the headline sits around it in the corners, and callouts name the three disciplines. */
 export default function Hero({ reduced, onOpen }) {
   const [n, setN] = useState(0);
+  const root = useRef(null);
+  useCallouts(root, { threshold: 0.2, delay: 1100 });
+  usePointerDepth(root);
+
   useEffect(() => {
     if (reduced) return;
     const id = setInterval(() => setN((v) => (v + 1) % SLIDES.length), 6000);
     return () => clearInterval(id);
   }, [reduced]);
   const now = SLIDES[n];
-  const root = useRef(null);
 
-  // Intro: the headline rises word by word, then the rest of the copy follows it in.
-  // Runs before first paint so nothing flashes in its final position.
+  // Intro: the words rise into their corners, the screen settles in, then the details follow.
   useLayoutEffect(() => {
     if (prefersReduced()) return;
-    const scope = createScope({ root }).add(() => {
-      const follow = ['.hero-content .chip', '.hero-name', '.hero-lede', '.hero-content .actions > *', '.now-showing'];
-      const words = splitWords(root.current.querySelector('.hero-title'));
-      utils.set(follow, { opacity: 0, translateY: 16 });
-      utils.set(words, { translateY: '110%' });
-      createTimeline({ defaults: { ease: 'outExpo', duration: 1100 } })
-        .add('.hero-content .chip', { opacity: 1, translateY: 0, delay: 150 })
-        .add('.hero-name', { opacity: 1, translateY: 0 }, '-=950')
-        .add(words, { translateY: '0%', duration: 1300, delay: stagger(90) }, '-=1000')
-        .add('.hero-lede', { opacity: 1, translateY: 0 }, '-=900')
-        .add('.hero-content .actions > *', { opacity: 1, translateY: 0, delay: stagger(80) }, '-=950')
-        .add('.now-showing', { opacity: 1, translateY: 0 }, '-=900');
-
-      // Parallax: as the hero scrolls away the image drifts slower than the page
-      // and the copy lifts and fades, like a layer further back.
-      const sync = () => onScroll({ target: root.current.querySelector('.hero-stage'), enter: 'top top', leave: 'top bottom', sync: true });
-      animate('.hero-media', { translateY: ['0%', '22%'], scale: [1, 1.06], ease: 'linear', autoplay: sync() });
-      animate('.hero-content', { translateY: [0, -60], opacity: [1, 0.2], ease: 'linear', autoplay: sync() });
-    });
-    return () => scope.revert();
+    const el = root.current;
+    const words = el.querySelectorAll('.scene-word');
+    const rest = el.querySelectorAll('.scene-bar, .scene-foot > *');
+    const screen = el.querySelector('.screen-frame');
+    utils.set(words, { opacity: 0, translateY: 60 });
+    utils.set(rest, { opacity: 0, translateY: 14 });
+    utils.set(screen, { opacity: 0, scale: 0.92 });
+    const tl = createTimeline({ defaults: { ease: 'outExpo', duration: 1200 } })
+      .add(words, { opacity: 1, translateY: 0, delay: stagger(120, { start: 100 }) })
+      .add(screen, { opacity: 1, scale: 1, duration: 1400 }, 250)
+      .add(rest, { opacity: 1, translateY: 0, delay: stagger(60) }, 600);
+    return () => { tl.revert(); };
   }, []);
 
   return (
-    <section className="hero" id="top" data-tone="dark" ref={root}>
-      <div className="hero-stage">
-        <div className="hero-media" aria-hidden="true">
-          {SLIDES.map((s, k) => (
-            <img key={k} src={s.src} alt="" className={k === n ? 'on' : ''} decoding="async" fetchpriority={k === 0 ? 'high' : 'low'} />
-          ))}
+    <>
+      <section className="hero scene panel scene-screen" id="top" data-tone="dark" style={VARS} ref={root}>
+        <div className="scene-bg" aria-hidden="true" />
+        <div className="scene-backdrop" aria-hidden="true">
+          {SLIDES.map((s, k) => <img key={k} src={s.src} className={k === n ? 'on' : ''} alt="" decoding="async" />)}
         </div>
-        <div className="hero-scrim" aria-hidden="true" />
-  
-        <div className="hero-content wrap">
-          <Glass className="chip" variant="clear">
-            <span className="status-dot" aria-hidden="true" />Available for freelance
-          </Glass>
-          <p className="hero-name">{SITE.name}</p>
-          <h1 className="hero-title">Worlds that<br />tell stories.</h1>
-          <p className="hero-lede">Level design, environment art and technical art for games, VR and AR. Based in {SITE.location}, working with teams anywhere.</p>
-          <div className="actions">
-            <a className="btn btn-primary" href="#work">See the work</a>
-            <Glass as="a" variant="clear" className="btn btn-glass" href="#contact">Start a project</Glass>
-          </div>
-        </div>
-  
-        <div className="hero-foot wrap">
-          <Glass as="button" variant="clear" className="now-showing" onClick={() => onOpen(now.p, now.i)} aria-label={`Now showing ${now.p.title}. Open project`}>
+        <Decor kind="motes" layer="back" />
+        <Crops />
+
+        <div className="scene-bar">
+          <span>{SITE.name} — Portfolio</span>
+          <button className="scene-bar-mid now-showing" onClick={() => onOpen(now.p, now.i)}>
             <span className="now-label">Now showing</span>
             <span className="now-title">{now.p.title}{now.p.subtitle ? `: ${now.p.subtitle}` : ''}</span>
-            <span className="now-dots" aria-hidden="true">
-              {SLIDES.map((_, k) => <i key={k} className={k === n ? 'on' : ''} />)}
+            <span className="now-dots" aria-hidden="true">{SLIDES.map((_, k) => <i key={k} className={k === n ? 'on' : ''} />)}</span>
+          </button>
+          <span className="scene-bar-end"><i className="status-dot" aria-hidden="true" />Available for freelance</span>
+        </div>
+
+        <h1 className="hero-words">
+          <span className="scene-word w1">Worlds</span>{' '}
+          <span className="scene-word w2">that tell</span>{' '}
+          <span className="scene-word w3">stories</span>
+        </h1>
+
+        <button className="scene-hero" onClick={() => onOpen(now.p, now.i)} aria-label={`Open ${now.p.title}`}>
+          <span className="scene-float">
+            <span className="screen-frame">
+              <span className="slides">
+                {SLIDES.map((s, k) => <img key={k} src={s.src} className={k === n ? 'on' : ''} alt="" decoding="async" fetchpriority={k === 0 ? 'high' : 'low'} />)}
+              </span>
             </span>
-          </Glass>
-      </div>
-      </div>
+          </span>
+        </button>
+
+        <Tag side="r" className="t1">Level design</Tag>
+        <Tag side="l" className="t2">Environment art & lighting</Tag>
+        <Tag side="l" className="t3">Technical art · VR · AR</Tag>
+
+        <Decor kind="motes" layer="front" />
+
+        <div className="scene-foot">
+          <p className="scene-title">{SITE.name}</p>
+          <p className="scene-copy">Level design, environment art and technical art for games, VR and AR.</p>
+          <p className="scene-copy dim">Based in {SITE.location} · Working in English and Spanish</p>
+          <div className="box-row">
+            <a className="box-btn" href="#work">See the work<ArrowUpRight size={15} stroke={2} /></a>
+            <a className="box-btn ghost" href="#contact">Start a project</a>
+          </div>
+        </div>
+      </section>
 
       <div className="stats wrap reveal" role="list">
-        {STATS.map((s) => (
+        {STATS.map((s, i) => (
           <div key={s.label} className="stat" role="listitem">
-            <strong data-count>{s.value}</strong><span>{s.label}</span>
+            <span className="stat-idx">{String(i + 1).padStart(2, '0')}</span>
+            <strong data-count>{s.value}</strong>
+            <span className="stat-label">{s.label}</span>
           </div>
         ))}
       </div>
-    </section>
+    </>
   );
 }

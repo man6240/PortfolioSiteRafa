@@ -17,19 +17,17 @@ export default function App() {
   return (
     <>
       <a className="skip" href="#work">Skip to work</a>
-      <div className="classic"><Nav /></div>
+      <Nav />
       <main>
-        <div className="classic"><Hero reduced={reduced} onOpen={open} /></div>
+        <Hero reduced={reduced} onOpen={open} />
         <Work reduced={reduced} onOpen={open} />
-        <div className="classic">
-          <Services />
-          <Experience />
-          <Reviews />
-          <About />
-          <Contact />
-        </div>
+        <Services />
+        <Experience />
+        <Reviews />
+        <About />
+        <Contact />
       </main>
-      <div className="classic"><Footer /></div>
+      <Footer />
       <ProjectSheet state={sheet} onClose={close} reduced={reduced} />
     </>
   );

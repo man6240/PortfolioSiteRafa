@@ -5,10 +5,10 @@
 // shots:    screenshots, in order. The first one is the cover.
 // frame:    how portrait shots are shown on the card: 'phone' | 'card'. Omit for landscape shots.
 // palette:  [accent, light, deep] — tints the card and the project sheet.
-// panel:    [from, to, text] — the saturated backdrop of a featured phone project and its text colour.
 // live:     'flag-fiesta' renders the animated placeholder phone (for projects without captures).
-// scene:    renders the featured project as a cinematic product scene instead of a split panel:
-//           { words: [topLeft, topRight, bottomRight], tags: [3 callouts], colors: { base, deep, glow } }
+// scene:    how a featured project is staged (src/components/Scene.jsx): the phone or screen floats at the
+//           centre, `words` sit around it (top left, top right, bottom right), three `tags` pop in as
+//           callouts, `colors` tint the scene, and `decor` adds 'bunting', 'confetti', 'embers' or 'motes'.
 
 const all = import.meta.glob('./assets/shots/*.{jpg,png,webp}', { eager: true, import: 'default' });
 const pick = (prefix) =>
@@ -43,6 +43,12 @@ export const PROJECTS = [
     summary: 'A third-person action adventure about the start of the Berserker’s journey after tragedy strikes his village. Developed and published by Mad Viking Games on Steam as a glimpse of the franchise to come.',
     shots: pick('idunn'),
     palette: ['#8FE3A0', '#D6F5DC', '#07130D'],
+    scene: {
+      words: ['Where', 'sagas', 'begin'],
+      tags: ['Level & environment design', 'Lighting', 'Published on Steam'],
+      colors: { base: '#2A3A3C', deep: '#0A1212', glow: '#8FA7B8' },
+      decor: 'motes',
+    },
   },
   {
     id: 'flag-fiesta',
@@ -61,6 +67,7 @@ export const PROJECTS = [
       words: ['Know', 'your', 'world'],
       tags: ['Guess or paint flags', 'Places, people & paintings', 'Geography & history trivia'],
       colors: { base: '#1B3452', deep: '#0B1828', glow: '#C2447C' },
+      decor: 'bunting',
     },
   },
   {
@@ -76,6 +83,12 @@ export const PROJECTS = [
     summary: 'A short, playable VR experience that puts you inside the Viking lifestyle: explore the mead hall, choose a hero and inhabit the world.',
     shots: pick('vr'),
     palette: ['#FFA24C', '#FFE1C2', '#1A0A04'],
+    scene: {
+      words: ['Enter', 'the', 'mead hall'],
+      tags: ['Explore the mead hall', 'Choose a hero', 'Released on Steam'],
+      colors: { base: '#4A2410', deep: '#140803', glow: '#E07A2E' },
+      decor: 'embers',
+    },
   },
   {
     id: 'sugoi',
@@ -90,7 +103,12 @@ export const PROJECTS = [
     shots: pick('sugoi'),
     frame: 'phone',
     palette: ['#FFC23D', '#FFF0C8', '#3A1C04'],
-    panel: ['#FFD84A', '#FF8A3D', '#3A1C04'],
+    scene: {
+      words: ['Merge', 'the', 'fruit'],
+      tags: ['Suika-style merging', '2D art & code', 'Economy design'],
+      colors: { base: '#6E4A26', deep: '#221305', glow: '#E8B064' },
+      decor: 'confetti',
+    },
   },
   {
     id: 'ar',
@@ -106,7 +124,12 @@ export const PROJECTS = [
     shots: pick('ar'),
     frame: 'phone',
     palette: ['#5ED3A0', '#DDF7EA', '#062019'],
-    panel: ['#8BEBC1', '#2FA89A', '#062019'],
+    scene: {
+      words: ['Place', 'the', 'Vikings'],
+      tags: ['Place characters in AR', 'High-quality viewer', 'App Store & Google Play'],
+      colors: { base: '#33291F', deep: '#0E0B08', glow: '#C9954F' },
+      decor: 'motes',
+    },
   },
   {
     id: 'kodex',

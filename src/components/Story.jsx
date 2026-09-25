@@ -13,7 +13,7 @@ import { SITE, DISCIPLINES, TOOLS, EXPERIENCE, REVIEWS, ABOUT, PROJECTS } from '
    drawing, all reversible. Phones and "Reduce motion": the chapters flow as ordinary
    full-height sections that animate in once, without pinning. */
 
-const H = 1.9; // scroll length of one chapter, in viewport heights
+const H = 3.5; // scroll length of one chapter, in viewport heights
 const START = 0.35; // local progress of the first chapter when the stage pins
 
 const shot = (id, i) => PROJECTS.find((p) => p.id === id).shots[i];

@@ -73,7 +73,10 @@ const CONFETTI = [
 
 export default function Scene({ p, index, total, onOpen }) {
   const root = useRef(null);
-  const { words, tags, colors, decor, shot = 0 } = p.scene;
+  const { words, tags, colors, decor, shot = 0, variant = 'split' } = p.scene;
+  // Which side of the phone each callout sits on; the stacked variant mirrors the split one.
+  const sides = variant === 'stack' ? ['r', 'r', 'r'] : ['l', 'r', 'r'];
+  const back = variant === 'stack' ? p.shots.find((_, k) => k !== shot && k !== 0) : null;
   const vars = { '--s-base': colors.base, '--s-deep': colors.deep, '--s-glow': colors.glow };
 
   // Callouts: frames pop in and leader lines draw, once, when the scene is well in view.
@@ -113,7 +116,7 @@ export default function Scene({ p, index, total, onOpen }) {
 
   const title = `${p.title}${p.subtitle ? ` ${p.subtitle}` : ''}`;
   return (
-    <article className="scene reveal" style={vars} ref={root}>
+    <article className={`scene v-${variant} reveal`} style={vars} ref={root}>
       <div className="scene-bg" aria-hidden="true" />
       {decor === 'bunting' && <Bunting />}
       <div className="confetti back" aria-hidden="true">
@@ -126,18 +129,30 @@ export default function Scene({ p, index, total, onOpen }) {
         <span className="scene-bar-end"><i className={`status-dot ${p.status === 'In development' ? 'wip' : ''}`} aria-hidden="true" />{p.status}<span className="scene-plat"> · {p.platforms}</span></span>
       </div>
 
-      <p className="scene-word w1" aria-hidden="true">{words[0]}</p>
-      <p className="scene-word w2" aria-hidden="true">{words[1]}</p>
+      {variant === 'stack' ? (
+        <p className="scene-stack" aria-hidden="true">{words.map((w, i) => <span key={w} className={`s${i + 1}`}>{w}</span>)}</p>
+      ) : (
+        <>
+          <p className="scene-word w1" aria-hidden="true">{words[0]}</p>
+          <p className="scene-word w2" aria-hidden="true">{words[1]}</p>
+        </>
+      )}
 
       <button className="scene-hero" onClick={() => onOpen(p, shot)} aria-label={`Open ${title} gallery`}>
+        {back && <span className="scene-float back"><PhoneFrame src={back} /></span>}
         <span className="scene-float"><PhoneFrame src={p.shots[shot] || p.shots[0]} /></span>
       </button>
 
-      <p className="scene-word w3" aria-hidden="true">{words[2]}</p>
+      {variant !== 'stack' && <p className="scene-word w3" aria-hidden="true">{words[2]}</p>}
 
       {tags.map((t, i) => (
-        <div key={t} className={`scene-tag t${i + 1}`} aria-hidden="true">
-          <svg className="tag-line" viewBox="0 0 100 60" preserveAspectRatio="none"><path d={i === 0 ? 'M0 60 L40 60 L100 0' : 'M100 60 L60 60 L0 0'} /></svg>
+        <div key={t} className={`scene-tag t${i + 1} on-${sides[i]}`} aria-hidden="true">
+          <span className="tag-lead">
+            <svg className="tag-line" viewBox="0 0 100 60" preserveAspectRatio="none">
+              <path d={sides[i] === 'l' ? 'M0 60 C 55 60 50 0 100 0' : 'M100 60 C 45 60 50 0 0 0'} />
+            </svg>
+            <i className="tag-dot" />
+          </span>
           <span className="tag-frame"><span className="tag-box">{t}</span></span>
         </div>
       ))}

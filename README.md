@@ -3,7 +3,7 @@
 Portfolio site for Rafael Vitriago: level design, environment art and technical art.
 The first design (SF/Inter type, black hero over a render slideshow, light `#f5f5f7` and white sections, blue
 pill buttons, rounded cards) with the work section as its centrepiece: Flag Fiesta and Sugoi are staged as
-product-shot scenes (floating phone, big words, rounded callout tags), and Ashes of Idunn and the VR Experience
+product-shot scenes (floating phones, big words, rounded callout tags on curved leader lines), and Ashes of Idunn and the VR Experience
 are full-width rounded panels with the render behind the copy. The first design's section styles are scoped
 under `.classic` in `styles.css`.
 
@@ -33,7 +33,8 @@ Per project:
 - `palette`: `[accent, light, deep]`, tints the card and the project sheet.
 - `scene` (optional, featured phone projects): stages the project as a product-shot scene: `words` (three,
   around the phone), `tags` (three callouts), `colors` (`base`, `deep`, `glow`), `decor: 'bunting'` (flag
-  string, Flag Fiesta only) and `shot` (which screenshot sits on the phone). Used by Flag Fiesta and Sugoi.
+  string, Flag Fiesta only), `shot` (which screenshot sits on the phone) and `variant`: `'split'` (words around
+  one phone, Flag Fiesta) or `'stack'` (rounded words stacked on the left, two phones on the right, Sugoi).
 - `live: 'flag-fiesta'`: shows the animated placeholder phone (`src/flagFiesta.js`) until real captures exist.
 
 The hero slideshow is `HERO` in the same file (`[projectId, shotIndex]` pairs).

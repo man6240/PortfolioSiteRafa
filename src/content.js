@@ -9,7 +9,8 @@
 // live:     'flag-fiesta' renders the animated placeholder phone (for projects without captures).
 // scene:    renders the featured phone project as a product-shot scene instead of a split panel:
 //           { words: [topLeft, topRight, bottomRight], tags: [3 callouts], colors: { base, deep, glow },
-//             decor: 'bunting' (optional flag string), shot: index of the screenshot on the phone (default 0) }
+//             decor: 'bunting' (optional flag string), shot: index of the screenshot on the phone (default 0),
+//             variant: 'split' (words around the phone, default) | 'stack' (words stacked left, two phones right) }
 
 const all = import.meta.glob('./assets/shots/*.{jpg,png,webp}', { eager: true, import: 'default' });
 const pick = (prefix) =>
@@ -97,6 +98,7 @@ export const PROJECTS = [
       tags: ['Suika-style merging', '2D art & code', 'Economy design'],
       colors: { base: '#5A3A1C', deep: '#1E1206', glow: '#E8A94E' },
       shot: 1,
+      variant: 'stack',
     },
   },
   {

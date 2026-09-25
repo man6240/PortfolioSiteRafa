@@ -300,6 +300,8 @@ a.glass:active, button.glass:active { transform: scale(0.96); --g-glow: rgba(255
    Work: featured panels
    ========================================================================= */
 .work { padding-top: clamp(48px, 6vw, 96px); background: #000; letter-spacing: -0.022em; }
+/* the projects get more of a wide screen than the rest of the page */
+.work .wrap { max-width: 1920px; padding-inline: clamp(12px, 2vw, 40px); }
 .work .section-sub { color: #a1a1a6; }
 .feats { display: grid; gap: clamp(16px, 2vw, 24px); }
 .feat {
@@ -445,8 +447,6 @@ a.glass:active, button.glass:active { transform: scale(0.96); --g-glow: rgba(255
 .confetti i.c2 { width: 0; height: 0; background: none !important; border-left: 7px solid transparent; border-right: 7px solid transparent; border-bottom: 12px solid #8B7CFF; }
 @keyframes drift { from { transform: translate(0, -14px) rotate(-20deg); } to { transform: translate(10px, 18px) rotate(160deg); } }
 
-/* crop marks */
-
 .scene-bar {
   position: absolute; z-index: 6; left: 44px; right: 44px; top: 100px;
   display: flex; align-items: center; gap: 24px;
@@ -455,7 +455,7 @@ a.glass:active, button.glass:active { transform: scale(0.96); --g-glow: rgba(255
 .scene-bar-mid { margin-inline: auto; }
 .scene-bar-end { display: inline-flex; align-items: center; gap: 10px; }
 
-/* the words around the object */
+/* the words around the object (split variant) */
 .scene-word {
   position: absolute; z-index: 1; margin: 0;
   font-family: var(--grot); font-weight: 500; text-transform: uppercase;
@@ -490,40 +490,73 @@ a.glass:active, button.glass:active { transform: scale(0.96); --g-glow: rgba(255
   background: linear-gradient(118deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.05) 28%, rgba(255, 255, 255, 0) 40%);
 }
 
-/* callout tags with bracket frames and leader lines */
+/* callout tags: a soft curve with rounded ends runs from a dot on the phone to a pill */
 .scene-tag { position: absolute; z-index: 4; display: flex; align-items: flex-start; }
-.scene-tag.t1 { right: calc(50% + 150px); top: 58%; flex-direction: row-reverse; }
-.scene-tag.t2 { left: calc(50% + 130px); top: 33%; }
-.scene-tag.t3 { left: calc(50% + 150px); top: 62%; }
-.tag-line { width: 90px; height: 54px; margin-top: -40px; overflow: visible; }
-.tag-line path { fill: none; stroke: rgba(255, 255, 255, 0.8); stroke-width: 1.2; vector-effect: non-scaling-stroke; }
+.scene-tag.on-l { flex-direction: row-reverse; }
+.v-split .t1 { right: calc(50% + 150px); top: 58%; }
+.v-split .t2 { left: calc(50% + 130px); top: 33%; }
+.v-split .t3 { left: calc(50% + 150px); top: 62%; }
+.tag-lead { position: relative; width: 90px; height: 54px; margin-top: -36px; }
+.tag-line { display: block; width: 100%; height: 100%; overflow: visible; }
+.tag-line path { fill: none; stroke: rgba(255, 255, 255, 0.75); stroke-width: 1.5; stroke-linecap: round; vector-effect: non-scaling-stroke; }
+.tag-dot { position: absolute; top: -4px; width: 9px; height: 9px; border-radius: 50%; background: #fff; box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.18), 0 0 14px rgba(255, 255, 255, 0.6); }
+.on-r .tag-dot { left: -4px; }
+.on-l .tag-dot { right: -4px; }
 .tag-frame { display: inline-block; }
 .tag-box {
   display: block; padding: 9px 16px; border-radius: 999px; background: #fff; color: var(--s-deep);
   box-shadow: 0 10px 30px -12px rgba(0, 0, 0, 0.5);
-  font-family: var(--mono); font-size: 12px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; white-space: nowrap;
+  font-family: var(--font); font-size: 14px; font-weight: 600; letter-spacing: -0.01em; white-space: nowrap;
 }
 
 /* project details, bottom left */
 .scene-foot { position: absolute; z-index: 6; left: 44px; bottom: 44px; max-width: 330px; }
 .scene-title { font-family: var(--grot); font-size: 30px; font-weight: 600; letter-spacing: -0.02em; line-height: 1; }
-.scene-copy { margin-top: 12px; font-family: var(--mono); font-size: 12px; line-height: 1.55; letter-spacing: 0.04em; text-transform: uppercase; }
-.scene-copy.dim { margin-top: 8px; color: rgba(255, 255, 255, 0.66); }
+.scene-copy { margin-top: 12px; font-family: var(--font); font-size: 15px; line-height: 1.5; letter-spacing: -0.01em; color: rgba(255, 255, 255, 0.86); }
+.scene-copy.dim { margin-top: 8px; font-size: 14px; color: rgba(255, 255, 255, 0.6); }
 .scene-btn {
   display: inline-flex; align-items: center; gap: 8px; margin-top: 20px; padding: 13px 22px;
   border: 0; border-radius: 999px; background: #fff; color: var(--s-deep); cursor: pointer;
-  font-family: var(--mono); font-size: 12px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
+  font-family: var(--font); font-size: 15px; font-weight: 600; letter-spacing: -0.01em;
   transition: transform 0.35s var(--spring), background-color 0.2s;
 }
 .scene-btn:hover { background: color-mix(in srgb, var(--s-glow) 18%, #fff); }
 .scene-btn:active { transform: scale(0.96); }
+/* ---- the stacked variant (Sugoi): rounded type stacked on the left, two phones on the right,
+   callouts listed down the right-hand side ---- */
+.v-stack .scene-stack {
+  position: absolute; z-index: 1; left: 44px; top: 150px; margin: 0;
+  display: flex; flex-direction: column;
+  font-family: 'Fredoka Variable', var(--font); font-weight: 600; text-transform: lowercase;
+  font-size: clamp(64px, 8.4vw, 168px); line-height: 0.86; letter-spacing: -0.02em;
+  transform: translate(calc(var(--mx) * -18px), calc(var(--my) * -10px));
+  transition: transform 0.8s var(--ease-out);
+}
+.v-stack .scene-stack .s2 { color: var(--s-glow); }
+.v-stack .scene-stack .s3::after { content: '.'; color: var(--s-glow); }
+.v-stack .scene-hero { left: 62%; top: 17%; height: 72%; }
+.v-stack .scene-float { animation-name: bob-r; }
+@keyframes bob-r {
+  from { transform: rotate(8deg) translateY(0); }
+  to { transform: rotate(5deg) translateY(-16px); }
+}
+.v-stack .scene-float.back { position: absolute; inset: 0; z-index: -1; animation-name: bob-back; animation-duration: 9s; }
+.v-stack .scene-float.back .phone { filter: brightness(0.82) saturate(0.9); }
+@keyframes bob-back {
+  from { transform: translateX(-66%) translateY(6%) rotate(-9deg) scale(0.86); }
+  to { transform: translateX(-66%) translateY(4%) rotate(-7deg) scale(0.86); }
+}
+.v-stack .t1 { left: calc(62% + 160px); top: 26%; }
+.v-stack .t2 { left: calc(62% + 180px); top: 47%; }
+.v-stack .t3 { left: calc(62% + 160px); top: 68%; }
+@media (max-width: 1280px) { .v-stack .t2 { display: none; } }
 .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 
 @media (prefers-reduced-motion: reduce) {
   .bunt-flag, .confetti i, .scene-float { animation: none; }
 }
 @media (max-width: 1100px) {
-  .scene-tag.t1 { display: none; }
+  .v-split .t1, .v-stack .t3 { display: none; }
 }
 @media (max-width: 900px) {
   /* the phone and words live in a fixed stage at the top; the text flows below it */
@@ -536,6 +569,8 @@ a.glass:active, button.glass:active { transform: scale(0.96); --g-glow: rgba(255
   .scene-word.w2 { right: 24px; top: calc(120px + 14vw); }
   .scene-word.w3 { right: 24px; top: calc(var(--stage) - 18vw); bottom: auto; }
   .scene-hero { top: 250px; height: 440px; }
+  .v-stack .scene-stack { left: 24px; top: 120px; font-size: clamp(52px, 15vw, 110px); }
+  .v-stack .scene-hero { left: 60%; top: 290px; height: 400px; }
   .scene-tag { display: none; }
   .scene-foot { position: relative; left: auto; right: auto; bottom: auto; max-width: none; }
   .scene-title { font-size: 26px; }
@@ -716,13 +751,14 @@ a.glass:active, button.glass:active { transform: scale(0.96); --g-glow: rgba(255
   .feat.flip .feat-info { order: 0; }
   .feat-phone .feat-media { min-height: 480px; }
   .feat-phones .phone { top: 6%; height: 104%; }
-  .feat-screen { min-height: 720px; }
-  .feat-screen .feat-info { order: 2; justify-content: flex-end; }
-  .feat-screen .feat-media { order: 1; min-height: 0; padding: 20px 20px 0; justify-content: flex-start; align-items: flex-start; }
+  /* on phones the render gets its own clear block at the top, with the copy below it */
+  .feat-screen { display: flex; flex-direction: column; background: color-mix(in srgb, var(--deep) 80%, #111); }
+  .feat-screen::after, .feat-screen.flip::after { content: none; }
+  .feat-screen .feat-bg { position: relative; inset: auto; z-index: 0; aspect-ratio: 16 / 10; margin: 10px 10px 0; border-radius: 20px; overflow: hidden; }
+  .feat-screen .feat-media { position: absolute; top: 10px; left: 10px; right: 10px; aspect-ratio: 16 / 10; min-height: 0; padding: 12px; display: flex; align-items: flex-end; justify-content: flex-start; pointer-events: none; }
+  .feat-screen .feat-rail { pointer-events: auto; }
+  .feat-screen .feat-info { padding-top: 24px; }
   .feat-screen .feat-index { margin-bottom: 0; padding-bottom: 16px; }
-  .feat-screen::after, .feat-screen.flip::after {
-    background: linear-gradient(0deg, color-mix(in srgb, var(--deep) 96%, transparent) 0%, color-mix(in srgb, var(--deep) 86%, transparent) 55%, color-mix(in srgb, var(--deep) 45%, transparent) 100%);
-  }
   .section-head.split { grid-template-columns: 1fr; }
   .section-head.split > .section-sub { justify-self: start; }
 }
@@ -733,7 +769,7 @@ a.glass:active, button.glass:active { transform: scale(0.96); --g-glow: rgba(255
   .card.is-portrait { height: 540px; }
   .stat:nth-child(3) { border-left: 0; padding-left: 0; }
   .feat { border-radius: 28px; }
-  .feat-rail button { width: 58px; height: 38px; border-radius: 10px; }
+  .feat-rail button { width: 50px; height: 32px; border-radius: 9px; }
   .sheet { border-radius: 26px; }
   .sheet-body { grid-template-columns: 1fr; gap: 24px; padding: 24px 22px 28px; }
   .viewer { aspect-ratio: 4 / 3; }

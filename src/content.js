@@ -5,10 +5,11 @@
 // shots:    screenshots, in order. The first one is the cover.
 // frame:    how portrait shots are shown on the card: 'phone' | 'card'. Omit for landscape shots.
 // palette:  [accent, light, deep] — tints the card and the project sheet.
+// panel:    [from, to, text] — the saturated backdrop of a featured phone project and its text colour.
 // live:     'flag-fiesta' renders the animated placeholder phone (for projects without captures).
-// scene:    optional; stages a featured project as a full product-shot scene (src/components/Scene.jsx):
-//           `words` around the phone, three callout `tags`, `colors` and `decor`. Used for Flag Fiesta.
-//           Featured projects without it get the standard split layout, tinted by `palette`.
+// scene:    renders the featured phone project as a product-shot scene instead of a split panel:
+//           { words: [topLeft, topRight, bottomRight], tags: [3 callouts], colors: { base, deep, glow },
+//             decor: 'bunting' (optional flag string), shot: index of the screenshot on the phone (default 0) }
 
 const all = import.meta.glob('./assets/shots/*.{jpg,png,webp}', { eager: true, import: 'default' });
 const pick = (prefix) =>
@@ -91,21 +92,12 @@ export const PROJECTS = [
     shots: pick('sugoi'),
     frame: 'phone',
     palette: ['#FFC23D', '#FFF0C8', '#3A1C04'],
-  },
-  {
-    id: 'ar',
-    featured: true,
-    title: 'Mad Viking Games',
-    subtitle: 'AR Experience',
-    kind: 'Augmented reality',
-    category: 'xr',
-    status: 'Shipped',
-    platforms: 'App Store and Google Play',
-    role: 'Environment designer, lighting artist and optimisation',
-    summary: 'An app for viewing the upcoming Mad Viking characters in high quality and placing them in the real world through augmented reality.',
-    shots: pick('ar'),
-    frame: 'phone',
-    palette: ['#5ED3A0', '#DDF7EA', '#062019'],
+    scene: {
+      words: ['Merge', 'the', 'fruit'],
+      tags: ['Suika-style merging', '2D art & code', 'Economy design'],
+      colors: { base: '#5A3A1C', deep: '#1E1206', glow: '#E8A94E' },
+      shot: 1,
+    },
   },
   {
     id: 'kodex',

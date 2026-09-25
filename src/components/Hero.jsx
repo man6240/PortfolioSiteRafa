@@ -1,73 +1,88 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { createTimeline, stagger, utils } from 'animejs';
+import { animate, createTimeline, createScope, onScroll, stagger, utils } from 'animejs';
+import { Glass } from '../glass/LiquidGlass.jsx';
+import { splitWords, prefersReduced } from '../motion.js';
 import { SITE, PROJECTS, HERO, STATS } from '../content.js';
-import { prefersReduced, splitWords } from '../motion.js';
-import { ArrowUpRight } from './Icons.jsx';
 
 const byId = Object.fromEntries(PROJECTS.map((p) => [p.id, p]));
 const SLIDES = HERO.map(([id, i]) => ({ p: byId[id], i, src: byId[id].shots[i] }));
 
-/* A calm hero: headline and intro, then one wide render slideshow. */
 export default function Hero({ reduced, onOpen }) {
   const [n, setN] = useState(0);
-  const root = useRef(null);
-
   useEffect(() => {
     if (reduced) return;
     const id = setInterval(() => setN((v) => (v + 1) % SLIDES.length), 6000);
     return () => clearInterval(id);
   }, [reduced]);
   const now = SLIDES[n];
+  const root = useRef(null);
 
+  // Intro: the headline rises word by word, then the rest of the copy follows it in.
+  // Runs before first paint so nothing flashes in its final position.
   useLayoutEffect(() => {
     if (prefersReduced()) return;
-    const el = root.current;
-    const words = splitWords(el.querySelector('.hero-title'));
-    const rest = el.querySelectorAll('.hero-meta, .hero-lede, .hero-actions > *, .hero-media');
-    utils.set(words, { translateY: '110%' });
-    utils.set(rest, { opacity: 0, translateY: 16 });
-    const tl = createTimeline({ defaults: { ease: 'outExpo', duration: 1200 } })
-      .add(words, { translateY: '0%', delay: stagger(70, { start: 120 }) })
-      .add(rest, { opacity: 1, translateY: 0, delay: stagger(80) }, 350);
-    return () => { tl.revert(); };
+    const scope = createScope({ root }).add(() => {
+      const follow = ['.hero-content .chip', '.hero-name', '.hero-lede', '.hero-content .actions > *', '.now-showing'];
+      const words = splitWords(root.current.querySelector('.hero-title'));
+      utils.set(follow, { opacity: 0, translateY: 16 });
+      utils.set(words, { translateY: '110%' });
+      createTimeline({ defaults: { ease: 'outExpo', duration: 1100 } })
+        .add('.hero-content .chip', { opacity: 1, translateY: 0, delay: 150 })
+        .add('.hero-name', { opacity: 1, translateY: 0 }, '-=950')
+        .add(words, { translateY: '0%', duration: 1300, delay: stagger(90) }, '-=1000')
+        .add('.hero-lede', { opacity: 1, translateY: 0 }, '-=900')
+        .add('.hero-content .actions > *', { opacity: 1, translateY: 0, delay: stagger(80) }, '-=950')
+        .add('.now-showing', { opacity: 1, translateY: 0 }, '-=900');
+
+      // Parallax: as the hero scrolls away the image drifts slower than the page
+      // and the copy lifts and fades, like a layer further back.
+      const sync = () => onScroll({ target: root.current.querySelector('.hero-stage'), enter: 'top top', leave: 'top bottom', sync: true });
+      animate('.hero-media', { translateY: ['0%', '22%'], scale: [1, 1.06], ease: 'linear', autoplay: sync() });
+      animate('.hero-content', { translateY: [0, -60], opacity: [1, 0.2], ease: 'linear', autoplay: sync() });
+    });
+    return () => scope.revert();
   }, []);
 
   return (
     <section className="hero" id="top" data-tone="dark" ref={root}>
-      <div className="wrap">
-        <p className="hero-meta">
-          <span><i className="status-dot" aria-hidden="true" />Available for freelance</span>
-          <span>{SITE.location}</span>
-        </p>
-        <div className="hero-head">
-          <h1 className="hero-title">Worlds that tell stories.</h1>
-          <div className="hero-side">
-            <p className="hero-lede">I’m {SITE.name}, a level designer, environment artist and technical artist for games, VR and AR. Working remotely in English and Spanish.</p>
-            <div className="hero-actions">
-              <a className="box-btn" href="#work">See the work<ArrowUpRight size={15} stroke={2} /></a>
-              <a className="box-btn ghost" href="#contact">Start a project</a>
-            </div>
-          </div>
-        </div>
-
-        <button className="hero-media" onClick={() => onOpen(now.p, now.i)} aria-label={`Open ${now.p.title}`}>
-          <span className="hero-slides">
-            {SLIDES.map((s, k) => <img key={k} src={s.src} className={k === n ? 'on' : ''} alt="" decoding="async" fetchpriority={k === 0 ? 'high' : 'low'} />)}
-          </span>
-          <span className="hero-caption">
-            <span className="hero-caption-title"><span className="mono-label">Now showing</span>{now.p.title}{now.p.subtitle ? `: ${now.p.subtitle}` : ''}</span>
-            <span className="now-dots" aria-hidden="true">{SLIDES.map((_, k) => <i key={k} className={k === n ? 'on' : ''} />)}</span>
-          </span>
-        </button>
-
-        <div className="stats reveal" role="list">
-          {STATS.map((s) => (
-            <div key={s.label} className="stat" role="listitem">
-              <strong data-count>{s.value}</strong>
-              <span className="stat-label">{s.label}</span>
-            </div>
+      <div className="hero-stage">
+        <div className="hero-media" aria-hidden="true">
+          {SLIDES.map((s, k) => (
+            <img key={k} src={s.src} alt="" className={k === n ? 'on' : ''} decoding="async" fetchpriority={k === 0 ? 'high' : 'low'} />
           ))}
         </div>
+        <div className="hero-scrim" aria-hidden="true" />
+  
+        <div className="hero-content wrap">
+          <Glass className="chip" variant="clear">
+            <span className="status-dot" aria-hidden="true" />Available for freelance
+          </Glass>
+          <p className="hero-name">{SITE.name}</p>
+          <h1 className="hero-title">Worlds that<br />tell stories.</h1>
+          <p className="hero-lede">Level design, environment art and technical art for games, VR and AR. Based in {SITE.location}, working with teams anywhere.</p>
+          <div className="actions">
+            <a className="btn btn-primary" href="#work">See the work</a>
+            <Glass as="a" variant="clear" className="btn btn-glass" href="#contact">Start a project</Glass>
+          </div>
+        </div>
+  
+        <div className="hero-foot wrap">
+          <Glass as="button" variant="clear" className="now-showing" onClick={() => onOpen(now.p, now.i)} aria-label={`Now showing ${now.p.title}. Open project`}>
+            <span className="now-label">Now showing</span>
+            <span className="now-title">{now.p.title}{now.p.subtitle ? `: ${now.p.subtitle}` : ''}</span>
+            <span className="now-dots" aria-hidden="true">
+              {SLIDES.map((_, k) => <i key={k} className={k === n ? 'on' : ''} />)}
+            </span>
+          </Glass>
+      </div>
+      </div>
+
+      <div className="stats wrap reveal" role="list">
+        {STATS.map((s) => (
+          <div key={s.label} className="stat" role="listitem">
+            <strong data-count>{s.value}</strong><span>{s.label}</span>
+          </div>
+        ))}
       </div>
     </section>
   );

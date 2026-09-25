@@ -3,7 +3,7 @@ import { animate } from 'animejs';
 import { Glass } from '../glass/LiquidGlass.jsx';
 import { gentle } from '../motion.js';
 import { ChevronLeft, ChevronRight, Close } from './Icons.jsx';
-import { PhoneFrame, LiveScreen } from './Devices.jsx';
+import { PhoneFrame, LiveScreen } from './Work.jsx';
 
 export default function ProjectSheet({ state, onClose, reduced }) {
   const [i, setI] = useState(0);

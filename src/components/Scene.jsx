@@ -154,7 +154,7 @@ export default function Scene({ p, index, total, onOpen }) {
 
       <button className="scene-hero" onClick={() => onOpen(p, shot)} aria-label={`Open ${title} gallery`}>
         {back && <span className="scene-float back"><PhoneFrame src={back} /></span>}
-        <span className="scene-float"><PhoneFrame src={p.shots[shot] || p.shots[0]} /></span>
+        <span className="scene-float"><PhoneFrame src={p.shots[shot] || p.shots[0]} alt={`${title}, ${p.kind.toLowerCase()} screenshot`} /></span>
       </button>
 
       {variant !== 'stack' && <p className="scene-word w3" aria-hidden="true">{words[2]}</p>}

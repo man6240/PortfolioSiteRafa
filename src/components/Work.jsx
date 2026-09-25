@@ -26,11 +26,11 @@ function layout(items) {
   return out;
 }
 
-export function PhoneFrame({ src, children, className = '' }) {
+export function PhoneFrame({ src, alt = '', children, className = '' }) {
   return (
     <div className={`phone ${className}`}>
       <div className="phone-screen">
-        {src ? <img src={src} alt="" loading="lazy" decoding="async" /> : children}
+        {src ? <img src={src} alt={alt} loading="lazy" decoding="async" /> : children}
         <span className="phone-island" aria-hidden="true" />
       </div>
     </div>
@@ -87,7 +87,7 @@ function CardMedia({ p, reduced }) {
   }
   return (
     <div className="card-photo">
-      <img src={p.shots[0]} alt="" loading="lazy" decoding="async" />
+      <img src={p.shots[0]} alt={`${fullTitle(p)}, ${p.kind.toLowerCase()} by Rafael Vitriago`} loading="lazy" decoding="async" />
       {p.shots[1] && <img className="alt" src={p.shots[1]} alt="" loading="lazy" decoding="async" />}
     </div>
   );

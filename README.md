@@ -78,3 +78,15 @@ All motion is Anime.js v4, defined in `src/motion.js`:
 - `src/motion.js`               Anime.js springs, word rise, count-up, capsule motion
 - `src/useReveal.js`            scroll-triggered entrances
 - `src/styles.css`              tokens, glass material, layout
+
+## SEO
+
+- `npm run build` prerenders the page (`src/entry-server.jsx` + `scripts/prerender.mjs`), so `dist/index.html`
+  already contains all the text and project names; search engines and link previews don't need JavaScript.
+  The browser then hydrates it (`src/main.jsx`).
+- `index.html` holds the title, description, canonical URL, Open Graph / Twitter preview tags and JSON-LD
+  structured data (Person, ProfessionalService, WebSite). **If the domain is not `rafavitriago.eu`, replace it
+  there and in `public/robots.txt` and `public/sitemap.xml`.**
+- `public/og.jpg` is the 1200×630 image shown when the link is shared.
+- After deploying: add the site to Google Search Console and Bing Webmaster Tools, submit
+  `https://rafavitriago.eu/sitemap.xml`, and link the site from LinkedIn, Upwork, Behance and ArtStation.

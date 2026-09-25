@@ -8,7 +8,7 @@ const shot = (id, i) => PROJECTS.find((p) => p.id === id).shots[i];
 
 export function Services() {
   return (
-    <section className="services section-light" id="services" data-tone="light">
+    <section className="services section-light" id="services" data-tone="dark">
       <div className="wrap">
         <header className="section-head reveal">
           <p className="eyebrow">What I do</p>
@@ -38,7 +38,7 @@ export function Services() {
 
 export function Experience() {
   return (
-    <section className="experience section-white" id="experience" data-tone="light">
+    <section className="experience section-white" id="experience" data-tone="dark">
       <div className="wrap exp-grid">
         <header className="section-head reveal">
           <p className="eyebrow">Experience</p>
@@ -90,7 +90,7 @@ export function Reviews() {
 
 export function About() {
   return (
-    <section className="about section-light" id="about" data-tone="light">
+    <section className="about section-light" id="about" data-tone="dark">
       <div className="wrap about-grid">
         <div className="reveal">
           <p className="eyebrow">About</p>
@@ -151,7 +151,7 @@ export function Contact() {
 
 export function Footer() {
   return (
-    <footer className="foot" data-tone="light">
+    <footer className="foot" data-tone="dark">
       <div className="wrap foot-inner">
         <p>Copyright © {new Date().getFullYear()} {SITE.name}. All rights reserved.</p>
         <p>{SITE.title} · {SITE.location}</p>

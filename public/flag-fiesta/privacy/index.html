@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>Flag Fiesta Privacy Policy</title>
+<meta name="description" content="How Flag Fiesta handles your data.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&family=Fraunces:ital,opsz,wght@0,9..144,300;1,9..144,200&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+--bg:#0a0a0b;--bg2:#111114;--bg3:#18181c;--border:rgba(255,255,255,.07);--border2:rgba(255,255,255,.12);
+--text:#f0ede8;--text2:#a19d97;--text3:#6b6966;--accent:#c8a96e;--accent2:#e8c98a;--teal:#4ab8a0;
+--font-head:'Syne',system-ui,sans-serif;--font-mono:'DM Mono',ui-monospace,Consolas,monospace;--font-serif:'Fraunces',Georgia,serif;}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{background:var(--bg);color:var(--text);font-family:var(--font-mono);font-size:14px;line-height:1.85}
+a{color:var(--accent);text-decoration:underline;text-decoration-color:rgba(200,169,110,.35);text-underline-offset:3px;overflow-wrap:anywhere}
+a:hover{color:var(--accent2);text-decoration-color:var(--accent2)}
+a:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+
+.top{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1.5rem 3rem;border-bottom:1px solid var(--border)}
+.logo{font-size:13px;letter-spacing:.1em;color:var(--text2);text-decoration:none}
+.logo span{color:var(--accent)}
+.top-note{font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--text3)}
+
+.wrap{max-width:780px;margin:0 auto;padding-inline:3rem;padding-block:4.5rem 5rem}
+.label{font-size:11px;letter-spacing:.25em;text-transform:uppercase;color:var(--accent);display:flex;align-items:center;gap:1rem;margin-bottom:1.25rem}
+.label::before{content:'';width:32px;height:1px;background:var(--accent)}
+h1{font-family:var(--font-head);font-size:clamp(2.4rem,7vw,4.2rem);font-weight:800;line-height:.95;letter-spacing:-.03em;text-wrap:balance}
+h1 em{font-family:var(--font-serif);font-style:italic;font-weight:200;color:var(--text2)}
+.meta{margin-top:1.5rem;font-size:12px;color:var(--text3);letter-spacing:.04em}
+
+.short{margin-top:3rem;background:var(--bg2);border:1px solid var(--border2);padding:1.75rem 2rem}
+.short h2{font-family:var(--font-head);font-size:1.05rem;font-weight:700;letter-spacing:-.01em;margin-bottom:1rem}
+.short ul{list-style:none;display:grid;gap:.6rem}
+.short li{padding-left:1.4rem;position:relative;color:var(--text2)}
+.short li::before{content:'';position:absolute;left:0;top:.8em;width:.55rem;height:1px;background:var(--accent)}
+.short strong{color:var(--text);font-weight:500}
+
+.toc{margin-top:2.5rem;display:flex;flex-wrap:wrap;gap:.5rem}
+.toc a{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--text2);text-decoration:none;border:1px solid var(--border2);padding:.35rem .7rem}
+.toc a:hover{color:var(--text);border-color:var(--accent)}
+
+section{margin-top:4rem;scroll-margin-top:1.5rem}
+h2.sec{font-family:var(--font-head);font-size:clamp(1.4rem,3.4vw,1.9rem);font-weight:700;letter-spacing:-.02em;line-height:1.15;margin-bottom:1.1rem;text-wrap:balance}
+h3{font-family:var(--font-head);font-size:1rem;font-weight:700;margin-top:1.75rem;margin-bottom:.4rem}
+p,li{color:var(--text2);max-width:68ch}
+p+p{margin-top:.9rem}
+section ul{margin-top:.75rem;padding-left:1.2rem;display:grid;gap:.4rem}
+section li::marker{color:var(--accent)}
+strong{color:var(--text);font-weight:500}
+
+.table{margin-top:1.25rem;overflow-x:auto;border:1px solid var(--border2)}
+table{width:100%;min-width:560px;border-collapse:collapse;font-size:12.5px;line-height:1.7}
+th{text-align:left;font-weight:500;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--text3);background:var(--bg2);padding:.8rem 1rem;border-bottom:1px solid var(--border2)}
+td{vertical-align:top;padding:.95rem 1rem;border-bottom:1px solid var(--border);color:var(--text2)}
+tr:last-child td{border-bottom:none}
+td:first-child{color:var(--text);width:30%}
+.tag{display:inline-block;font-size:10px;letter-spacing:.1em;text-transform:uppercase;padding:.1rem .45rem;border:1px solid rgba(74,184,160,.35);color:var(--teal);margin-top:.35rem}
+.tag.out{border-color:rgba(200,169,110,.35);color:var(--accent)}
+
+.steps{counter-reset:s;list-style:none;padding-left:0!important}
+.steps li{counter-increment:s;padding-left:2.4rem;position:relative}
+.steps li::before{content:counter(s);position:absolute;left:0;top:.15rem;width:1.6rem;height:1.6rem;border:1px solid var(--accent);color:var(--accent);font-size:11px;display:flex;align-items:center;justify-content:center}
+
+.contact{margin-top:5rem;padding-top:2.5rem;border-top:1px solid var(--border)}
+.contact .mail{display:inline-block;margin-top:.75rem;font-family:var(--font-head);font-weight:800;font-size:clamp(1rem,3.4vw,1.5rem);letter-spacing:-.01em;color:var(--text);text-decoration:none}
+.contact .mail:hover{color:var(--accent)}
+
+footer{padding:2rem 3rem;border-top:1px solid var(--border);display:flex;flex-wrap:wrap;justify-content:space-between;gap:.75rem;font-size:11px;color:var(--text3);letter-spacing:.08em}
+footer a{color:var(--text3)}
+
+@media(max-width:768px){
+.top{padding:1.2rem 1.25rem}.top-note{display:none}
+.wrap{padding-inline:1.25rem;padding-block:3rem 4rem}
+.short{padding:1.4rem 1.25rem}
+footer{padding:1.5rem 1.25rem}
+}
+</style>
+</head>
+<body>
+
+<header class="top">
+<a href="/" class="logo">RV<span>.</span></a>
+<span class="top-note">Flag Fiesta · Legal</span>
+</header>
+
+<main class="wrap">
+<div class="label">Flag Fiesta</div>
+<h1>Privacy <em>policy</em></h1>
+<p class="meta">Effective 24 September 2026 · Applies to Flag Fiesta on Android</p>
+
+<div class="short">
+<h2>The short version</h2>
+<ul>
+<li>You don't need to give me your <strong>email, real name or phone number</strong> to play. The game creates an anonymous player ID for you.</li>
+<li>Your progress, coins and settings are <strong>saved on your phone</strong>. Only your public profile card (the name you pick, level, league, badges) is stored online, so friends can see it.</li>
+<li>The game shows <strong>ads through Unity LevelPlay</strong>. Where the law requires it, you're asked before ads are personalised, and you can change your mind.</li>
+<li>Purchases go through <strong>Google Play</strong>. I never see your card or bank details.</li>
+<li>I <strong>don't sell your data</strong>. You can ask me to see it or delete it at any time.</li>
+</ul>
+</div>
+
+<nav class="toc" aria-label="Sections">
+<a href="#who">Who I am</a><a href="#data">What's collected</a><a href="#ads">Ads</a><a href="#sharing">Who gets it</a><a href="#transfers">Transfers</a><a href="#keep">How long</a><a href="#rights">Your rights</a><a href="#delete">Delete your data</a><a href="#children">Children</a><a href="#changes">Changes</a>
+</nav>
+
+<section id="who">
+<h2 class="sec">Who I am</h2>
+<p>Flag Fiesta is made by <strong>Rafael Alejandro Vitriago Rivero</strong>, an independent game developer living in Spain who publishes as Baldman Studios. I'm the data controller for the personal data described here, which means I decide how it's used and I'm responsible for protecting it.</p>
+<p>Contact: <a href="mailto:rafaelrivero6240@gmail.com">rafaelrivero6240@gmail.com</a>. I'm a one-person studio, so there's no data protection officer — questions come straight to me.</p>
+<p>This policy follows the EU General Data Protection Regulation (GDPR) and Spain's data protection law (LOPDGDD). Because Flag Fiesta is played worldwide, it also covers the rights you have under other laws, such as the UK GDPR, the California Consumer Privacy Act and Brazil's LGPD. Whatever the law where you live, I give every player the rights described here.</p>
+</section>
+
+<section id="data">
+<h2 class="sec">What's collected, and why</h2>
+<p>Each row says what the data is, why the game needs it, and the legal reason it's allowed to use it.</p>
+
+<div class="table">
+<table>
+<thead><tr><th>Data</th><th>Why</th><th>Legal basis</th></tr></thead>
+<tbody>
+<tr>
+<td>Game progress: coins, hints, lives, streaks, cards, challenges, settings<br><span class="tag">Stays on your phone</span></td>
+<td>So the game remembers where you are. It's stored on your device and isn't sent to me.</td>
+<td>Needed to provide the game you asked for (contract).</td>
+</tr>
+<tr>
+<td>Anonymous player ID<br><span class="tag out">Stored online</span></td>
+<td>Created automatically by Unity Authentication the first time you play online. It isn't linked to your name, email or Google account.</td>
+<td>Contract.</td>
+</tr>
+<tr>
+<td>Public profile card: the display name you choose (or one generated for you), friend code, avatar colour, level, XP, league, streaks, badges, lifetime stats<br><span class="tag out">Stored online · visible to other players</span></td>
+<td>Lets friends find you by code and see your card. Anyone with your friend code can view it. It never contains coins, purchases or device details.</td>
+<td>Contract.</td>
+</tr>
+<tr>
+<td>Friends, friend requests and blocked players<br><span class="tag out">Stored online</span></td>
+<td>Runs the friends list.</td>
+<td>Contract.</td>
+</tr>
+<tr>
+<td>Purchases: product, order number, purchase date<br><span class="tag out">Via Google Play</span></td>
+<td>To deliver what you bought, restore it later, and handle refunds. Google Play takes the payment. I never receive your card or bank details.</td>
+<td>Contract; legal obligation (tax and accounting records).</td>
+</tr>
+<tr>
+<td>Device and ad data: advertising ID, IP address, device model, operating system, language, approximate country, ad views and taps<br><span class="tag out">Via ad partners</span></td>
+<td>To show ads, limit how often you see the same one, pay out ad rewards, and prevent fraud. <a href="#ads">More on ads below.</a></td>
+<td>Consent, for personalised ads where the law requires it. Otherwise legitimate interest: funding a free game, and preventing fraud.</td>
+</tr>
+<tr>
+<td>Technical logs: IP address, device type, request times<br><span class="tag out">Via Unity</span></td>
+<td>Unity's servers record these to keep the online features running and secure.</td>
+<td>Legitimate interest: security and reliability.</td>
+</tr>
+<tr>
+<td>Reminder notifications<br><span class="tag">Stays on your phone</span></td>
+<td>Reminders about your streak and free packs are scheduled on your phone. No push token or other data is sent to me. Turn them off in the game's settings or Android's.</td>
+<td>Your consent (Android's notification permission).</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<p style="margin-top:1.25rem">Flag Fiesta <strong>does not</strong> collect your precise location, contacts, photos, camera, microphone, email address or real name. It has no in-game chat, and no analytics or crash reporting.</p>
+<p>When you rate the game, Google Play shows its own rating window. Your rating and review go to Google, not to me.</p>
+</section>
+
+<section id="ads">
+<h2 class="sec">Ads</h2>
+<p>Flag Fiesta is free, and ads pay for it. They're served by <strong>Unity LevelPlay</strong> (Unity Technologies), which picks an ad from its partner ad networks, such as Unity Ads. Some ads you choose to watch in exchange for a reward. Others appear between games, unless you buy <em>Remove ads</em>.</p>
+<p>To show and measure ads, LevelPlay and the ad networks receive the device and ad data listed above. Each network decides for itself how it uses that data, so each one is responsible for it too.</p>
+<h3>Your choices</h3>
+<ul>
+<li><strong>In the EU, UK and Switzerland</strong>, the game asks before ads are personalised to you. You can change your answer later from the game's settings.</li>
+<li><strong>Everywhere</strong>, you can delete or reset your advertising ID in Android's settings (<em>Settings → Privacy → Ads</em>, or <em>Google → Ads</em> on some phones). Ads won't stop, but they'll no longer be based on your interests.</li>
+<li>If you live in a US state with its own privacy law, such as California: personalised ads can count as "sharing" your data under those laws. The settings above are how you opt out.</li>
+</ul>
+</section>
+
+<section id="sharing">
+<h2 class="sec">Who gets your data</h2>
+<p>I don't sell your personal data or give it to anyone for their own marketing. It goes only to the services that run the game:</p>
+<ul>
+<li><strong>Unity Technologies</strong>: player accounts (Unity Authentication), online profiles (Cloud Save), friends (Unity Friends), and ads (LevelPlay and Unity Ads). <a href="https://unity.com/legal/privacy-policy" target="_blank" rel="noopener">Unity's privacy policy</a>.</li>
+<li><strong>Google</strong>: payments and purchase records (Google Play Billing), and the rating window. <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Google's privacy policy</a>.</li>
+<li><strong>Ad networks working through LevelPlay</strong>, as described under <a href="#ads">Ads</a>. Email me for the current list.</li>
+<li><strong>Authorities</strong>, only if the law requires it.</li>
+</ul>
+<p>If the game were ever sold or transferred, your data would go with it. The new owner would have to keep this policy or tell you before changing it.</p>
+</section>
+
+<section id="transfers">
+<h2 class="sec">Transfers outside Europe</h2>
+<p>Unity and Google may process your data in the United States and other countries outside the European Economic Area. These transfers are protected by the EU–US Data Privacy Framework where the company takes part in it, and otherwise by the European Commission's Standard Contractual Clauses.</p>
+</section>
+
+<section id="keep">
+<h2 class="sec">How long it's kept</h2>
+<ul>
+<li><strong>Progress on your phone</strong>: until you uninstall the game or clear its data.</li>
+<li><strong>Your online profile, player ID and friends</strong>: while you keep playing, until you ask me to delete them. If I shut down the online features, I delete them then.</li>
+<li><strong>Purchase records</strong>: as long as tax and accounting law requires. In Spain that can be up to six years. Google keeps its own records as the seller.</li>
+<li><strong>Ad and technical data</strong>: for the periods set by Unity and the ad networks in their own privacy policies.</li>
+</ul>
+</section>
+
+<section id="rights">
+<h2 class="sec">Your rights</h2>
+<p>You can ask me to:</p>
+<ul>
+<li><strong>Access</strong>: get a copy of the data I hold about you.</li>
+<li><strong>Correct</strong> it if it's wrong. You can also change your display name in the game.</li>
+<li><strong>Delete</strong> it. See <a href="#delete">below</a>.</li>
+<li><strong>Restrict</strong> or <strong>object to</strong> how it's used, including anything based on legitimate interest.</li>
+<li><strong>Take it with you</strong> in a common format (portability).</li>
+<li><strong>Withdraw consent</strong> at any time. This doesn't affect anything done before you withdrew.</li>
+</ul>
+<p>Email <a href="mailto:rafaelrivero6240@gmail.com">rafaelrivero6240@gmail.com</a> and include the <strong>friend code</strong> shown on your Profile screen, so I can find your data. I'll reply within one month. It's free, and I won't treat you differently for asking.</p>
+<p>If you're unhappy with my answer, you can complain to Spain's data protection authority, the <a href="https://www.aepd.es" target="_blank" rel="noopener">Agencia Española de Protección de Datos (AEPD)</a>, or to the authority where you live.</p>
+</section>
+
+<section id="delete">
+<h2 class="sec">Delete your data</h2>
+<p>To delete your Flag Fiesta account and the data linked to it:</p>
+<ol class="steps">
+<li>Open Flag Fiesta, go to <strong>Profile</strong>, and note your <strong>friend code</strong>.</li>
+<li>Email <a href="mailto:rafaelrivero6240@gmail.com?subject=Flag%20Fiesta%20%E2%80%94%20delete%20my%20data">rafaelrivero6240@gmail.com</a> with the subject "Flag Fiesta — delete my data" and your friend code.</li>
+<li>Within 30 days, I'll delete your player ID, profile card, friend code, friends list and blocks, and email you to confirm.</li>
+<li>Uninstall the game, or clear its storage in Android's settings, to remove the progress saved on your phone.</li>
+</ol>
+<p style="margin-top:1rem">Some records aren't deleted: Google keeps its own records of any purchases, and I keep purchase order numbers for as long as tax law requires. Deleting your data doesn't refund purchases, and anything you bought, such as Remove ads, may be lost unless it can be restored from your Google account.</p>
+</section>
+
+<section id="children">
+<h2 class="sec">Children</h2>
+<p>Flag Fiesta is a general-audience trivia game. It isn't made for young children and isn't aimed at anyone under 13. In the EU, personalised ads need consent, and a child under the age of digital consent in their country can't give it alone: that age is 14 in Spain, and between 13 and 16 elsewhere in the EU. Those players need permission from a parent or guardian.</p>
+<p>If you're a parent and think your child has shared data through the game, email me and I'll delete it.</p>
+</section>
+
+<section id="security">
+<h2 class="sec">Security</h2>
+<p>Data travels to Unity and Google over encrypted connections, and online profiles can only be changed by their owner. No system is perfectly secure, but I only collect what the game needs, which limits what could ever be exposed.</p>
+</section>
+
+<section id="changes">
+<h2 class="sec">Changes to this policy</h2>
+<p>If the game starts handling data differently, I'll update this page and its date. If a change is significant, I'll also tell you in the game before it takes effect.</p>
+</section>
+
+<div class="contact">
+<div class="label">Questions</div>
+<p>Anything about your data or this policy:</p>
+<a class="mail" href="mailto:rafaelrivero6240@gmail.com">rafaelrivero6240@gmail.com</a>
+</div>
+</main>
+
+<footer>
+<span>© 2026 Rafael Vitriago · Spain</span>
+<a href="/">rafavitriago.eu</a>
+</footer>
+
+</body>
+</html>

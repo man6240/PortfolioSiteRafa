@@ -100,3 +100,8 @@ normal full-height sections instead of pinning.
 - `public/og.jpg` is the 1200×630 image shown when the link is shared.
 - After deploying: add the site to Google Search Console and Bing Webmaster Tools, submit
   `https://rafavitriago.eu/sitemap.xml`, and link the site from LinkedIn, Upwork, Behance and ArtStation.
+
+## Hidden pages
+
+- `public/flag-fiesta/privacy/index.html` → `https://rafavitriago.eu/flag-fiesta/privacy/`: Flag Fiesta's privacy
+  policy (for Google Play). Not linked from the site, not in the sitemap, and marked `noindex`.

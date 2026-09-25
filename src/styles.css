@@ -592,6 +592,8 @@ a.glass:active, button.glass:active { transform: scale(0.96); --g-glow: rgba(255
 .more-chevron { transform: rotate(90deg); transition: transform 0.4s var(--spring); }
 .more-chevron.up { transform: rotate(-90deg); }
 .more-grid { margin-top: 32px; }
+/* featured image cards: taller than the ones under More work */
+.feat-cards .card { height: clamp(460px, 42vw, 820px); }
 
 .grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 20px; }
 .card {

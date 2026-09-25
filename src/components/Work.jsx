@@ -71,69 +71,6 @@ function Slideshow({ shots, reduced, interval = 4200 }) {
   );
 }
 
-/* A featured project fills the width: copy on one side, the work on the other, alternating.
-   Phone projects sit on a saturated panel in their own colours with the phones bleeding off
-   the bottom edge. Landscape projects put the screenshot itself behind the whole panel. */
-function Feature({ p, index, total, reduced, onOpen }) {
-  const phone = portrait(p);
-  const flip = index % 2 === 1;
-  const vars = { '--accent': p.palette[0], '--light': p.palette[1], '--deep': p.palette[2] };
-  if (p.panel) Object.assign(vars, { '--from': p.panel[0], '--to': p.panel[1], '--on': p.panel[2] });
-  const [shot, setShot] = useState(0);
-  useEffect(() => {
-    if (phone || reduced || p.shots.length < 2) return;
-    const id = setInterval(() => setShot((v) => (v + 1) % p.shots.length), 5600);
-    return () => clearInterval(id);
-  }, [phone, reduced, p.shots.length]);
-
-  return (
-    <article className={`feat ${phone ? 'feat-phone' : 'feat-screen'} ${flip ? 'flip' : ''} reveal`} style={vars}>
-      {!phone && (
-        <div className="feat-bg" aria-hidden="true">
-          {p.shots.map((src, k) => <img key={k} src={src} className={k === shot ? 'on' : ''} alt="" loading="lazy" decoding="async" />)}
-        </div>
-      )}
-      <div className="feat-info">
-        <p className="feat-index"><span>{String(index + 1).padStart(2, '0')}</span> / {String(total).padStart(2, '0')}</p>
-        <p className="feat-kind">{p.kind}</p>
-        <h3 className="feat-title">{p.title}{p.subtitle && <span>{p.subtitle}</span>}</h3>
-        <p className="feat-summary">{p.summary}</p>
-        <dl className="feat-meta">
-          <div><dt>Status</dt><dd>{p.status}</dd></div>
-          <div><dt>Platforms</dt><dd>{p.platforms}</dd></div>
-          <div className="wide"><dt>My role</dt><dd>{p.role}</dd></div>
-        </dl>
-        <button className="btn btn-feat" onClick={() => onOpen(p, phone ? 0 : shot)}>
-          {p.shots.length ? `Open gallery · ${p.shots.length}` : 'View project'}<ArrowUpRight size={16} stroke={2.2} />
-        </button>
-      </div>
-
-      <div className="feat-media">
-        {phone ? (
-          <button className="feat-phones" onClick={() => onOpen(p, 0)} aria-label={`Open ${fullTitle(p)} gallery`}>
-            {p.live ? (
-              <PhoneFrame className="ph-main"><LiveScreen reduced={reduced} /></PhoneFrame>
-            ) : (
-              <>
-                <PhoneFrame className="ph-back" src={p.shots[1] || p.shots[0]} />
-                <PhoneFrame className="ph-main"><Slideshow shots={p.shots} reduced={reduced} /></PhoneFrame>
-              </>
-            )}
-          </button>
-        ) : (
-          <Glass className="feat-rail" variant="clear" refract={{ blur: 6, scale: 32, bezel: 14 }}>
-            {p.shots.map((src, k) => (
-              <button key={k} className={k === shot ? 'on' : ''} onClick={() => onOpen(p, k)} aria-label={`Open image ${k + 1} of ${p.shots.length}`}>
-                <img src={src} alt="" loading="lazy" decoding="async" />
-              </button>
-            ))}
-          </Glass>
-        )}
-      </div>
-    </article>
-  );
-}
-
 function CardMedia({ p, reduced }) {
   if (p.live) {
     return <div className="card-stage"><PhoneFrame className="solo"><LiveScreen reduced={reduced} /></PhoneFrame></div>;
@@ -177,6 +114,14 @@ function Card({ p, span, reduced, onOpen }) {
   );
 }
 
+/* Phone projects are staged as scenes; the rest are image cards, and neighbouring cards share a row. */
+const groups = FEATURED.reduce((out, p, index) => {
+  if (p.scene) out.push({ scene: p, index });
+  else if (out.length && out[out.length - 1].cards) out[out.length - 1].cards.push(p);
+  else out.push({ cards: [p] });
+  return out;
+}, []);
+
 export default function Work({ reduced, onOpen }) {
   const [more, setMore] = useState(false);
   const root = useRef(null);
@@ -213,9 +158,13 @@ export default function Work({ reduced, onOpen }) {
         </header>
 
         <div className="feats">
-          {FEATURED.map((p, i) => p.scene
-            ? <Scene key={p.id} p={p} index={i} total={FEATURED.length} onOpen={onOpen} />
-            : <Feature key={p.id} p={p} index={i} total={FEATURED.length} reduced={reduced} onOpen={onOpen} />)}
+          {groups.map((g, i) => g.scene
+            ? <Scene key={g.scene.id} p={g.scene} index={g.index} total={FEATURED.length} onOpen={onOpen} />
+            : (
+              <div key={i} className="grid feat-cards">
+                {g.cards.map((p) => <Card key={p.id} p={p} span={g.cards.length > 1 ? 6 : 12} reduced={reduced} onOpen={onOpen} />)}
+              </div>
+            ))}
         </div>
 
         <div className="more">

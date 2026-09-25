@@ -86,7 +86,7 @@ All motion is Anime.js v4, defined in `src/motion.js`:
 Everything after the work section is one pinned, full-screen stage (`Story.jsx`). The scroll position
 gives each chapter a progress value `--l` (≈0 arriving, 1 leaving), and CSS derives every effect from it:
 crossfades, push-ins, letters rising, lines drawing, the render getting lit. It all reverses on the way back.
-Chapter length is `H` in `Story.jsx`. On phones, short screens and with *Reduce motion* the chapters flow as
+Chapter lengths are `SHORT` (2.25 screens) and `LONG` (4 screens), set per chapter in `CHAPTERS` in `Story.jsx`. On phones, short screens and with *Reduce motion* the chapters flow as
 normal full-height sections instead of pinning.
 
 ## SEO

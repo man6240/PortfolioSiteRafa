@@ -13,7 +13,9 @@ import { SITE, DISCIPLINES, TOOLS, EXPERIENCE, REVIEWS, ABOUT, PROJECTS } from '
    drawing, all reversible. Phones and "Reduce motion": the chapters flow as ordinary
    full-height sections that animate in once, without pinning. */
 
-const H = 3.5; // scroll length of one chapter, in viewport heights
+// Scroll length of each chapter, in viewport heights. The chapters with a slow reveal
+// (lighting, wireframe, drifting work, the journey map) get more room.
+const SHORT = 2.25, LONG = 4;
 const START = 0.35; // local progress of the first chapter when the stage pins
 
 const shot = (id, i) => PROJECTS.find((p) => p.id === id).shots[i];
@@ -354,15 +356,25 @@ function ChapterContact() {
 }
 
 const CHAPTERS = [
-  { key: 'level', C: ChapterLevel, anchor: 'services' },
-  { key: 'environment', C: ChapterEnvironment },
-  { key: 'tech', C: ChapterTech },
-  { key: 'experience', C: ChapterExperience, anchor: 'experience' },
-  { key: 'reviews', C: ChapterReviews, anchor: 'reviews' },
-  { key: 'about', C: ChapterAbout, anchor: 'about' },
-  { key: 'contact', C: ChapterContact, anchor: 'contact' },
+  { key: 'level', C: ChapterLevel, anchor: 'services', h: SHORT },
+  { key: 'environment', C: ChapterEnvironment, h: LONG },
+  { key: 'tech', C: ChapterTech, h: LONG },
+  { key: 'experience', C: ChapterExperience, anchor: 'experience', h: LONG },
+  { key: 'reviews', C: ChapterReviews, anchor: 'reviews', h: SHORT },
+  { key: 'about', C: ChapterAbout, anchor: 'about', h: LONG },
+  { key: 'contact', C: ChapterContact, anchor: 'contact', h: SHORT },
 ];
 const N = CHAPTERS.length;
+// where each chapter starts, in viewport heights of scrolling
+const STARTS = CHAPTERS.reduce((a, c, i) => [...a, i ? a[i - 1] + CHAPTERS[i - 1].h : 0], []);
+// total pinned scroll: until the last chapter has settled (local progress 0.6), plus one screen
+const TOTAL = STARTS[N - 1] + CHAPTERS[N - 1].h * (0.6 - START) + 1;
+// scroll (in screens) -> story progress g: each chapter covers one unit of g, at its own pace
+const progressAt = (y) => {
+  let i = 0;
+  while (i < N - 1 && y >= STARTS[i + 1]) i++;
+  return i + (y - STARTS[i]) / CHAPTERS[i].h;
+};
 
 export default function Story() {
   const root = useRef(null);
@@ -397,7 +409,7 @@ export default function Story() {
       // nav anchors: in pinned mode each sits where its chapter is fully on screen
       marks.forEach((m) => {
         const i = +m.dataset.i;
-        if (mode === 'pinned') { m.style.top = `${(i + 0.1) * H * vh}px`; m.style.height = `${H * vh}px`; }
+        if (mode === 'pinned') { m.style.top = `${(STARTS[i] + 0.1 * CHAPTERS[i].h) * vh}px`; m.style.height = `${CHAPTERS[i].h * vh}px`; }
         else { m.style.top = `${layers[i].offsetTop}px`; m.style.height = `${layers[i].offsetHeight}px`; }
       });
       update();
@@ -408,7 +420,7 @@ export default function Story() {
       const vh = window.innerHeight;
       if (mode === 'pinned') {
         const y = -el.getBoundingClientRect().top;
-        const base = y / (H * vh) + START;
+        const base = progressAt(y / vh) + START;
         layers.forEach((layer, i) => {
           const l = Math.max(-1.5, Math.min(2, base - i));
           layer.style.setProperty('--l', l.toFixed(4));
@@ -445,7 +457,7 @@ export default function Story() {
   }, []);
 
   return (
-    <section className="story" ref={root} data-tone="dark" style={{ '--n': N, '--h': H, '--start': START }} aria-label="What I do, experience, reviews, about and contact">
+    <section className="story" ref={root} data-tone="dark" style={{ '--total': TOTAL, '--start': START }} aria-label="What I do, experience, reviews, about and contact">
       {CHAPTERS.filter((c) => c.anchor).map((c) => (
         <div key={c.anchor} id={c.anchor} className="story-mark" data-i={CHAPTERS.indexOf(c)} data-tone="dark" aria-hidden="true" />
       ))}

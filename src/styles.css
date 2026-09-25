@@ -1046,7 +1046,7 @@ html.js:not(.no-motion) .reveal:not([data-watched]) { opacity: 0; }
    Each chapter gets `--l` from the scroll position: ~0 as it arrives, 1 as it
    leaves. Everything below is derived from it, so it all plays in reverse too.
    ========================================================================= */
-.story { position: relative; height: calc((var(--n) - 0.6) * var(--h) * 100vh + 100vh); background: #05080f; color: #f5f5f7; }
+.story { position: relative; height: calc(var(--total) * 100vh); background: #05080f; color: #f5f5f7; }
 .story-mark { position: absolute; left: 0; width: 1px; pointer-events: none; }
 .story-stage { position: sticky; top: 0; height: 100vh; overflow: hidden; }
 

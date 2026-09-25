@@ -74,10 +74,20 @@ All motion is Anime.js v4, defined in `src/motion.js`:
 - `src/components/Work.jsx`     featured projects (panels or scenes), phone frames and the "More work" grid
 - `src/components/Scene.jsx`    the product-shot scene (Flag Fiesta, Sugoi): callout tags, bunting, confetti, pointer depth
 - `src/components/ProjectSheet.jsx` modal gallery (keyboard, swipe, thumbnails)
-- `src/components/Sections.jsx` services, experience, reviews, about, contact, footer
+- `src/components/Story.jsx`    the scroll story after the work: level design, environment art, technical art, experience,
+                                reviews, about and contact as full-screen chapters on a pinned stage
+- `src/components/Sections.jsx` footer
 - `src/motion.js`               Anime.js springs, word rise, count-up, capsule motion
 - `src/useReveal.js`            scroll-triggered entrances
 - `src/styles.css`              tokens, glass material, layout
+
+## Scroll story
+
+Everything after the work section is one pinned, full-screen stage (`Story.jsx`). The scroll position
+gives each chapter a progress value `--l` (≈0 arriving, 1 leaving), and CSS derives every effect from it:
+crossfades, push-ins, letters rising, lines drawing, the render getting lit. It all reverses on the way back.
+Chapter length is `H` in `Story.jsx`. On phones, short screens and with *Reduce motion* the chapters flow as
+normal full-height sections instead of pinning.
 
 ## SEO
 

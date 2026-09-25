@@ -3,7 +3,8 @@ import Nav from './components/Nav.jsx';
 import Hero from './components/Hero.jsx';
 import Work from './components/Work.jsx';
 import ProjectSheet from './components/ProjectSheet.jsx';
-import { Services, Experience, Reviews, About, Contact, Footer } from './components/Sections.jsx';
+import { Footer } from './components/Sections.jsx';
+import Story from './components/Story.jsx';
 import useReducedMotion from './useReducedMotion.js';
 import useReveal from './useReveal.js';
 
@@ -21,13 +22,7 @@ export default function App() {
       <main>
         <div className="classic"><Hero reduced={reduced} onOpen={open} /></div>
         <Work reduced={reduced} onOpen={open} />
-        <div className="classic">
-          <Services />
-          <Experience />
-          <Reviews />
-          <About />
-          <Contact />
-        </div>
+        <div className="classic"><Story /></div>
       </main>
       <div className="classic"><Footer /></div>
       <ProjectSheet state={sheet} onClose={close} reduced={reduced} />

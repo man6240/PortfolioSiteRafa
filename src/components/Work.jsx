@@ -3,6 +3,7 @@ import { Glass } from '../glass/LiquidGlass.jsx';
 import { Plus } from './Icons.jsx';
 import { PROJECTS, CATEGORIES } from '../content.js';
 import { makeFlagFiestaScreen } from '../flagFiesta.js';
+import { moveCapsule } from '../motion.js';
 
 const portrait = (p) => Boolean(p.frame || p.live);
 
@@ -21,11 +22,11 @@ function layout(items) {
 
 export function Segmented({ value, onChange, options }) {
   const ref = useRef(null);
-  const [thumb, setThumb] = useState(null);
+  const thumbRef = useRef(null);
   useLayoutEffect(() => {
     const measure = () => {
       const el = ref.current?.querySelector('[aria-checked="true"]');
-      if (el) setThumb({ left: el.offsetLeft, width: el.offsetWidth });
+      if (el) moveCapsule(thumbRef.current, { left: el.offsetLeft, width: el.offsetWidth });
     };
     measure();
     window.addEventListener('resize', measure);
@@ -42,7 +43,7 @@ export function Segmented({ value, onChange, options }) {
   };
   return (
     <Glass className="segmented" variant="clear" role="radiogroup" aria-label="Filter projects" ref={ref} onKeyDown={key}>
-      {thumb && <span className="segmented-thumb" style={{ transform: `translateX(${thumb.left}px)`, width: thumb.width }} aria-hidden="true" />}
+      <span className="segmented-thumb" ref={thumbRef} aria-hidden="true" />
       {options.map((o) => (
         <button key={o.id} data-id={o.id} role="radio" aria-checked={o.id === value} tabIndex={o.id === value ? 0 : -1} onClick={() => onChange(o.id)}>
           {o.label}

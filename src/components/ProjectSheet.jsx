@@ -1,12 +1,16 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { animate } from 'animejs';
 import { Glass } from '../glass/LiquidGlass.jsx';
+import { gentle } from '../motion.js';
 import { ChevronLeft, ChevronRight, Close } from './Icons.jsx';
 import { PhoneFrame, LiveScreen } from './Work.jsx';
 
 export default function ProjectSheet({ state, onClose, reduced }) {
   const [i, setI] = useState(0);
-  const [closing, setClosing] = useState(false);
+  const closing = useRef(false);
   const closeRef = useRef(null);
+  const backdropRef = useRef(null);
+  const sheetRef = useRef(null);
   const lastFocus = useRef(null);
   const p = state?.p;
   const n = p?.shots.length || 0;
@@ -14,7 +18,7 @@ export default function ProjectSheet({ state, onClose, reduced }) {
   useEffect(() => {
     if (!state) return;
     setI(state.i || 0);
-    setClosing(false);
+    closing.current = false;
     lastFocus.current = document.activeElement;
     closeRef.current?.focus({ preventScroll: true });
     const bar = window.innerWidth - document.documentElement.clientWidth;
@@ -27,10 +31,19 @@ export default function ProjectSheet({ state, onClose, reduced }) {
     };
   }, [state]);
 
+  // Open: the backdrop fades while the sheet springs up from slightly below and behind.
+  useLayoutEffect(() => {
+    if (!state || reduced) return;
+    animate(backdropRef.current, { opacity: [0, 1], duration: 350, ease: 'outQuad' });
+    animate(sheetRef.current, { opacity: [0, 1], translateY: [48, 0], scale: [0.95, 1], ease: gentle() });
+  }, [state, reduced]);
+
   const close = useCallback(() => {
     if (reduced) return onClose();
-    setClosing(true);
-    setTimeout(onClose, 220);
+    if (closing.current) return;
+    closing.current = true;
+    animate(backdropRef.current, { opacity: 0, duration: 260, ease: 'inQuad' });
+    animate(sheetRef.current, { opacity: 0, translateY: 24, scale: 0.97, duration: 260, ease: 'inQuad', onComplete: onClose });
   }, [onClose, reduced]);
   const step = useCallback((d) => n && setI((v) => (v + d + n) % n), [n]);
 
@@ -60,8 +73,8 @@ export default function ProjectSheet({ state, onClose, reduced }) {
   const vars = { '--accent': p.palette[0], '--light': p.palette[1], '--deep': p.palette[2] };
 
   return (
-    <div className={`sheet-backdrop ${closing ? 'closing' : ''}`} onClick={(e) => e.target === e.currentTarget && close()}>
-      <div className="sheet" role="dialog" aria-modal="true" aria-labelledby="sheet-title" style={vars}>
+    <div className="sheet-backdrop" ref={backdropRef} onClick={(e) => e.target === e.currentTarget && close()}>
+      <div className="sheet" ref={sheetRef} role="dialog" aria-modal="true" aria-labelledby="sheet-title" style={vars}>
         <div className={`viewer ${tall ? 'tall' : ''} ${p.live ? 'live' : ''}`} onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
           {p.live ? (
             <PhoneFrame className="solo"><LiveScreen reduced={reduced} /></PhoneFrame>

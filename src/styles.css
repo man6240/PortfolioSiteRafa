@@ -216,8 +216,10 @@ a.glass:active, button.glass:active { transform: scale(0.96); --g-glow: rgba(255
   position: absolute; left: 0; top: 0; bottom: 0; border-radius: 999px;
   background: rgba(255, 255, 255, 0.16);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.22);
-  transition: transform 0.55s var(--spring), width 0.55s var(--spring), background-color 0.4s;
+  opacity: 0;
+  transition: background-color 0.4s, opacity 0.3s;
 }
+.nav-pill.off { opacity: 0 !important; }
 .nav-cta { flex: none; }
 .nav-toggle {
   display: none; place-items: center; width: 40px; height: 40px; margin-left: auto;
@@ -319,7 +321,7 @@ a.glass:active, button.glass:active { transform: scale(0.96); --g-glow: rgba(255
   position: absolute; z-index: 1; left: 0; top: 4px; bottom: 4px; border-radius: 999px;
   background: rgba(255, 255, 255, 0.18);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3), 0 2px 8px rgba(0, 0, 0, 0.25);
-  transition: transform 0.55s var(--spring), width 0.55s var(--spring);
+  opacity: 0;
 }
 
 .grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 20px; }
@@ -407,10 +409,7 @@ a.glass:active, button.glass:active { transform: scale(0.96); --g-glow: rgba(255
   background: rgba(0, 0, 0, 0.5);
   -webkit-backdrop-filter: blur(28px) saturate(140%);
   backdrop-filter: blur(28px) saturate(140%);
-  animation: fade 0.3s ease both;
 }
-.sheet-backdrop.closing { animation: fade-out 0.22s ease both; }
-.sheet-backdrop.closing .sheet { animation: sink 0.22s ease both; }
 .sheet {
   width: min(1080px, 100%); margin-block: auto;
   overflow: hidden;
@@ -418,12 +417,7 @@ a.glass:active, button.glass:active { transform: scale(0.96); --g-glow: rgba(255
   background: var(--graphite);
   color: var(--on-dark);
   box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.08), 0 40px 120px rgba(0, 0, 0, 0.6);
-  animation: rise 0.5s var(--spring) both;
 }
-@keyframes fade { from { opacity: 0; } }
-@keyframes fade-out { to { opacity: 0; } }
-@keyframes rise { from { opacity: 0; transform: translateY(24px) scale(0.97); } }
-@keyframes sink { to { opacity: 0; transform: translateY(16px) scale(0.98); } }
 
 .viewer {
   position: relative; aspect-ratio: 16 / 9; overflow: hidden;
@@ -569,17 +563,13 @@ a.glass:active, button.glass:active { transform: scale(0.96); --g-glow: rgba(255
 /* =========================================================================
    Motion
    ========================================================================= */
-.reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.9s var(--ease-out), transform 0.9s var(--ease-out); }
-.reveal.in { opacity: 1; transform: none; }
-.grid .card:nth-child(even).reveal { transition-delay: 0.08s; }
-.tiles .tile:nth-child(2) { transition-delay: 0.06s; }
-.tiles .tile:nth-child(3) { transition-delay: 0.12s; }
-.tile.reveal.in { transition: opacity 0.9s var(--ease-out), transform 0.5s var(--spring), box-shadow 0.4s; }
+/* Entrances are driven by Anime.js (src/motion.js, useReveal.js). */
+.reveal-pending { opacity: 0; }
+.hero-title .word, .headline .word { will-change: transform; }
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; transition-delay: 0s !important; }
-  .reveal { opacity: 1; transform: none; }
 }
 
 /* =========================================================================

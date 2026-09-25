@@ -1,6 +1,7 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { Glass } from '../glass/LiquidGlass.jsx';
 import { Menu, Close } from './Icons.jsx';
+import { moveCapsule } from '../motion.js';
 
 const LINKS = [
   { id: 'work', label: 'Work' },
@@ -17,7 +18,7 @@ export default function Nav() {
   const [active, setActive] = useState(null);
   const [open, setOpen] = useState(false);
   const linksRef = useRef(null);
-  const [pill, setPill] = useState(null);
+  const pillRef = useRef(null);
 
   useEffect(() => {
     let raf = 0;
@@ -44,7 +45,11 @@ export default function Nav() {
 
   useLayoutEffect(() => {
     const a = active && linksRef.current?.querySelector(`[href="#${active}"]`);
-    setPill(a ? { left: a.offsetLeft, width: a.offsetWidth } : null);
+    const pill = pillRef.current;
+    if (!pill) return;
+    if (a) moveCapsule(pill, { left: a.offsetLeft, width: a.offsetWidth });
+    pill.classList.toggle('off', !a);
+    if (!a) pill.dataset.placed = '0'; // reappear in place rather than sliding from a stale slot
   }, [active]);
 
   useEffect(() => {
@@ -62,7 +67,7 @@ export default function Nav() {
           <span className="nav-name">Rafael Vitriago</span>
         </a>
         <nav className="nav-links" aria-label="Sections" ref={linksRef}>
-          {pill && <span className="nav-pill" style={{ transform: `translateX(${pill.left}px)`, width: pill.width }} aria-hidden="true" />}
+          <span className="nav-pill off" ref={pillRef} aria-hidden="true" />
           {LINKS.map((l) => (
             <a key={l.id} href={`#${l.id}`} aria-current={active === l.id ? 'true' : undefined}>{l.label}</a>
           ))}

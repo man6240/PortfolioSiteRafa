@@ -4,7 +4,7 @@ Portfolio site for Rafael Vitriago: level design, environment art and technical 
 It follows Apple's current design language: SF Pro type, dark cinematic sections alternating
 with light `#f5f5f7` ones, and **Liquid Glass** for all the floating controls.
 
-React + Vite. No 3D runtime: the site ships ~60 kB of gzipped JS plus images.
+React + Vite + Anime.js v4. No 3D runtime: the site ships ~85 kB of gzipped JS plus images.
 
 ## Run
 
@@ -43,6 +43,15 @@ Usage:
     <Glass className="panel" refract={{ blur: 12, scale: 40, bezel: 18 }}>…</Glass>
     <Glass refract={false}>CSS glass only</Glass>
 
+## Motion
+
+All motion is Anime.js v4, defined in `src/motion.js`:
+- **Hero intro** (`Hero.jsx`): a timeline where the headline rises word by word from behind a mask (`splitText`), then the copy and buttons follow.
+- **Hero parallax**: `onScroll({ sync: true })` drifts the image and lifts the copy as the hero scrolls away.
+- **Scroll reveals** (`useReveal.js`): anything with `.reveal` arrives staggered; a `.headline` inside it rises word by word; `[data-count]` stats count up.
+- **Springs**: the nav selection capsule and the filter thumb spring between slots and briefly stretch like liquid (`moveCapsule`); the project sheet springs open.
+- **Reduce motion** skips all of it and shows the final state.
+
 ## Files
 
 - `src/App.jsx`                 page order and project sheet state
@@ -51,4 +60,6 @@ Usage:
 - `src/components/Work.jsx`     segmented filter, bento grid, phone frames
 - `src/components/ProjectSheet.jsx` modal gallery (keyboard, swipe, thumbnails)
 - `src/components/Sections.jsx` services, experience, reviews, about, contact, footer
+- `src/motion.js`               Anime.js springs, word rise, count-up, capsule motion
+- `src/useReveal.js`            scroll-triggered entrances
 - `src/styles.css`              tokens, glass material, layout

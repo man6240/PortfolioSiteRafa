@@ -31,6 +31,9 @@ Per project:
 - `shots`: screenshots from `src/assets/shots/`, picked by filename prefix (`idunn-1.jpg`, `idunn-2.jpg`…). The first is the cover.
 - `frame`: for portrait shots, `'phone'` (shown in phone frames) or `'card'` (rounded prints). Leave it out for landscape shots.
 - `palette`: `[accent, light, deep]`, tints the card and the project sheet.
+- `scene`: stages the featured project like a product shot (`src/components/Scene.jsx`): the phone floats at the
+  centre of a dark scene in `colors`, `words` sit around it, and three `tags` pop in as callouts with leader lines.
+  Flag Fiesta uses it; any featured phone project can.
 - `live: 'flag-fiesta'`: shows the animated placeholder phone (`src/flagFiesta.js`) until real captures exist.
 
 The hero slideshow is `HERO` in the same file (`[projectId, shotIndex]` pairs).
@@ -68,6 +71,7 @@ All motion is Anime.js v4, defined in `src/motion.js`:
 - `src/components/Nav.jsx`      floating glass bar; re-tints over light sections, sliding selection capsule
 - `src/components/Hero.jsx`     full-bleed slideshow, headline, stats
 - `src/components/Work.jsx`     featured panels, "More work" grid, phone frames
+- `src/components/Scene.jsx`    product-shot scene for a featured project (bunting, confetti, callouts)
 - `src/components/ProjectSheet.jsx` modal gallery (keyboard, swipe, thumbnails)
 - `src/components/Sections.jsx` services, experience, reviews, about, contact, footer
 - `src/motion.js`               Anime.js springs, word rise, count-up, capsule motion

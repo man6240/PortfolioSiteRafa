@@ -5,6 +5,7 @@ import { Plus, ChevronRight, ArrowUpRight } from './Icons.jsx';
 import { PROJECTS } from '../content.js';
 import { makeFlagFiestaScreen } from '../flagFiesta.js';
 import { prefersReduced } from '../motion.js';
+import Scene from './Scene.jsx';
 
 const FEATURED = PROJECTS.filter((p) => p.featured);
 const MORE = PROJECTS.filter((p) => !p.featured);
@@ -212,7 +213,9 @@ export default function Work({ reduced, onOpen }) {
         </header>
 
         <div className="feats">
-          {FEATURED.map((p, i) => <Feature key={p.id} p={p} index={i} total={FEATURED.length} reduced={reduced} onOpen={onOpen} />)}
+          {FEATURED.map((p, i) => p.scene
+            ? <Scene key={p.id} p={p} index={i} total={FEATURED.length} onOpen={onOpen} />
+            : <Feature key={p.id} p={p} index={i} total={FEATURED.length} reduced={reduced} onOpen={onOpen} />)}
         </div>
 
         <div className="more">

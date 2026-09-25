@@ -7,8 +7,10 @@
 // palette:  [accent, light, deep] — tints the card and the project sheet.
 // panel:    [from, to, text] — the saturated backdrop of a featured phone project and its text colour.
 // live:     'flag-fiesta' renders the animated placeholder phone (for projects without captures).
+// scene:    renders the featured project as a cinematic product scene instead of a split panel:
+//           { words: [topLeft, topRight, bottomRight], tags: [3 callouts], colors: { base, deep, glow } }
 
-const all = import.meta.glob('./assets/shots/*.jpg', { eager: true, import: 'default' });
+const all = import.meta.glob('./assets/shots/*.{jpg,png,webp}', { eager: true, import: 'default' });
 const pick = (prefix) =>
   Object.keys(all)
     .filter((k) => k.split('/').pop().startsWith(prefix + '-'))
@@ -52,10 +54,14 @@ export const PROJECTS = [
     platforms: 'iOS and Android',
     role: 'Game design, art and technical art',
     summary: 'A fast, colourful flag quiz for phones. Currently in production.',
-    shots: [],
-    live: 'flag-fiesta',
-    palette: ['#FF5A3C', '#FFD9A8', '#2A0C02'],
-    panel: ['#FF5A3C', '#FFB23F', '#2A0C02'],
+    shots: pick('flag'),
+    frame: 'phone',
+    palette: ['#E0508A', '#FFD1E3', '#0B1828'],
+    scene: {
+      words: ['Know', 'your', 'world'],
+      tags: ['Guess or paint flags', 'Places, people & paintings', 'Geography & history trivia'],
+      colors: { base: '#1B3452', deep: '#0B1828', glow: '#C2447C' },
+    },
   },
   {
     id: 'vr',

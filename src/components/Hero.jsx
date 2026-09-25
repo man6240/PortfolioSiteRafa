@@ -2,11 +2,10 @@ import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { animate, createTimeline, createScope, onScroll, stagger, utils } from 'animejs';
 import { Glass } from '../glass/LiquidGlass.jsx';
 import { splitWords, prefersReduced } from '../motion.js';
-import { SITE, PROJECTS, HERO, STATS, TOOLS } from '../content.js';
+import { SITE, PROJECTS, HERO, STATS } from '../content.js';
 
 const byId = Object.fromEntries(PROJECTS.map((p) => [p.id, p]));
 const SLIDES = HERO.map(([id, i]) => ({ p: byId[id], i, src: byId[id].shots[i] }));
-const TICKER = ['Level design', 'Environment art', 'Lighting', 'Technical art', 'Virtual reality', 'Augmented reality', ...TOOLS];
 
 export default function Hero({ reduced, onOpen }) {
   const [n, setN] = useState(0);
@@ -23,13 +22,14 @@ export default function Hero({ reduced, onOpen }) {
   useLayoutEffect(() => {
     if (prefersReduced()) return;
     const scope = createScope({ root }).add(() => {
-      const follow = ['.hero-top > *', '.hero-lede', '.hero-content .actions > *', '.now-showing'];
+      const follow = ['.hero-content .chip', '.hero-name', '.hero-lede', '.hero-content .actions > *', '.now-showing'];
       const words = splitWords(root.current.querySelector('.hero-title'));
       utils.set(follow, { opacity: 0, translateY: 16 });
       utils.set(words, { translateY: '110%' });
       createTimeline({ defaults: { ease: 'outExpo', duration: 1100 } })
-        .add('.hero-top > *', { opacity: 1, translateY: 0, delay: stagger(80, { start: 150 }) })
-        .add(words, { translateY: '0%', duration: 1300, delay: stagger(110) }, '-=1000')
+        .add('.hero-content .chip', { opacity: 1, translateY: 0, delay: 150 })
+        .add('.hero-name', { opacity: 1, translateY: 0 }, '-=950')
+        .add(words, { translateY: '0%', duration: 1300, delay: stagger(90) }, '-=1000')
         .add('.hero-lede', { opacity: 1, translateY: 0 }, '-=900')
         .add('.hero-content .actions > *', { opacity: 1, translateY: 0, delay: stagger(80) }, '-=950')
         .add('.now-showing', { opacity: 1, translateY: 0 }, '-=900');
@@ -54,22 +54,18 @@ export default function Hero({ reduced, onOpen }) {
         <div className="hero-scrim" aria-hidden="true" />
   
         <div className="hero-content wrap">
-          <div className="hero-top">
-            <Glass className="chip" variant="clear">
-              <span className="status-dot" aria-hidden="true" />Available for freelance
-            </Glass>
-            <span className="hero-loc">{SITE.location} · English and Spanish</span>
-          </div>
-          <h1 className="hero-title">Rafael<br />Vitriago</h1>
-          <div className="hero-row">
-            <p className="hero-lede"><strong>Worlds that tell stories.</strong> Level design, environment art and technical art for games, VR and AR.</p>
-            <div className="actions">
-              <a className="btn btn-primary" href="#work">See the work</a>
-              <Glass as="a" variant="clear" className="btn btn-glass" href="#contact">Start a project</Glass>
-            </div>
+          <Glass className="chip" variant="clear">
+            <span className="status-dot" aria-hidden="true" />Available for freelance
+          </Glass>
+          <p className="hero-name">{SITE.name}</p>
+          <h1 className="hero-title">Worlds that<br />tell stories.</h1>
+          <p className="hero-lede">Level design, environment art and technical art for games, VR and AR. Based in {SITE.location}, working with teams anywhere.</p>
+          <div className="actions">
+            <a className="btn btn-primary" href="#work">See the work</a>
+            <Glass as="a" variant="clear" className="btn btn-glass" href="#contact">Start a project</Glass>
           </div>
         </div>
-
+  
         <div className="hero-foot wrap">
           <Glass as="button" variant="clear" className="now-showing" onClick={() => onOpen(now.p, now.i)} aria-label={`Now showing ${now.p.title}. Open project`}>
             <span className="now-label">Now showing</span>
@@ -79,16 +75,6 @@ export default function Hero({ reduced, onOpen }) {
             </span>
           </Glass>
       </div>
-      </div>
-
-      <div className="ticker" aria-hidden="true">
-        <div className="ticker-track">
-          {[0, 1].map((copy) => (
-            <span key={copy} className="ticker-set">
-              {TICKER.map((t) => <span key={t} className="ticker-item">{t}</span>)}
-            </span>
-          ))}
-        </div>
       </div>
 
       <div className="stats wrap reveal" role="list">

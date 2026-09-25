@@ -1,12 +1,11 @@
 # rafavitriago.eu — v3
 
 Portfolio site for Rafael Vitriago: level design, environment art and technical art.
-Two halves:
-- **Hero and work**: deep ink base, lime accent, Bricolage Grotesque display type, and full-width
-  featured project panels in each project's own colours.
-- **Everything after the work** (What I do, Experience, Reviews, About, Contact, footer): the first
-  design, with SF/Inter type, light `#f5f5f7` and white sections, blue actions, and glass reviews and a
-  dark contact over renders. Those styles are scoped under `.classic` in `styles.css`.
+The page uses the first design (SF/Inter type, dark hero over a slideshow, light `#f5f5f7` and white
+sections, blue actions) everywhere except the **work section**, which has its own look: a deep ink
+background, Bricolage Grotesque display type and full-width featured project panels in each project's
+own colours. The first design's styles are scoped under `.classic` in `styles.css` (the nav, hero and
+everything after the work section are wrapped in it in `App.jsx`).
 
 **Liquid Glass** is used for the floating controls throughout.
 
@@ -66,8 +65,8 @@ All motion is Anime.js v4, defined in `src/motion.js`:
 ## Files
 
 - `src/App.jsx`                 page order and project sheet state
-- `src/components/Nav.jsx`      floating glass bar; re-tints over the lime contact section, sliding selection capsule
-- `src/components/Hero.jsx`     full-bleed slideshow, name, discipline ticker, stats
+- `src/components/Nav.jsx`      floating glass bar; re-tints over light sections, sliding selection capsule
+- `src/components/Hero.jsx`     full-bleed slideshow, headline, stats
 - `src/components/Work.jsx`     featured panels, "More work" grid, phone frames
 - `src/components/ProjectSheet.jsx` modal gallery (keyboard, swipe, thumbnails)
 - `src/components/Sections.jsx` services, experience, reviews, about, contact, footer

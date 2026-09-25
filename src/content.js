@@ -189,19 +189,18 @@ export const DISCIPLINES = [
     icon: 'environment',
     title: 'Environment art and lighting',
     body: 'Believable places with a point of view: set dressing, materials, Lumen lighting and cinematics that sell the mood.',
-    tools: 'Blender, Maya, Substance, ZBrush',
+    tools: 'Blender, Unreal Engine 5',
   },
   {
     icon: 'xr',
     title: 'Technical art, AR and VR',
     body: 'Material pipelines, optimisation and performance budgets, so the art survives a phone GPU, a standalone headset or a PCVR build.',
-    tools: 'Unreal Engine 5, Unity, Houdini',
+    tools: 'Unreal Engine 5, Unity',
   },
 ];
 
 export const TOOLS = [
-  'Unreal Engine 5', 'Unity', 'Blender', 'Maya', 'Houdini',
-  'Substance Painter', 'Substance Designer', 'ZBrush', 'Photoshop',
+  'Unreal Engine 5', 'Unity', 'Blender', 'Photoshop',
 ];
 
 export const EXPERIENCE = [

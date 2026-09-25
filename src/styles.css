@@ -731,6 +731,9 @@ a.glass:active, button.glass:active { transform: scale(0.96); --g-glow: rgba(255
    Motion
    ========================================================================= */
 /* Entrances are driven by Anime.js (src/motion.js, useReveal.js). */
+/* The word-rise masks clip each word to its box; pad the box (and pull the layout back with
+   negative margins) so descenders, overhangs and full stops aren't cut off. */
+:is(.hero-title, .headline) > span[style*="overflow: clip"] { padding: 0.08em 0.06em 0.2em; margin: -0.08em -0.06em -0.2em; }
 .reveal-pending { opacity: 0; }
 .hero-title .word, .headline .word { will-change: transform; }
 

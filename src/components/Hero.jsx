@@ -57,8 +57,8 @@ export default function Hero({ reduced, onOpen }) {
           <Glass className="chip" variant="clear">
             <span className="status-dot" aria-hidden="true" />Available for freelance
           </Glass>
-          <p className="hero-name">{SITE.name} · Freelance game designer</p>
-          <h1 className="hero-title">Worlds that<br />tell stories.</h1>
+          <h1 className="hero-name">{SITE.name} · Freelance game designer</h1>
+          <p className="hero-title">Worlds that <br />tell stories.</p>
           <p className="hero-lede">Game design, level design and Unreal Engine development, plus environment and technical art, for PC, mobile, VR and AR. Based in {SITE.location}, working with teams anywhere.</p>
           <div className="actions">
             <a className="btn btn-primary" href="#work">See the work</a>

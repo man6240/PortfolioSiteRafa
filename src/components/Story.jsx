@@ -273,7 +273,7 @@ function ChapterReviews() {
       <div className="ch-shade full" />
       <div className="ch-copy wide st-reviews">
         <div className="st-score">
-          <Pop s={0} as="p" className="ch-kicker">Client reviews</Pop>
+          <Pop s={0} as="h2" className="ch-kicker">Client reviews</Pop>
           <Letters as="p" text={REVIEWS.score} className="score-num" s={0.04} step={0.05} />
           <div className="score-stars" aria-label="5 out of 5 stars">
             {[0, 1, 2, 3, 4].map((k) => <Pop key={k} as="span" s={0.14 + k * 0.03}><Star size={22} /></Pop>)}

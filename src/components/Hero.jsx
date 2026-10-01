@@ -21,24 +21,27 @@ export default function Hero({ reduced, onOpen }) {
   const tagPhone = useRef(null);
   const [now, setNow] = useState({ m: 0, p: 0 });
   const [live, setLive] = useState(false);
+  const [progress, setProgress] = useState(0);
 
-  // The 3D stage loads after the page is up; until then (and without WebGL) the poster render stands in.
+  // The 3D stage starts loading straight away (main.jsx already requested its code); until it's ready,
+  // and without WebGL, the poster render stands in with a small progress ring.
   useEffect(() => {
-    if (!webgl()) return;
+    if (!webgl()) { setLive(null); return; }
     let stop = null, cancelled = false;
-    const start = () => import('../hero3d.js').then(({ mountHero }) => {
+    import('../hero3d.js').then(({ mountHero }) => {
       if (cancelled) return;
       stop = mountHero(canvas.current, {
         monitor: MONITOR.map((s) => ({ src: s.p.shots[s.shot] })),
         phone: PHONE.map((s) => (s.video ? { video: true, src: VIDEO } : { src: s.p.shots[s.shot] })),
         reduced,
         anchors: { monitor: tagMonitor.current, phone: tagPhone.current },
+        box: root.current.querySelector('.hero-content'),
         onSlide: (m, p) => setNow({ m, p }),
+        onProgress: (f) => setProgress(Math.round(f * 20) / 20),
         onReady: () => setLive(true),
       });
     });
-    const idle = window.requestIdleCallback ? requestIdleCallback(start, { timeout: 600 }) : setTimeout(start, 120);
-    return () => { cancelled = true; (window.cancelIdleCallback || clearTimeout)(idle); stop?.(); };
+    return () => { cancelled = true; stop?.(); };
   }, [reduced]);
 
   // Intro: the headline rises word by word, then the rest of the copy follows it in.
@@ -68,7 +71,7 @@ export default function Hero({ reduced, onOpen }) {
 
   const m = MONITOR[now.m], p = PHONE[now.p];
   return (
-    <section className={`hero ${live ? 'is-live' : ''}`} id="top" data-tone="dark" ref={root}>
+    <section className={`hero ${live ? 'is-live' : live === null ? 'is-static' : ''}`} id="top" data-tone="dark" ref={root}>
       <div className="hero-stage">
         <div className="hero-media" aria-hidden="true">
           <img className="hero-poster" src="/hero/poster.jpg" alt="" fetchpriority="high" decoding="async" />
@@ -100,6 +103,10 @@ export default function Hero({ reduced, onOpen }) {
         <button ref={tagPhone} className="hero-tag" onClick={() => onOpen(p.p, p.shot)} aria-label={`On the phone: ${p.label}. Open project`}>
           <i>{p.tag}</i>{p.label}
         </button>
+        <span className="hero-loader" aria-hidden="true" style={{ '--p': progress }}>
+          <svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="8" /><circle className="arc" cx="10" cy="10" r="8" pathLength="1" /></svg>
+          Loading the stage
+        </span>
         <span className="hero-dots" aria-hidden="true">
           {MONITOR.map((_, k) => <i key={k} className={k === now.m ? 'on' : ''} />)}
         </span>

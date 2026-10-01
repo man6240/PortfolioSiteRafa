@@ -9,6 +9,9 @@
   <meta name="robots" content="index, follow, max-image-preview:large" />
   <link rel="canonical" href="https://rafavitriago.eu/" />
   <meta name="theme-color" content="#000000" />
+  <!-- the hero: its still render paints first, the phone model downloads while the page hydrates -->
+  <link rel="preload" href="/hero/poster.jpg" as="image" fetchpriority="high" />
+  <link rel="preload" href="/hero/iphone-17-pro.glb" as="fetch" crossorigin />
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='16' fill='%23111'/><text x='32' y='42' font-family='-apple-system,Helvetica,Arial' font-weight='700' font-size='26' fill='white' text-anchor='middle'>RV</text></svg>" />
 
   <!-- Link previews (LinkedIn, WhatsApp, Discord, X, Slack…) -->

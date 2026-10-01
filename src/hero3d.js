@@ -122,9 +122,10 @@ function averageColor(img) {
  * @param {HTMLCanvasElement} canvas
  * @param {{ monitor: {src: string}[], phone: {src: string, video?: boolean}[], reduced: boolean,
  *           onSlide: (m: number, p: number) => void, anchors: { monitor: HTMLElement, phone: HTMLElement },
- *           onReady: () => void }} opts
+ *           onReady: () => void, onProgress: (f: number) => void, box: HTMLElement }} opts
+ * box: the element whose content box the devices should line up with (the hero's text column wrapper).
  */
-export function mountHero(canvas, { monitor, phone: phoneSlides, reduced, onSlide, anchors, onReady }) {
+export function mountHero(canvas, { monitor, phone: phoneSlides, reduced, onSlide, anchors, onReady, onProgress, box }) {
   const coarse = window.matchMedia('(pointer: coarse)').matches;
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: false, powerPreference: 'high-performance' });
   const dpr = Math.min(window.devicePixelRatio || 1, coarse ? 1.5 : 1.75);
@@ -146,10 +147,15 @@ export function mountHero(canvas, { monitor, phone: phoneSlides, reduced, onSlid
   const disposables = [];
   const keep = (x) => { disposables.push(x); return x; };
 
+  /* loading: the phone model and the first slide on each screen gate the reveal; the rest load after */
+  const progress = { glb: 0, monitor: 0, phone: 0 };
+  const report = () => onProgress?.(progress.glb * 0.7 + progress.monitor * 0.15 + progress.phone * 0.15);
+
   /* screens' content */
   const loader = new THREE.TextureLoader();
   let video = null;
   const tints = [];
+  const later = [];
   const load = (s, i, list) => {
     if (s.video) {
       video = document.createElement('video');
@@ -160,14 +166,19 @@ export function mountHero(canvas, { monitor, phone: phoneSlides, reduced, onSlid
       s.src.forEach(([src, type]) => { const so = document.createElement('source'); so.src = src; so.type = type; video.append(so); });
       canvas.parentElement.append(video);
       video.play().catch(() => {});
+      video.addEventListener('loadeddata', () => { if (i === 0) { progress[list] = 1; report(); } }, { once: true });
       const t = keep(new THREE.VideoTexture(video)); t.colorSpace = THREE.SRGBColorSpace; t.userData.aspect = 9 / 20;
       return t;
     }
-    const t = keep(loader.load(s.src, (tex) => {
-      tex.userData.aspect = tex.image.width / tex.image.height;
+    const t = keep(new THREE.Texture());
+    t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 8; t.userData.aspect = list === 'monitor' ? 16 / 9 : 9 / 19.5;
+    const fetchIt = () => loader.load(s.src, (tex) => {
+      t.image = tex.image; t.needsUpdate = true;
+      t.userData.aspect = tex.image.width / tex.image.height;
       if (list === 'monitor') tints[i] = averageColor(tex.image);
-    }));
-    t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 8; t.userData.aspect = 16 / 9;
+      if (i === 0) { progress[list] = 1; report(); }
+    });
+    if (i === 0) fetchIt(); else later.push(fetchIt);
     return t;
   };
   const monTex = monitor.map((s, i) => load(s, i, 'monitor'));
@@ -177,7 +188,7 @@ export function mountHero(canvas, { monitor, phone: phoneSlides, reduced, onSlid
   const PH = 4.0;
   const ledge = new THREE.Mesh(
     keep(new RoundedBoxGeometry(6.4, PH, 2.6, 8, 0.035)),
-    keep(new THREE.MeshStandardMaterial({ ...stoneMaps(384, 7, [62, 60, 58], [2.4, 1.5]), roughness: 1, metalness: 0, normalScale: new THREE.Vector2(1.2, 1.2) })),
+    keep(new THREE.MeshStandardMaterial({ ...stoneMaps(256, 7, [62, 60, 58], [2.4, 1.5]), roughness: 1, metalness: 0, normalScale: new THREE.Vector2(1.2, 1.2) })),
   );
   ledge.position.set(2.4, -PH / 2, 0.15);
   ledge.castShadow = ledge.receiveShadow = true;
@@ -218,9 +229,6 @@ export function mountHero(canvas, { monitor, phone: phoneSlides, reduced, onSlid
   const phoneScreenMat = keep(screenMaterial(1.924 / 4.015));
   phone.position.set(3.55, 0.81, 0.95); phone.rotation.set(-0.12, -0.55, 0);
   scene.add(phone);
-  const cradle = new THREE.Mesh(keep(new RoundedBoxGeometry(0.62, 0.05, 0.42, 4, 0.02)), alu);
-  cradle.position.set(3.55, 0.025, 0.99); cradle.rotation.y = -0.55; cradle.castShadow = cradle.receiveShadow = true; scene.add(cradle);
-  const lip = new THREE.Mesh(keep(new RoundedBoxGeometry(0.62, 0.09, 0.04, 4, 0.018)), alu); lip.position.set(0, 0.06, 0.16); cradle.add(lip);
 
   let phoneReady = false;
   const gltf = new GLTFLoader().setMeshoptDecoder(MeshoptDecoder);
@@ -243,9 +251,11 @@ export function mountHero(canvas, { monitor, phone: phoneSlides, reduced, onSlid
     island.position.set(0, 1.827, 0.134); m.add(island);
     m.scale.setScalar(0.4);
     phone.add(m);
-    phoneReady = true;
-    maybeReady();
-  });
+    progress.glb = 1; report();
+    // compile every shader before the first frame, so the reveal doesn't stutter
+    const go = () => { phoneReady = true; sync(); };
+    (renderer.compileAsync ? renderer.compileAsync(scene, camera) : Promise.resolve()).then(go, go);
+  }, (e) => { if (e.total) { progress.glb = e.loaded / e.total; report(); } });
 
   /* light: one shaft from a square opening above, with a caustic pattern where it lands */
   const gobo = keep((() => {
@@ -260,7 +270,7 @@ export function mountHero(canvas, { monitor, phone: phoneSlides, reduced, onSlid
   gobo.wrapS = gobo.wrapT = THREE.ClampToEdgeWrapping;
   const key = new THREE.SpotLight(0xe9f1ff, 650, 0, 0.27, 0.35, 2);
   key.position.set(2.2, 11, -5.5); key.target.position.set(2.6, 0, 1.25); key.map = gobo;
-  key.castShadow = true; key.shadow.mapSize.set(2048, 2048); key.shadow.bias = -0.0008; key.shadow.normalBias = 0.03; key.shadow.radius = 4;
+  key.castShadow = true; key.shadow.mapSize.set(1024, 1024); key.shadow.bias = -0.0008; key.shadow.normalBias = 0.03; key.shadow.radius = 4;
   key.shadow.camera.near = 4; key.shadow.camera.far = 20;
   scene.add(key, key.target);
   // rim lights from behind draw the devices' edges out of the dark
@@ -355,7 +365,15 @@ export function mountHero(canvas, { monitor, phone: phoneSlides, reduced, onSlid
   function frame(w, h) {
     const aspect = w / h;
     const k = THREE.MathUtils.clamp((aspect - 0.75) / (1.45 - 0.75), 0, 1);
-    const u = THREE.MathUtils.lerp(0.54, 0.735, k), v = THREE.MathUtils.lerp(0.5, 0.5, k), frac = THREE.MathUtils.lerp(0.74, 0.6, k);
+    // on wide screens the devices fill the right part of the text column's box, so text and devices
+    // stay one centred composition however wide the window is
+    let uw = 0.735, fw = 0.6;
+    if (box) {
+      const cr = canvas.getBoundingClientRect(), br = box.getBoundingClientRect(), cs = getComputedStyle(box);
+      const left = br.left - cr.left + parseFloat(cs.paddingLeft), width = br.width - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
+      if (width > 0) { uw = (left + width * 0.735) / w; fw = Math.min(0.6, (width * 0.62) / w); }
+    }
+    const u = THREE.MathUtils.lerp(0.54, uw, k), v = 0.5, frac = THREE.MathUtils.lerp(0.74, fw, k);
     camera.aspect = aspect;
     narrow = aspect < 0.8;
     const tan = Math.tan(THREE.MathUtils.degToRad(camera.fov / 2));
@@ -421,21 +439,23 @@ export function mountHero(canvas, { monitor, phone: phoneSlides, reduced, onSlid
     beamMat.uniforms.t.value = t; dust.material.uniforms.t.value = reduced ? 0 : t; grade.uniforms.t.value = t % 10;
     if (narrow) {
       // tall screens: both labels on one line under the devices, pinned to the left and right edges
-      v3.set(0, -0.02, 0.5); cradle.localToWorld(v3); v3.project(camera);
+      v3.set(0, -0.86, 0.15); phone.localToWorld(v3); v3.project(camera);
       const y = ((1 - v3.y) / 2 * canvas.clientHeight + 12).toFixed(1), edge = 20;
       if (anchors?.monitor) anchors.monitor.style.transform = `translate(${edge}px, ${y}px)`;
       if (anchors?.phone) anchors.phone.style.transform = `translate(${canvas.clientWidth - edge}px, ${y}px) translateX(-100%)`;
     } else {
       place(anchors?.monitor, mon, -0.2, -MH / 2 - 1.02, 0.4);
-      place(anchors?.phone, cradle, 0, -0.02, 0.5);
+      place(anchors?.phone, phone, 0, -0.9, 0.25);
     }
     composer.render();
-    if (firstFrame) { firstFrame = false; maybeReady(); }
+    if (firstFrame) {
+      firstFrame = false;
+      onReady?.();
+      later.forEach((f, i) => setTimeout(f, 200 * i)); // the other slides, one at a time
+    }
   }
-  let readySent = false;
-  function maybeReady() { if (!readySent && phoneReady && !firstFrame) { readySent = true; onReady?.(); } }
   function sync() {
-    const should = visible && !document.hidden;
+    const should = phoneReady && visible && !document.hidden;
     if (should && !running) { running = true; last = performance.now(); renderer.setAnimationLoop(tick); video?.play().catch(() => {}); }
     if (!should && running) { running = false; renderer.setAnimationLoop(null); video?.pause(); }
   }

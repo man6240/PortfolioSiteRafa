@@ -286,7 +286,7 @@ a.glass:active, button.glass:active { transform: scale(0.96); --g-glow: rgba(255
 
 .hx-device {
   position: absolute; display: block; padding: 0; border: 0; background: none; cursor: pointer; color: inherit;
-  transition: transform 0.9s var(--ease-out);
+  transition: translate 0.9s var(--ease-out);
 }
 .hx-device:focus-visible { outline: 2px solid #fff; outline-offset: 8px; border-radius: 12px; }
 .hx-settle { display: block; position: relative; width: 100%; height: 100%; }
@@ -299,7 +299,8 @@ a.glass:active, button.glass:active { transform: scale(0.96); --g-glow: rgba(255
 /* the display: aluminium rim, picture right up to it, a short arm and a thin foot */
 .hx-display {
   left: calc(var(--u) * 44); top: calc(var(--u) * 5.6); width: calc(var(--u) * 40); z-index: 3;
-  transform: translate(calc(var(--mx) * -14px), calc(var(--my) * -8px)) rotate(-5deg);
+  /* tilt and pointer drift use their own properties: the intro animates `transform`, so they'd be lost there */
+  rotate: -5deg; translate: calc(var(--mx) * -14px) calc(var(--my) * -8px);
   filter: drop-shadow(0 40px 50px rgba(0, 0, 0, 0.6));
 }
 .hx-panel {
@@ -320,7 +321,7 @@ a.glass:active, button.glass:active { transform: scale(0.96); --g-glow: rgba(255
 /* the phone: Apple's iPhone 17 Pro frame over the screenshot, a solid black island */
 .hx-phone {
   left: calc(var(--u) * 31); top: calc(var(--u) * 29.4); height: calc(var(--u) * 27.5); aspect-ratio: 1350 / 2760; z-index: 4;
-  transform: translate(calc(var(--mx) * 18px), calc(var(--my) * 10px)) rotate(9deg);
+  rotate: 9deg; translate: calc(var(--mx) * 18px) calc(var(--my) * 10px);
   filter: drop-shadow(0 40px 50px rgba(0, 0, 0, 0.65));
 }
 .hx-pscreen { position: absolute; left: 5.4815%; top: 2.5725%; width: 88.963%; height: 94.8188%; overflow: hidden; border-radius: 13% / 6.2%; background: #000; }
@@ -354,7 +355,7 @@ a.glass:active, button.glass:active { transform: scale(0.96); --g-glow: rgba(255
   .hx-word.w1 { left: 4vw; top: 2vw; }
   .hx-word.w2 { right: 4vw; top: 76vw; }
   .hx-display { left: 21vw; top: 20vw; width: 74vw; }
-  .hx-phone { left: 3vw; top: 52vw; height: 58vw; }
+  .hx-phone { left: 6vw; top: 52vw; height: 56vw; }
   .hx-foot { height: 4px; }
   .hx-copy { position: relative; left: auto; bottom: auto; padding: 8px var(--gutter) 0; max-width: none; }
   .hx-now { position: relative; right: auto; bottom: auto; align-items: flex-start; padding: 28px var(--gutter) 0; }

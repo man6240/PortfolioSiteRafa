@@ -169,21 +169,22 @@ export const PROJECTS = [
   },
 ];
 
-// Hero: the 3D monitor and phone each rotate through work. [project id, shot index, platform tag, label].
-// 'video' plays the Flag Fiesta gameplay clip (public/hero/flag-fiesta.*). The label defaults to the project title.
+// Hero: the display and the phone each rotate through work, offset so only one changes at a time.
+// shot: index into the project's screenshots, or 'video' for the Flag Fiesta gameplay clip (public/hero/flag-fiesta.*).
+// tag: platform shown in "Now playing". label: overrides the project title. frame (phone): iPhone colour, 'blue' | 'orange'.
 export const HERO = {
   monitor: [
-    ['idunn', 0, 'PC'],
-    ['vr', 1, 'VR'],
-    ['trailer', 0, 'Cinematic', 'Ashes of Idunn trailer'],
-    ['vrtour', 0, 'VR tour', 'Sládkovič Museum'],
-    ['archviz', 0, 'UE5', 'ArchViz in real time'],
+    { id: 'idunn', shot: 0, tag: 'PC' },
+    { id: 'vr', shot: 1, tag: 'VR' },
+    { id: 'trailer', shot: 0, tag: 'Cinematic', label: 'Ashes of Idunn trailer' },
+    { id: 'vrtour', shot: 0, tag: 'VR tour', label: 'Sládkovič Museum' },
+    { id: 'archviz', shot: 0, tag: 'UE5', label: 'ArchViz in real time' },
   ],
   phone: [
-    ['flag-fiesta', 'video', 'Android'],
-    ['sugoi', 0, 'Android', 'Sugoi Fruit Fusion'],
-    ['flag-fiesta', 0, 'Android'],
-    ['sugoi', 2, 'Android', 'Sugoi Fruit Fusion'],
+    { id: 'flag-fiesta', shot: 'video', tag: 'Android', frame: 'blue' },
+    { id: 'sugoi', shot: 0, tag: 'Android', label: 'Sugoi Fruit Fusion', frame: 'orange' },
+    { id: 'flag-fiesta', shot: 0, tag: 'Android', frame: 'blue' },
+    { id: 'sugoi', shot: 2, tag: 'Android', label: 'Sugoi Fruit Fusion', frame: 'orange' },
   ],
 };
 

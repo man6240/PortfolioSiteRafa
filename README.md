@@ -1,7 +1,7 @@
 # rafavitriago.eu — v3
 
 Portfolio site for Rafael Vitriago: level design, environment art and technical art.
-The first design (SF/Inter type, a 3D hero, light `#f5f5f7` and white sections, blue
+The first design (SF/Inter type, a giant-name hero, light `#f5f5f7` and white sections, blue
 pill buttons, rounded cards) with the work section as its centrepiece: Flag Fiesta and Sugoi are staged as
 product-shot scenes (floating phones, big words, rounded callout tags on curved leader lines), and Ashes of Idunn and the VR Experience
 are full-width rounded panels with the render behind the copy. The first design's section styles are scoped
@@ -9,8 +9,7 @@ under `.classic` in `styles.css`.
 
 **Liquid Glass** is used for the floating controls throughout.
 
-React + Vite + Anime.js v4, plus three.js for the hero only: the page ships ~90 kB of gzipped JS, and the
-3D stage (~290 kB gzipped, `src/hero3d.js`) loads after the page is up.
+React + Vite + Anime.js v4. No 3D runtime: the page ships ~90 kB of gzipped JS plus images.
 
 ## Run
 
@@ -38,25 +37,23 @@ Per project:
   one phone, Flag Fiesta) or `'stack'` (rounded words stacked on the left, two phones on the right, Sugoi).
 - `live: 'flag-fiesta'`: shows the animated placeholder phone (`src/flagFiesta.js`) until real captures exist.
 
-The hero's two screens are `HERO` in the same file: `monitor` and `phone` lists of `[projectId, shotIndex, tag, label]`
-(`'video'` as the shot plays the Flag Fiesta gameplay clip).
+The hero's two screens are `HERO` in the same file: `monitor` and `phone` lists of `{ id, shot, tag, label?, frame? }`
+(`shot: 'video'` plays the Flag Fiesta gameplay clip; `frame` is the iPhone colour, `'blue'` or `'orange'`).
 
 Featured landscape projects (Idunn, VR) take a `pitch` (one sentence): they're shown as full-width panels the same
 size as the phone scenes, with the pitch in the caption.
 
-## 3D hero
+## Hero
 
-`src/hero3d.js` (three.js) stages a studio display and an iPhone on a stone ledge under one shaft of light; the monitor
-rotates through PC and VR work, the phone through the mobile games, and the glow behind them takes the colour of
-what's on screen. Everything is built in code except:
-- `public/hero/iphone-17-pro.glb`: “iPhone 17 Pro” by Ibrahim.Bhl, CC BY 4.0 (credited in the footer), compressed
-  with gltf-transform (meshopt + WebP, 8.4 MB → 0.8 MB).
-- `public/hero/flag-fiesta.mp4` / `.webm`: the gameplay clip on the phone.
-- `public/hero/poster.jpg`: a still render of the stage, shown until the 3D is running and when WebGL isn't available.
-  Re-render it if the scene changes.
-
-It renders only while the hero is on screen, caps the pixel ratio, and with *Reduce motion* holds the camera still
-and swaps screens without crossfades. Antialiasing comes from a multisampled render target.
+"Rafael" and "Vitriago" in giant type, a studio display tilted over the first name and an iPhone over the last
+(`src/components/Hero.jsx`). The two screens rotate through `HERO`, taking turns so only one changes at a time;
+each change crossfades the screen and gives the device a small settle. The background glow takes the colour of the
+project on the display, "Now playing" names both, and clicking a device opens its project. On a mouse the two
+devices drift apart slightly. It's all HTML and CSS, laid out in `--u` units so the composition holds at any size:
+- The display is drawn in CSS (aluminium rim, arm, foot).
+- `public/hero/iphone-17-pro-blue.webp` / `-orange.webp`: Apple's iPhone 17 Pro frames (Apple Design Resources,
+  via @mockifydev/react, MIT), drawn over the screenshot, with a solid black island.
+- `public/hero/flag-fiesta.mp4` / `.webm`: the gameplay clip; it plays only while it's on the phone.
 
 ## Liquid Glass
 
@@ -78,8 +75,8 @@ Usage:
 ## Motion
 
 All motion is Anime.js v4, defined in `src/motion.js`:
-- **Hero intro** (`Hero.jsx`): a timeline where the headline rises word by word from behind a mask (`splitText`), then the copy and buttons follow.
-- **Hero parallax**: `onScroll({ sync: true })` drifts the 3D stage and lifts the copy as the hero scrolls away.
+- **Hero intro** (`Hero.jsx`): "Rafael" and "Vitriago" rise from behind their lines, the devices drop in, then the copy and buttons follow.
+- **Hero parallax**: `onScroll({ sync: true })` lifts the name and devices as the hero scrolls away.
 - **Scroll reveals** (`useReveal.js`): anything with `.reveal` arrives staggered; a `.headline` inside it rises word by word; `[data-count]` stats count up.
 - **Panel parallax**: the phones in featured panels drift up slightly as the panel scrolls in.
 - **Springs**: the nav selection capsule springs between slots and briefly stretch like liquid (`moveCapsule`); the project sheet springs open.
@@ -89,8 +86,7 @@ All motion is Anime.js v4, defined in `src/motion.js`:
 
 - `src/App.jsx`                 page order and project sheet state
 - `src/components/Nav.jsx`      floating glass bar; sliding selection capsule
-- `src/components/Hero.jsx`     headline, labels and stats over the 3D stage
-- `src/hero3d.js`               the hero's three.js scene (loaded on demand)
+- `src/components/Hero.jsx`     the hero: giant name, display and phone rotating through the work, stats
 - `src/components/Work.jsx`     featured projects (panels or scenes), phone frames and the "More work" grid
 - `src/components/Scene.jsx`    the product-shot scene (Flag Fiesta, Sugoi): callout tags, bunting, confetti, pointer depth
 - `src/components/ProjectSheet.jsx` modal gallery (keyboard, swipe, thumbnails)

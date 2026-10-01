@@ -1,115 +1,141 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { animate, createTimeline, createScope, onScroll, stagger, utils } from 'animejs';
 import { Glass } from '../glass/LiquidGlass.jsx';
-import { splitWords, prefersReduced } from '../motion.js';
+import { prefersReduced } from '../motion.js';
 import { SITE, PROJECTS, HERO, STATS } from '../content.js';
 
+/* The hero: "Rafael" and "Vitriago" in giant type, a studio display over the first name and an
+   iPhone over the last, each rotating through the work. The display is drawn in CSS; the phone is
+   Apple's iPhone 17 Pro frame (public/hero) over the screenshot. */
+
 const byId = Object.fromEntries(PROJECTS.map((p) => [p.id, p]));
-const slide = ([id, shot, tag, label]) => ({ p: byId[id], shot: shot === 'video' ? 0 : shot, video: shot === 'video', tag, label: label || byId[id].title });
+const slide = (s) => ({ ...s, p: byId[s.id], label: s.label || byId[s.id].title, video: s.shot === 'video', src: s.shot === 'video' ? null : byId[s.id].shots[s.shot] });
 const MONITOR = HERO.monitor.map(slide);
 const PHONE = HERO.phone.map(slide);
-const VIDEO = [['/hero/flag-fiesta.mp4', 'video/mp4'], ['/hero/flag-fiesta.webm', 'video/webm']];
+const FRAMES = [...new Set(PHONE.map((s) => s.frame))];
+const HOLD = 5200; // each screen stays this long; the phone changes halfway between the display's changes
 
-function webgl() {
-  try { const c = document.createElement('canvas'); return Boolean(c.getContext('webgl2')); } catch { return false; }
+function Screens({ slides, now, video }) {
+  return slides.map((s, k) => (s.video
+    ? <video key={k} ref={video} className={k === now ? 'on' : ''} muted loop playsInline autoPlay preload="metadata" aria-hidden="true">
+        <source src="/hero/flag-fiesta.mp4" type="video/mp4" />
+        <source src="/hero/flag-fiesta.webm" type="video/webm" />
+      </video>
+    : <img key={k} className={k === now ? 'on' : ''} src={s.src} alt="" decoding="async" fetchpriority={k === 0 ? 'high' : 'low'} loading={k === 0 ? 'eager' : 'lazy'} />));
 }
 
-export default function Hero({ reduced, onOpen }) {
+export default function Hero({ onOpen }) {
   const root = useRef(null);
-  const canvas = useRef(null);
-  const tagMonitor = useRef(null);
-  const tagPhone = useRef(null);
-  const [now, setNow] = useState({ m: 0, p: 0 });
-  const [live, setLive] = useState(false);
-  const [progress, setProgress] = useState(0);
+  const video = useRef(null);
+  const [m, setM] = useState(0);
+  const [p, setP] = useState(0);
 
-  // The 3D stage starts loading straight away (main.jsx already requested its code); until it's ready,
-  // and without WebGL, the poster render stands in with a small progress ring.
+  // Rotation: the display and the phone take turns, so only one changes at a time.
   useEffect(() => {
-    if (!webgl()) { setLive(null); return; }
-    let stop = null, cancelled = false;
-    import('../hero3d.js').then(({ mountHero }) => {
-      if (cancelled) return;
-      stop = mountHero(canvas.current, {
-        monitor: MONITOR.map((s) => ({ src: s.p.shots[s.shot] })),
-        phone: PHONE.map((s) => (s.video ? { video: true, src: VIDEO } : { src: s.p.shots[s.shot] })),
-        reduced,
-        anchors: { monitor: tagMonitor.current, phone: tagPhone.current },
-        box: root.current.querySelector('.hero-content'),
-        onSlide: (m, p) => setNow({ m, p }),
-        onProgress: (f) => setProgress(Math.round(f * 20) / 20),
-        onReady: () => setLive(true),
-      });
-    });
-    return () => { cancelled = true; stop?.(); };
-  }, [reduced]);
+    if (prefersReduced()) return;
+    let t2;
+    const t1 = setInterval(() => setM((v) => (v + 1) % MONITOR.length), HOLD);
+    const half = setTimeout(() => { t2 = setInterval(() => setP((v) => (v + 1) % PHONE.length), HOLD); }, HOLD / 2);
+    return () => { clearInterval(t1); clearInterval(t2); clearTimeout(half); };
+  }, []);
 
-  // Intro: the headline rises word by word, then the rest of the copy follows it in.
+  // The gameplay clip only plays while it's on screen.
+  useEffect(() => {
+    const v = video.current;
+    if (!v) return;
+    if (PHONE[p].video) v.play().catch(() => {}); else v.pause();
+  }, [p]);
+
+  // A small settle in the tilt whenever a device changes, like it was just set down.
+  const first = useRef({ m: true, p: true });
+  useEffect(() => {
+    if (first.current.m) { first.current.m = false; return; }
+    if (prefersReduced()) return;
+    animate(root.current.querySelector('.hx-display .hx-settle'), { rotate: ['1.6deg', '0deg'], scale: [0.985, 1], duration: 1100, ease: 'outElastic(1, .6)' });
+  }, [m]);
+  useEffect(() => {
+    if (first.current.p) { first.current.p = false; return; }
+    if (prefersReduced()) return;
+    animate(root.current.querySelector('.hx-phone .hx-settle'), { rotate: ['-2deg', '0deg'], scale: [0.98, 1], duration: 1100, ease: 'outElastic(1, .6)' });
+  }, [p]);
+
+  // Depth: on a mouse, the two devices drift a little in opposite directions.
+  useEffect(() => {
+    const el = root.current;
+    if (prefersReduced() || !window.matchMedia('(pointer: fine)').matches) return;
+    let raf = 0;
+    const move = (e) => {
+      const x = e.clientX / window.innerWidth - 0.5, y = e.clientY / window.innerHeight - 0.5;
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(() => { el.style.setProperty('--mx', x.toFixed(3)); el.style.setProperty('--my', y.toFixed(3)); });
+    };
+    window.addEventListener('pointermove', move, { passive: true });
+    return () => { window.removeEventListener('pointermove', move); cancelAnimationFrame(raf); };
+  }, []);
+
+  // Intro: the names rise from behind their lines, the devices drop in, the rest follows.
   // Runs before first paint so nothing flashes in its final position.
   useLayoutEffect(() => {
     if (prefersReduced()) return;
     const scope = createScope({ root }).add(() => {
-      const follow = ['.hero-content .chip', '.hero-name', '.hero-lede', '.hero-content .actions > *'];
-      const words = splitWords(root.current.querySelector('.hero-title'));
+      const follow = ['.hx-lede', '.hx-actions > *', '.hx-now'];
+      utils.set('.hx-word > span', { translateY: '105%' });
+      utils.set(['.hx-display', '.hx-phone'], { opacity: 0, translateY: 60 });
       utils.set(follow, { opacity: 0, translateY: 16 });
-      utils.set(words, { translateY: '110%' });
-      createTimeline({ defaults: { ease: 'outExpo', duration: 1100 } })
-        .add('.hero-content .chip', { opacity: 1, translateY: 0, delay: 150 })
-        .add('.hero-name', { opacity: 1, translateY: 0 }, '-=950')
-        .add(words, { translateY: '0%', duration: 1300, delay: stagger(90) }, '-=1000')
-        .add('.hero-lede', { opacity: 1, translateY: 0 }, '-=900')
-        .add('.hero-content .actions > *', { opacity: 1, translateY: 0, delay: stagger(80) }, '-=950');
+      createTimeline({ defaults: { ease: 'outExpo', duration: 1300 } })
+        .add('.hx-word > span', { translateY: '0%', delay: stagger(140, { start: 150 }) })
+        .add('.hx-display', { opacity: 1, translateY: 0, duration: 1400 }, '-=900')
+        .add('.hx-phone', { opacity: 1, translateY: 0, duration: 1400 }, '-=1150')
+        .add(follow, { opacity: 1, translateY: 0, delay: stagger(70) }, '-=1000');
 
-      // Parallax: as the hero scrolls away the stage drifts slower than the page
-      // and the copy lifts and fades, like a layer further back.
-      const sync = () => onScroll({ target: root.current.querySelector('.hero-stage'), enter: 'top top', leave: 'top bottom', sync: true });
-      animate('.hero-media', { translateY: ['0%', '14%'], ease: 'linear', autoplay: sync() });
-      animate('.hero-content', { translateY: [0, -60], opacity: [1, 0.2], ease: 'linear', autoplay: sync() });
+      // Parallax as the hero scrolls away: the art lifts a little faster than the page.
+      const sync = () => onScroll({ target: root.current.querySelector('.hx-stage'), enter: 'top top', leave: 'top bottom', sync: true });
+      animate('.hx-art', { translateY: [0, -50], ease: 'linear', autoplay: sync() });
     });
     return () => scope.revert();
   }, []);
 
-  const m = MONITOR[now.m], p = PHONE[now.p];
+  const mon = MONITOR[m], ph = PHONE[p];
   return (
-    <section className={`hero ${live ? 'is-live' : live === null ? 'is-static' : ''}`} id="top" data-tone="dark" ref={root}>
-      <div className="hero-stage">
-        <div className="hero-media" aria-hidden="true">
-          <img className="hero-poster" src="/hero/poster.jpg" alt="" fetchpriority="high" decoding="async" />
-          <canvas className="hero-canvas" ref={canvas} />
-        </div>
-        <div className="hero-scrim" aria-hidden="true" />
+    <section className="hero hx" id="top" data-tone="dark" ref={root} style={{ '--glow': mon.p.palette[0] }}>
+      <div className="hx-stage">
+        <div className="hx-art">
+          <h1 className="hx-name">
+            <span className="hx-word w1"><span>Rafael</span></span>{' '}
+            <span className="hx-word w2"><span>Vitriago</span></span>
+            <span className="sr-only"> · Freelance game designer</span>
+          </h1>
 
-        <div className="hero-content wrap">
-          <div className="hero-top">
-            <Glass className="chip" variant="clear">
-              <span className="status-dot" aria-hidden="true" />Available for freelance
-            </Glass>
-            <h1 className="hero-name">{SITE.name} · Freelance game designer</h1>
-            <p className="hero-title">Games for <br /><em>every screen.</em></p>
-          </div>
-          <div className="hero-bottom">
-            <p className="hero-lede">Game design, level design and Unreal Engine development, plus environment and technical art, for PC, mobile, VR and AR. Based in {SITE.location}, working with teams anywhere.</p>
-            <div className="actions">
-              <a className="btn btn-primary" href="#work">See the work</a>
-              <Glass as="a" variant="clear" className="btn btn-glass" href="#contact">Start a project</Glass>
-            </div>
+          <button className="hx-device hx-display" onClick={() => onOpen(mon.p, mon.shot)} aria-label={`On the display: ${mon.label}. Open project`}>
+            <span className="hx-settle">
+              <span className="hx-panel"><span className="hx-screen"><Screens slides={MONITOR} now={m} /></span></span>
+              <span className="hx-arm" /><span className="hx-foot" />
+            </span>
+          </button>
+
+          <button className="hx-device hx-phone" onClick={() => onOpen(ph.p, ph.video ? 0 : ph.shot)} aria-label={`On the phone: ${ph.label}. Open project`}>
+            <span className="hx-settle">
+              <span className="hx-pscreen"><Screens slides={PHONE} now={p} video={video} /></span>
+              {FRAMES.map((f) => <img key={f} className={`hx-frame ${f === ph.frame ? 'on' : ''}`} src={`/hero/iphone-17-pro-${f}.webp`} alt="" decoding="async" />)}
+              <span className="hx-island" />
+            </span>
+          </button>
+        </div>
+
+        <div className="hx-copy">
+          <p className="hx-lede">Freelance game designer: level design and Unreal Engine development, plus environment and technical art, for PC, mobile, VR and AR. Based in {SITE.location}.</p>
+          <div className="actions hx-actions">
+            <a className="btn btn-primary" href="#work">See the work</a>
+            <Glass as="a" variant="clear" className="btn btn-glass" href="#contact">Start a project</Glass>
           </div>
         </div>
 
-        {/* labels that follow the devices; the 3D stage positions them every frame */}
-        <button ref={tagMonitor} className="hero-tag" onClick={() => onOpen(m.p, m.shot)} aria-label={`On the monitor: ${m.label}. Open project`}>
-          <i>{m.tag}</i>{m.label}
-        </button>
-        <button ref={tagPhone} className="hero-tag" onClick={() => onOpen(p.p, p.shot)} aria-label={`On the phone: ${p.label}. Open project`}>
-          <i>{p.tag}</i>{p.label}
-        </button>
-        <span className="hero-loader" aria-hidden="true" style={{ '--p': progress }}>
-          <svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="8" /><circle className="arc" cx="10" cy="10" r="8" pathLength="1" /></svg>
-          Loading the stage
-        </span>
-        <span className="hero-dots" aria-hidden="true">
-          {MONITOR.map((_, k) => <i key={k} className={k === now.m ? 'on' : ''} />)}
-        </span>
+        <div className="hx-now" aria-live="polite">
+          <b>Now playing</b>
+          <button onClick={() => onOpen(mon.p, mon.shot)}>{mon.label} · {mon.tag}</button>
+          <button onClick={() => onOpen(ph.p, ph.video ? 0 : ph.shot)}>{ph.label} · {ph.tag}</button>
+          <span className="hx-dots" aria-hidden="true">{MONITOR.map((_, k) => <i key={k} className={k === m ? 'on' : ''} />)}</span>
+        </div>
       </div>
 
       <div className="stats wrap reveal" role="list">

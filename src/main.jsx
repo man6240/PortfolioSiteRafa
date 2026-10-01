@@ -8,9 +8,6 @@ import '@fontsource/space-mono/700.css';
 import App from './App.jsx';
 import './styles.css';
 
-// Start fetching the hero's 3D stage now, in parallel with hydration (Hero.jsx picks up the same module).
-import('./hero3d.js');
-
 const root = document.getElementById('root');
 // The production build ships prerendered HTML (scripts/prerender.mjs); pick it up instead of re-rendering.
 if (root.firstElementChild) hydrateRoot(root, <App />);

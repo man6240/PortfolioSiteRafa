@@ -5,7 +5,7 @@ import { prefersReduced } from '../motion.js';
 import { SITE, PROJECTS, HERO, STATS } from '../content.js';
 
 /* The hero: "Rafael" and "Vitriago" in giant type, a studio display over the first name and an
-   iPhone over the last, each rotating through the work. The display is drawn in CSS; the phone is
+   iPhone over the last, each rotating through the work (a plain crossfade, the devices themselves stay put). The display is drawn in CSS; the phone is
    Apple's iPhone 17 Pro frame (public/hero) over the screenshot. */
 
 const byId = Object.fromEntries(PROJECTS.map((p) => [p.id, p]));
@@ -44,19 +44,6 @@ export default function Hero({ onOpen }) {
     const v = video.current;
     if (!v) return;
     if (PHONE[p].video) v.play().catch(() => {}); else v.pause();
-  }, [p]);
-
-  // A small settle in the tilt whenever a device changes, like it was just set down.
-  const first = useRef({ m: true, p: true });
-  useEffect(() => {
-    if (first.current.m) { first.current.m = false; return; }
-    if (prefersReduced()) return;
-    animate(root.current.querySelector('.hx-display .hx-settle'), { rotate: ['1.6deg', '0deg'], scale: [0.985, 1], duration: 1100, ease: 'outElastic(1, .6)' });
-  }, [m]);
-  useEffect(() => {
-    if (first.current.p) { first.current.p = false; return; }
-    if (prefersReduced()) return;
-    animate(root.current.querySelector('.hx-phone .hx-settle'), { rotate: ['-2deg', '0deg'], scale: [0.98, 1], duration: 1100, ease: 'outElastic(1, .6)' });
   }, [p]);
 
   // Depth: on a mouse, the two devices drift a little in opposite directions.

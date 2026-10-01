@@ -114,6 +114,34 @@ function Card({ p, span, reduced, onOpen }) {
   );
 }
 
+/* Featured landscape projects: the render fills a panel as tall as the scenes, with big title
+   words over it like the mobile games' scenes, and a caption with a one-line pitch. */
+function FeatureCard({ p, index, total, onOpen }) {
+  const { words, line } = p.headline;
+  return (
+    <article
+      className="card feat-card reveal is-landscape"
+      style={{ '--span': 6, '--accent': p.palette[0], '--light': p.palette[1], '--deep': p.palette[2] }}
+    >
+      <CardMedia p={p} />
+      <div className="feat-card-bar" aria-hidden="true">
+        <span>{String(index + 1).padStart(2, '0')} / {String(total).padStart(2, '0')}</span>
+        <span className="feat-card-kind">{p.kind}</span>
+        <span className="feat-card-status"><i className="status-dot" />{p.status} · {p.platforms}</span>
+      </div>
+      <p className="feat-card-words" aria-hidden="true">{words.map((w) => <span key={w}>{w}</span>)}</p>
+      <Glass className="card-caption" refract={{ blur: 12, scale: 40, bezel: 18 }}>
+        <div className="card-text">
+          <h3>{p.title}{p.subtitle && <span> {p.subtitle}</span>}</h3>
+          <p className="card-line">{line}</p>
+        </div>
+        <span className="card-plus" aria-hidden="true"><Plus size={18} stroke={2.2} /></span>
+      </Glass>
+      <button className="card-hit" onClick={() => onOpen(p, 0)} aria-label={`Open ${fullTitle(p)}: ${line}`} />
+    </article>
+  );
+}
+
 /* Phone projects are staged as scenes; the rest are image cards, and neighbouring cards share a row. */
 const groups = FEATURED.reduce((out, p, index) => {
   if (p.scene) out.push({ scene: p, index });
@@ -162,7 +190,9 @@ export default function Work({ reduced, onOpen }) {
             ? <Scene key={g.scene.id} p={g.scene} index={g.index} total={FEATURED.length} onOpen={onOpen} />
             : (
               <div key={i} className="grid feat-cards">
-                {g.cards.map((p) => <Card key={p.id} p={p} span={g.cards.length > 1 ? 6 : 12} reduced={reduced} onOpen={onOpen} />)}
+                {g.cards.map((p) => (p.headline
+                  ? <FeatureCard key={p.id} p={p} index={FEATURED.indexOf(p)} total={FEATURED.length} onOpen={onOpen} />
+                  : <Card key={p.id} p={p} span={g.cards.length > 1 ? 6 : 12} reduced={reduced} onOpen={onOpen} />))}
               </div>
             ))}
         </div>

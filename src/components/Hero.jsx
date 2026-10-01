@@ -5,24 +5,48 @@ import { splitWords, prefersReduced } from '../motion.js';
 import { SITE, PROJECTS, HERO, STATS } from '../content.js';
 
 const byId = Object.fromEntries(PROJECTS.map((p) => [p.id, p]));
-const SLIDES = HERO.map(([id, i]) => ({ p: byId[id], i, src: byId[id].shots[i] }));
+const slide = ([id, shot, tag, label]) => ({ p: byId[id], shot: shot === 'video' ? 0 : shot, video: shot === 'video', tag, label: label || byId[id].title });
+const MONITOR = HERO.monitor.map(slide);
+const PHONE = HERO.phone.map(slide);
+const VIDEO = [['/hero/flag-fiesta.mp4', 'video/mp4'], ['/hero/flag-fiesta.webm', 'video/webm']];
+
+function webgl() {
+  try { const c = document.createElement('canvas'); return Boolean(c.getContext('webgl2')); } catch { return false; }
+}
 
 export default function Hero({ reduced, onOpen }) {
-  const [n, setN] = useState(0);
-  useEffect(() => {
-    if (reduced) return;
-    const id = setInterval(() => setN((v) => (v + 1) % SLIDES.length), 6000);
-    return () => clearInterval(id);
-  }, [reduced]);
-  const now = SLIDES[n];
   const root = useRef(null);
+  const canvas = useRef(null);
+  const tagMonitor = useRef(null);
+  const tagPhone = useRef(null);
+  const [now, setNow] = useState({ m: 0, p: 0 });
+  const [live, setLive] = useState(false);
+
+  // The 3D stage loads after the page is up; until then (and without WebGL) the poster render stands in.
+  useEffect(() => {
+    if (!webgl()) return;
+    let stop = null, cancelled = false;
+    const start = () => import('../hero3d.js').then(({ mountHero }) => {
+      if (cancelled) return;
+      stop = mountHero(canvas.current, {
+        monitor: MONITOR.map((s) => ({ src: s.p.shots[s.shot] })),
+        phone: PHONE.map((s) => (s.video ? { video: true, src: VIDEO } : { src: s.p.shots[s.shot] })),
+        reduced,
+        anchors: { monitor: tagMonitor.current, phone: tagPhone.current },
+        onSlide: (m, p) => setNow({ m, p }),
+        onReady: () => setLive(true),
+      });
+    });
+    const idle = window.requestIdleCallback ? requestIdleCallback(start, { timeout: 600 }) : setTimeout(start, 120);
+    return () => { cancelled = true; (window.cancelIdleCallback || clearTimeout)(idle); stop?.(); };
+  }, [reduced]);
 
   // Intro: the headline rises word by word, then the rest of the copy follows it in.
   // Runs before first paint so nothing flashes in its final position.
   useLayoutEffect(() => {
     if (prefersReduced()) return;
     const scope = createScope({ root }).add(() => {
-      const follow = ['.hero-content .chip', '.hero-name', '.hero-lede', '.hero-content .actions > *', '.now-showing'];
+      const follow = ['.hero-content .chip', '.hero-name', '.hero-lede', '.hero-content .actions > *'];
       const words = splitWords(root.current.querySelector('.hero-title'));
       utils.set(follow, { opacity: 0, translateY: 16 });
       utils.set(words, { translateY: '110%' });
@@ -31,50 +55,54 @@ export default function Hero({ reduced, onOpen }) {
         .add('.hero-name', { opacity: 1, translateY: 0 }, '-=950')
         .add(words, { translateY: '0%', duration: 1300, delay: stagger(90) }, '-=1000')
         .add('.hero-lede', { opacity: 1, translateY: 0 }, '-=900')
-        .add('.hero-content .actions > *', { opacity: 1, translateY: 0, delay: stagger(80) }, '-=950')
-        .add('.now-showing', { opacity: 1, translateY: 0 }, '-=900');
+        .add('.hero-content .actions > *', { opacity: 1, translateY: 0, delay: stagger(80) }, '-=950');
 
-      // Parallax: as the hero scrolls away the image drifts slower than the page
+      // Parallax: as the hero scrolls away the stage drifts slower than the page
       // and the copy lifts and fades, like a layer further back.
       const sync = () => onScroll({ target: root.current.querySelector('.hero-stage'), enter: 'top top', leave: 'top bottom', sync: true });
-      animate('.hero-media', { translateY: ['0%', '22%'], scale: [1, 1.06], ease: 'linear', autoplay: sync() });
+      animate('.hero-media', { translateY: ['0%', '14%'], ease: 'linear', autoplay: sync() });
       animate('.hero-content', { translateY: [0, -60], opacity: [1, 0.2], ease: 'linear', autoplay: sync() });
     });
     return () => scope.revert();
   }, []);
 
+  const m = MONITOR[now.m], p = PHONE[now.p];
   return (
-    <section className="hero" id="top" data-tone="dark" ref={root}>
+    <section className={`hero ${live ? 'is-live' : ''}`} id="top" data-tone="dark" ref={root}>
       <div className="hero-stage">
         <div className="hero-media" aria-hidden="true">
-          {SLIDES.map((s, k) => (
-            <img key={k} src={s.src} alt="" className={k === n ? 'on' : ''} decoding="async" fetchpriority={k === 0 ? 'high' : 'low'} />
-          ))}
+          <img className="hero-poster" src="/hero/poster.jpg" alt="" fetchpriority="high" decoding="async" />
+          <canvas className="hero-canvas" ref={canvas} />
         </div>
         <div className="hero-scrim" aria-hidden="true" />
-  
+
         <div className="hero-content wrap">
-          <Glass className="chip" variant="clear">
-            <span className="status-dot" aria-hidden="true" />Available for freelance
-          </Glass>
-          <h1 className="hero-name">{SITE.name} · Freelance game designer</h1>
-          <p className="hero-title">Worlds that <br />tell stories.</p>
-          <p className="hero-lede">Game design, level design and Unreal Engine development, plus environment and technical art, for PC, mobile, VR and AR. Based in {SITE.location}, working with teams anywhere.</p>
-          <div className="actions">
-            <a className="btn btn-primary" href="#work">See the work</a>
-            <Glass as="a" variant="clear" className="btn btn-glass" href="#contact">Start a project</Glass>
+          <div className="hero-top">
+            <Glass className="chip" variant="clear">
+              <span className="status-dot" aria-hidden="true" />Available for freelance
+            </Glass>
+            <h1 className="hero-name">{SITE.name} · Freelance game designer</h1>
+            <p className="hero-title">Games for <br /><em>every screen.</em></p>
+          </div>
+          <div className="hero-bottom">
+            <p className="hero-lede">Game design, level design and Unreal Engine development, plus environment and technical art, for PC, mobile, VR and AR. Based in {SITE.location}, working with teams anywhere.</p>
+            <div className="actions">
+              <a className="btn btn-primary" href="#work">See the work</a>
+              <Glass as="a" variant="clear" className="btn btn-glass" href="#contact">Start a project</Glass>
+            </div>
           </div>
         </div>
-  
-        <div className="hero-foot wrap">
-          <Glass as="button" variant="clear" className="now-showing" onClick={() => onOpen(now.p, now.i)} aria-label={`Now showing ${now.p.title}. Open project`}>
-            <span className="now-label">Now showing</span>
-            <span className="now-title">{now.p.title}{now.p.subtitle ? `: ${now.p.subtitle}` : ''}</span>
-            <span className="now-dots" aria-hidden="true">
-              {SLIDES.map((_, k) => <i key={k} className={k === n ? 'on' : ''} />)}
-            </span>
-          </Glass>
-      </div>
+
+        {/* labels that follow the devices; the 3D stage positions them every frame */}
+        <button ref={tagMonitor} className="hero-tag" onClick={() => onOpen(m.p, m.shot)} aria-label={`On the monitor: ${m.label}. Open project`}>
+          <i>{m.tag}</i>{m.label}
+        </button>
+        <button ref={tagPhone} className="hero-tag" onClick={() => onOpen(p.p, p.shot)} aria-label={`On the phone: ${p.label}. Open project`}>
+          <i>{p.tag}</i>{p.label}
+        </button>
+        <span className="hero-dots" aria-hidden="true">
+          {MONITOR.map((_, k) => <i key={k} className={k === now.m ? 'on' : ''} />)}
+        </span>
       </div>
 
       <div className="stats wrap reveal" role="list">

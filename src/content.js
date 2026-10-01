@@ -6,6 +6,8 @@
 // frame:    how portrait shots are shown on the card: 'phone' | 'card'. Omit for landscape shots.
 // palette:  [accent, light, deep] — tints the card and the project sheet.
 // panel:    [from, to, text] — the saturated backdrop of a featured phone project and its text colour.
+// headline: { words: [line 1, line 2], line: one-sentence pitch } for featured image panels (Idunn, VR):
+//           big title words over the render, the pitch in the caption.
 // live:     'flag-fiesta' renders the animated placeholder phone (for projects without captures).
 // scene:    renders the featured phone project as a product-shot scene instead of a split panel:
 //           { words: [topLeft, topRight, bottomRight], tags: [3 callouts], colors: { base, deep, glow },
@@ -65,6 +67,10 @@ export const PROJECTS = [
     summary: 'A third-person action adventure about the start of the Berserker’s journey after tragedy strikes his village. Developed and published by Mad Viking Games on Steam as a glimpse of the franchise to come.',
     shots: pick('idunn'),
     palette: ['#8FE3A0', '#D6F5DC', '#07130D'],
+    headline: {
+      words: ['Before', 'the saga.'],
+      line: 'Third-person action adventure: the Berserker’s journey begins.',
+    },
   },
   {
     id: 'vr',
@@ -79,6 +85,10 @@ export const PROJECTS = [
     summary: 'A short, playable VR experience that puts you inside the Viking lifestyle: explore the mead hall, choose a hero and inhabit the world.',
     shots: pick('vr'),
     palette: ['#FFA24C', '#FFE1C2', '#1A0A04'],
+    headline: {
+      words: ['Raise', 'your horn.'],
+      line: 'A Viking mead hall in VR: explore it, then choose your hero.',
+    },
   },
   {
     id: 'sugoi',
@@ -166,10 +176,23 @@ export const PROJECTS = [
   },
 ];
 
-// Hero slideshow: [project id, shot index].
-export const HERO = [
-  ['idunn', 0], ['trailer', 1], ['vr', 2], ['vrtour', 2], ['archviz', 0],
-];
+// Hero: the 3D monitor and phone each rotate through work. [project id, shot index, platform tag, label].
+// 'video' plays the Flag Fiesta gameplay clip (public/hero/flag-fiesta.*). The label defaults to the project title.
+export const HERO = {
+  monitor: [
+    ['idunn', 0, 'PC'],
+    ['vr', 1, 'VR'],
+    ['trailer', 0, 'Cinematic', 'Ashes of Idunn trailer'],
+    ['vrtour', 0, 'VR tour', 'Sládkovič Museum'],
+    ['archviz', 0, 'UE5', 'ArchViz in real time'],
+  ],
+  phone: [
+    ['flag-fiesta', 'video', 'Android'],
+    ['sugoi', 0, 'Android', 'Sugoi Fruit Fusion'],
+    ['flag-fiesta', 0, 'Android'],
+    ['sugoi', 2, 'Android', 'Sugoi Fruit Fusion'],
+  ],
+};
 
 export const STATS = [
   { value: '5+', label: 'Years in the industry' },

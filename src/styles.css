@@ -620,13 +620,12 @@ a.glass:active, button.glass:active { transform: scale(0.96); --g-glow: rgba(255
 .more-chevron { transform: rotate(90deg); transition: transform 0.4s var(--spring); }
 .more-chevron.up { transform: rotate(-90deg); }
 .more-grid { margin-top: 32px; }
-/* featured image cards: as tall as the scenes, with big title words over the render */
+/* featured image panels: the same size as the scenes */
 .feat-cards .card { height: clamp(460px, 42vw, 820px); }
 .feat-cards .feat-card { height: min(94vh, 880px); min-height: 680px; border-radius: var(--radius-panel); }
 .feat-card .card-photo::after {
   background:
-    linear-gradient(180deg, rgba(0, 0, 0, 0.62) 0%, rgba(0, 0, 0, 0.18) 34%, rgba(0, 0, 0, 0) 52%),
-    linear-gradient(90deg, rgba(0, 0, 0, 0.35) 0%, rgba(0, 0, 0, 0) 50%),
+    linear-gradient(180deg, rgba(0, 0, 0, 0.45) 0%, rgba(0, 0, 0, 0) 22%),
     linear-gradient(0deg, rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0) 34%);
 }
 .feat-card-bar {
@@ -636,16 +635,6 @@ a.glass:active, button.glass:active { transform: scale(0.96); --g-glow: rgba(255
 }
 .feat-card-kind { margin-inline: auto; }
 .feat-card-status { display: inline-flex; align-items: center; gap: 10px; white-space: nowrap; }
-.feat-card-words {
-  position: absolute; z-index: 3; left: 40px; right: 40px; top: 96px; margin: 0;
-  display: flex; flex-direction: column;
-  font-family: 'Cinzel', Georgia, serif; font-weight: 600; text-transform: uppercase;
-  font-size: clamp(44px, 8vw, 150px); line-height: 0.9; letter-spacing: 0.01em;
-  color: #fff; text-shadow: 0 6px 40px rgba(0, 0, 0, 0.45);
-  transition: transform 1.2s var(--ease-out);
-}
-.feat-card-words span:last-child { color: var(--accent); }
-.feat-card:hover .feat-card-words { transform: translateY(-4px); }
 .feat-card .card-caption { left: 20px; bottom: 20px; right: auto; width: min(640px, calc(100% - 40px)); padding: 18px 16px 18px 24px; }
 .feat-card .card-text h3 { font-size: clamp(20px, 1.8vw, 26px); }
 .feat-card .card-line { margin-top: 6px; font-size: 15px; line-height: 1.45; color: rgba(255, 255, 255, 0.82); }
@@ -836,7 +825,6 @@ a.glass:active, button.glass:active { transform: scale(0.96); --g-glow: rgba(255
   .card.is-landscape { height: auto; aspect-ratio: 4 / 5; }
   .feat-cards .feat-card { height: 940px; min-height: 0; aspect-ratio: auto; border-radius: 28px; }
   .feat-card-bar { left: 22px; right: 22px; top: 24px; font-size: 11px; }
-  .feat-card-words { left: 20px; top: 64px; font-size: clamp(40px, 12vw, 60px); }
   .card.is-portrait { height: 540px; }
   .stat:nth-child(3) { border-left: 0; padding-left: 0; }
   .feat { border-radius: 28px; }

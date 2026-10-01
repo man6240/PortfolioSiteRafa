@@ -41,8 +41,8 @@ Per project:
 The hero's two screens are `HERO` in the same file: `monitor` and `phone` lists of `[projectId, shotIndex, tag, label]`
 (`'video'` as the shot plays the Flag Fiesta gameplay clip).
 
-Featured landscape projects (Idunn, VR) take a `headline`: `{ words: [line 1, line 2], line: one-sentence pitch }`,
-shown as full-width panels the same size as the phone scenes, with big Cinzel title words over the render and the pitch in the caption.
+Featured landscape projects (Idunn, VR) take a `pitch` (one sentence): they're shown as full-width panels the same
+size as the phone scenes, with the pitch in the caption.
 
 ## 3D hero
 

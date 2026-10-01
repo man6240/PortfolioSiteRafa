@@ -5,7 +5,6 @@ import '@fontsource-variable/space-grotesk';
 import '@fontsource-variable/fredoka';
 import '@fontsource/space-mono/400.css';
 import '@fontsource/space-mono/700.css';
-import '@fontsource/cinzel/600.css';
 import App from './App.jsx';
 import './styles.css';
 

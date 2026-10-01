@@ -114,14 +114,14 @@ function Card({ p, span, reduced, onOpen }) {
   );
 }
 
-/* Featured landscape projects: the render fills a panel as tall as the scenes, with big title
+/* Featured landscape projects: the render fills a full-width panel the same size as the scenes, with big title
    words over it like the mobile games' scenes, and a caption with a one-line pitch. */
 function FeatureCard({ p, index, total, onOpen }) {
   const { words, line } = p.headline;
   return (
     <article
       className="card feat-card reveal is-landscape"
-      style={{ '--span': 6, '--accent': p.palette[0], '--light': p.palette[1], '--deep': p.palette[2] }}
+      style={{ '--span': 12, '--accent': p.palette[0], '--light': p.palette[1], '--deep': p.palette[2] }}
     >
       <CardMedia p={p} />
       <div className="feat-card-bar" aria-hidden="true">

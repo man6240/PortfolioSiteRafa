@@ -115,6 +115,7 @@ export default function ProjectSheet({ state, onClose, reduced }) {
             <div><dt>Status</dt><dd><span className={`status-dot ${p.status === 'In development' ? 'wip' : ''}`} aria-hidden="true" />{p.status}</dd></div>
             <div><dt>Platforms</dt><dd>{p.platforms}</dd></div>
             <div><dt>My role</dt><dd>{p.role}</dd></div>
+            {p.link && <div><dt>Play it</dt><dd><a className="sheet-link" href={p.link.href} target="_blank" rel="noopener">{p.link.label} ↗</a></dd></div>}
           </dl>
         </div>
       </div>

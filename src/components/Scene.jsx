@@ -73,7 +73,7 @@ const CONFETTI = [
 
 export default function Scene({ p, index, total, onOpen }) {
   const root = useRef(null);
-  const { words, tags, colors, decor, shot = 0, variant = 'split' } = p.scene;
+  const { words, tags, colors, decor, shot = 0, variant = 'split', video } = p.scene;
   // Which side of the phone each callout sits on; the stacked variant mirrors the split one.
   const sides = variant === 'stack' ? ['r', 'r', 'r'] : ['l', 'r', 'r'];
   const back = variant === 'stack' ? p.shots.find((_, k) => k !== shot && k !== 0) : null;
@@ -121,9 +121,16 @@ export default function Scene({ p, index, total, onOpen }) {
           <p className="scene-copy">{p.summary}</p>
           <p className="scene-copy dim">My role: {p.role}</p>
           <ul className="sr-only">{tags.map((t) => <li key={t}>{t}</li>)}</ul>
-          <button className="scene-btn" onClick={() => onOpen(p, 0)}>
-            {p.shots.length > 1 ? `Open gallery · ${p.shots.length}` : 'View project'}<ArrowUpRight size={15} stroke={2} />
-          </button>
+          <div className="scene-btns">
+            <button className="scene-btn" onClick={() => onOpen(p, 0)}>
+              {p.shots.length > 1 ? `Open gallery · ${p.shots.length}` : 'View project'}<ArrowUpRight size={15} stroke={2} />
+            </button>
+            {p.link && (
+              <a className="scene-btn ghost" href={p.link.href} target="_blank" rel="noopener">
+                {p.link.label}<ArrowUpRight size={15} stroke={2} />
+              </a>
+            )}
+          </div>
         </div>
   );
   return (
@@ -154,7 +161,7 @@ export default function Scene({ p, index, total, onOpen }) {
 
       <button className="scene-hero" onClick={() => onOpen(p, shot)} aria-label={`Open ${title} gallery`}>
         {back && <span className="scene-float back"><PhoneFrame src={back} /></span>}
-        <span className="scene-float"><PhoneFrame src={p.shots[shot] || p.shots[0]} alt={`${title}, ${p.kind.toLowerCase()} screenshot`} /></span>
+        <span className="scene-float"><PhoneFrame src={p.shots[shot] || p.shots[0]} video={video} alt={`${title}, ${video ? 'gameplay' : `${p.kind.toLowerCase()} screenshot`}`} /></span>
       </button>
 
       {variant !== 'stack' && <p className="scene-word w3" aria-hidden="true">{words[2]}</p>}

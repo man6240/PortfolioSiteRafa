@@ -7,6 +7,8 @@
 // palette:  [accent, light, deep] — tints the card and the project sheet.
 // panel:    [from, to, text] — the saturated backdrop of a featured phone project and its text colour.
 // pitch:    one-sentence description shown in the caption of a featured image panel (Idunn, VR).
+// link:     { label, href } store page, shown as a button on the scene and in the project sheet.
+// scene.video: a clip in public/hero (name without extension) that plays on the scene phone instead of the screenshot.
 // live:     'flag-fiesta' renders the animated placeholder phone (for projects without captures).
 // scene:    renders the featured phone project as a product-shot scene instead of a split panel:
 //           { words: [topLeft, topRight, bottomRight], tags: [3 callouts], colors: { base, deep, glow },
@@ -39,18 +41,20 @@ export const PROJECTS = [
     title: 'Flag Fiesta',
     kind: 'Mobile game',
     category: 'games',
-    status: 'In development',
-    platforms: 'iOS and Android',
+    status: 'Out now',
+    platforms: 'Android',
     role: 'Game design, art and technical art',
-    summary: 'A fast, colourful flag quiz for phones. Currently in production.',
+    summary: 'A fast, colourful flag quiz for phones: guess or paint flags, then test yourself on places, people and history. Out now on Google Play.',
     shots: pick('flag'),
     frame: 'phone',
+    link: { label: 'Get it on Google Play', href: 'https://play.google.com/store/apps/details?id=com.BaldmanStudios.FlagFiesta' },
     palette: ['#E0508A', '#FFD1E3', '#0B1828'],
     scene: {
       words: ['Know', 'your', 'world'],
       tags: ['Guess or paint flags', 'Places, people & paintings', 'Geography & history trivia'],
       colors: { base: '#1B3452', deep: '#0B1828', glow: '#C2447C' },
       decor: 'bunting',
+      video: 'flag-fiesta', // the phone plays public/hero/flag-fiesta.mp4 / .webm (shot is the poster)
     },
   },
   {

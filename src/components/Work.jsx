@@ -26,17 +26,11 @@ function layout(items) {
   return out;
 }
 
-/* video: a clip in public/hero (name without extension) played muted on the screen; src is its poster. */
-export function PhoneFrame({ src, alt = '', video, children, className = '' }) {
+export function PhoneFrame({ src, alt = '', children, className = '' }) {
   return (
     <div className={`phone ${className}`}>
       <div className="phone-screen">
-        {video
-          ? <video poster={src} muted loop playsInline autoPlay preload="metadata" aria-label={alt || undefined}>
-              <source src={`/hero/${video}.mp4`} type="video/mp4" />
-              <source src={`/hero/${video}.webm`} type="video/webm" />
-            </video>
-          : src ? <img src={src} alt={alt} loading="lazy" decoding="async" /> : children}
+        {src ? <img src={src} alt={alt} loading="lazy" decoding="async" /> : children}
         <span className="phone-island" aria-hidden="true" />
       </div>
     </div>

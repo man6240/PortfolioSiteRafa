@@ -8,7 +8,6 @@
 // panel:    [from, to, text] — the saturated backdrop of a featured phone project and its text colour.
 // pitch:    one-sentence description shown in the caption of a featured image panel (Idunn, VR).
 // link:     { label, href } store page, shown as a button on the scene and in the project sheet.
-// scene.video: a clip in public/hero (name without extension) that plays on the scene phone instead of the screenshot.
 // live:     'flag-fiesta' renders the animated placeholder phone (for projects without captures).
 // scene:    renders the featured phone project as a product-shot scene instead of a split panel:
 //           { words: [topLeft, topRight, bottomRight], tags: [3 callouts], colors: { base, deep, glow },
@@ -54,7 +53,6 @@ export const PROJECTS = [
       tags: ['Guess or paint flags', 'Places, people & paintings', 'Geography & history trivia'],
       colors: { base: '#1B3452', deep: '#0B1828', glow: '#C2447C' },
       decor: 'bunting',
-      video: 'flag-fiesta', // the phone plays public/hero/flag-fiesta.mp4 / .webm (shot is the poster)
     },
   },
   {

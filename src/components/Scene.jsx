@@ -73,7 +73,7 @@ const CONFETTI = [
 
 export default function Scene({ p, index, total, onOpen }) {
   const root = useRef(null);
-  const { words, tags, colors, decor, shot = 0, variant = 'split', video } = p.scene;
+  const { words, tags, colors, decor, shot = 0, variant = 'split' } = p.scene;
   // Which side of the phone each callout sits on; the stacked variant mirrors the split one.
   const sides = variant === 'stack' ? ['r', 'r', 'r'] : ['l', 'r', 'r'];
   const back = variant === 'stack' ? p.shots.find((_, k) => k !== shot && k !== 0) : null;
@@ -161,7 +161,7 @@ export default function Scene({ p, index, total, onOpen }) {
 
       <button className="scene-hero" onClick={() => onOpen(p, shot)} aria-label={`Open ${title} gallery`}>
         {back && <span className="scene-float back"><PhoneFrame src={back} /></span>}
-        <span className="scene-float"><PhoneFrame src={p.shots[shot] || p.shots[0]} video={video} alt={`${title}, ${video ? 'gameplay' : `${p.kind.toLowerCase()} screenshot`}`} /></span>
+        <span className="scene-float"><PhoneFrame src={p.shots[shot] || p.shots[0]} alt={`${title}, ${p.kind.toLowerCase()} screenshot`} /></span>
       </button>
 
       {variant !== 'stack' && <p className="scene-word w3" aria-hidden="true">{words[2]}</p>}

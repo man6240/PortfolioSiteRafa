@@ -798,10 +798,13 @@ a.glass:active, button.glass:active { transform: scale(0.96); --g-glow: rgba(255
   position: relative; aspect-ratio: 16 / 9; overflow: hidden;
   background: radial-gradient(120% 100% at 50% 0%, color-mix(in srgb, var(--accent) 40%, var(--deep)), var(--deep));
 }
-.viewer > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; opacity: 0; transition: opacity 0.45s ease; }
-.viewer > img.on { opacity: 1; }
+.viewer > :is(img, video) { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; opacity: 0; transition: opacity 0.45s ease; }
+.viewer > :is(img, video).on { opacity: 1; }
 .viewer.tall, .viewer.live { aspect-ratio: auto; height: min(74vh, 760px); }
-.viewer.tall > img {
+/* the gameplay clip's thumbnail gets a play mark */
+.thumbs .is-video { position: relative; }
+.thumbs .is-video::after { content: ''; position: absolute; left: 50%; top: 50%; width: 0; height: 0; transform: translate(-35%, -50%); border-left: 12px solid #fff; border-top: 8px solid transparent; border-bottom: 8px solid transparent; filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.6)); }
+.viewer.tall > :is(img, video) {
   left: 50%; top: 50%; width: auto; height: calc(100% - 64px); inset: auto;
   transform: translate(-50%, -50%);
   border-radius: 22px; object-fit: cover;

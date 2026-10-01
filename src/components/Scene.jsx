@@ -123,7 +123,7 @@ export default function Scene({ p, index, total, onOpen }) {
           <ul className="sr-only">{tags.map((t) => <li key={t}>{t}</li>)}</ul>
           <div className="scene-btns">
             <button className="scene-btn" onClick={() => onOpen(p, 0)}>
-              {p.shots.length > 1 ? `Open gallery · ${p.shots.length}` : 'View project'}<ArrowUpRight size={15} stroke={2} />
+              {p.shots.length + (p.video ? 1 : 0) > 1 ? `Open gallery · ${p.shots.length + (p.video ? 1 : 0)}` : 'View project'}<ArrowUpRight size={15} stroke={2} />
             </button>
             {p.link && (
               <a className="scene-btn ghost" href={p.link.href} target="_blank" rel="noopener">

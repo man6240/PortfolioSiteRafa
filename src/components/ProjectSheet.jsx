@@ -13,11 +13,15 @@ export default function ProjectSheet({ state, onClose, reduced }) {
   const sheetRef = useRef(null);
   const lastFocus = useRef(null);
   const p = state?.p;
-  const n = p?.shots.length || 0;
+  // the gallery: a gameplay clip first if the project has one, then the screenshots
+  const media = p ? [...(p.video ? [{ video: p.video, poster: p.shots[0] }] : []), ...p.shots.map((src) => ({ src }))] : [];
+  const n = media.length;
+  const viewer = useRef(null);
 
   useEffect(() => {
     if (!state) return;
-    setI(state.i || 0);
+    // callers pass a screenshot index; with a clip in front, 0 opens the clip and the rest shift by one
+    setI(state.p.video && state.i > 0 ? state.i + 1 : state.i || 0);
     closing.current = false;
     lastFocus.current = document.activeElement;
     closeRef.current?.focus({ preventScroll: true });
@@ -58,6 +62,13 @@ export default function ProjectSheet({ state, onClose, reduced }) {
     return () => document.removeEventListener('keydown', k);
   }, [state, close, step]);
 
+  // The clip plays only while it's the one on show.
+  useEffect(() => {
+    viewer.current?.querySelectorAll('video').forEach((v) => {
+      if (v.classList.contains('on')) { v.currentTime = 0; v.play().catch(() => {}); } else v.pause();
+    });
+  }, [i, state]);
+
   // Swipe between images on touch screens.
   const touch = useRef(null);
   const onTouchStart = (e) => { touch.current = e.touches[0].clientX; };
@@ -75,13 +86,16 @@ export default function ProjectSheet({ state, onClose, reduced }) {
   return (
     <div className="sheet-backdrop" ref={backdropRef} onClick={(e) => e.target === e.currentTarget && close()}>
       <div className="sheet" ref={sheetRef} role="dialog" aria-modal="true" aria-labelledby="sheet-title" style={vars}>
-        <div className={`viewer ${tall ? 'tall' : ''} ${p.live ? 'live' : ''}`} onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
+        <div ref={viewer} className={`viewer ${tall ? 'tall' : ''} ${p.live ? 'live' : ''}`} onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
           {p.live ? (
             <PhoneFrame className="solo"><LiveScreen reduced={reduced} /></PhoneFrame>
           ) : (
-            p.shots.map((src, k) => (
-              <img key={k} src={src} className={k === i ? 'on' : ''} alt={k === i ? `${p.title}, image ${k + 1} of ${n}` : ''} aria-hidden={k !== i} decoding="async" />
-            ))
+            media.map((m, k) => (m.video
+              ? <video key={k} className={k === i ? 'on' : ''} poster={m.poster} muted loop playsInline preload="metadata" aria-label={`${p.title}, gameplay`} aria-hidden={k !== i}>
+                  <source src={`/hero/${m.video}.mp4`} type="video/mp4" />
+                  <source src={`/hero/${m.video}.webm`} type="video/webm" />
+                </video>
+              : <img key={k} src={m.src} className={k === i ? 'on' : ''} alt={k === i ? `${p.title}, image ${k + 1} of ${n}` : ''} aria-hidden={k !== i} decoding="async" />))
           )}
           <Glass as="button" variant="clear" className="icon-btn sheet-close" onClick={close} aria-label="Close" ref={closeRef}>
             <Close size={18} stroke={2.2} />
@@ -97,9 +111,9 @@ export default function ProjectSheet({ state, onClose, reduced }) {
 
         {n > 1 && (
           <div className="thumbs" role="tablist" aria-label="Images">
-            {p.shots.map((src, k) => (
-              <button key={k} role="tab" aria-selected={k === i} className={k === i ? 'on' : ''} onClick={() => setI(k)} aria-label={`Image ${k + 1}`}>
-                <img src={src} alt="" loading="lazy" />
+            {media.map((m, k) => (
+              <button key={k} role="tab" aria-selected={k === i} className={`${k === i ? 'on' : ''} ${m.video ? 'is-video' : ''}`} onClick={() => setI(k)} aria-label={m.video ? 'Gameplay video' : `Image ${k + 1}`}>
+                <img src={m.video ? m.poster : m.src} alt="" loading="lazy" />
               </button>
             ))}
           </div>

@@ -7,6 +7,7 @@
 // palette:  [accent, light, deep] — tints the card and the project sheet.
 // panel:    [from, to, text] — the saturated backdrop of a featured phone project and its text colour.
 // pitch:    one-sentence description shown in the caption of a featured image panel (Idunn, VR).
+// video:    a clip in public/hero (name without extension), shown first in the project's gallery.
 // link:     { label, href } store page, shown as a button on the scene and in the project sheet.
 // live:     'flag-fiesta' renders the animated placeholder phone (for projects without captures).
 // scene:    renders the featured phone project as a product-shot scene instead of a split panel:
@@ -46,6 +47,7 @@ export const PROJECTS = [
     summary: 'A fast, colourful flag quiz for phones: guess or paint flags, then test yourself on places, people and history. Out now on Google Play.',
     shots: pick('flag'),
     frame: 'phone',
+    video: 'flag-fiesta', // gameplay clip (public/hero/flag-fiesta.*), first in the gallery
     link: { label: 'Get it on Google Play', href: 'https://play.google.com/store/apps/details?id=com.BaldmanStudios.FlagFiesta' },
     palette: ['#E0508A', '#FFD1E3', '#0B1828'],
     scene: {

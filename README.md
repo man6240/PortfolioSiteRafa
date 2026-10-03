@@ -15,8 +15,16 @@ React + Vite + Anime.js v4. No 3D runtime: the page ships ~90 kB of gzipped JS p
 
     npm install
     npm run dev          # local
-    npm run build        # dist/  -> deploy to Cloudflare Pages (build cmd: npm run build, output: dist)
+    npm run build        # dist/ (Cloudflare Pages runs this itself on every push, see Deploy)
     npm run build:single # dist-single/index.html, everything inlined in one file
+
+## Deploy
+
+The Cloudflare Pages project **portfoliositerafa** is connected to this GitHub repository: every push to
+`claude/blissful-newton-ad8pcu` builds (`npm run build`, output `dist`, `NODE_VERSION=22`) and goes live on
+rafavitriago.eu and www.rafavitriago.eu within a couple of minutes. Builds are listed under the project's
+Deployments tab. `public/version.txt` (https://rafavitriago.eu/version.txt) was the first test deploy.
+`public/_headers` keeps pages revalidating and hashed assets cached long-term.
 
 ## Edit content
 

@@ -121,3 +121,5 @@ normal full-height sections instead of pinning.
 
 - `public/flag-fiesta/privacy/index.html` → `https://rafavitriago.eu/flag-fiesta/privacy/`: Flag Fiesta's privacy
   policy (for Google Play). Not linked from the site, not in the sitemap, and marked `noindex`.
+- `public/sugoi-fruit-merge/privacy/index.html` → `https://rafavitriago.eu/sugoi-fruit-merge/privacy/`: Sugoi Fruit
+  Merge's privacy policy (for Google Play). Same treatment: unlinked, not in the sitemap, `noindex`.

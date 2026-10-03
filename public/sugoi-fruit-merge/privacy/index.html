@@ -100,6 +100,7 @@ footer{padding:1.5rem 1.25rem}
 <li>Your best score, seeds and settings are <strong>saved only on your phone</strong>. Nothing about your game is stored on my servers.</li>
 <li>The game shows <strong>ads through Google AdMob</strong>. Where the law requires it, you're asked before ads are personalised, and you can change your mind from Settings.</li>
 <li>Purchases go through <strong>Google Play</strong>. I never see your card or bank details.</li>
+<li>The game uses <strong>Firebase</strong> (by Google) to count how it's played and to report crashes, so I can fix bugs. It's linked to a random app ID, never to your name.</li>
 <li>Daily reminders are <strong>optional</strong> and scheduled on your phone. I <strong>don't sell your data</strong>.</li>
 </ul>
 </div>
@@ -139,6 +140,16 @@ footer{padding:1.5rem 1.25rem}
 <td>Consent, for personalised ads where the law requires it. Otherwise legitimate interest: funding a free game, and preventing fraud.</td>
 </tr>
 <tr>
+<td>Usage statistics: a random app-instance ID, sessions, screens and game events (games started, scores, revives, watermelon merges), device model, OS version, language, approximate country<br><span class="tag out">Via Firebase Analytics</span></td>
+<td>To understand how the game is played — for example where players struggle or stop — and to measure ad revenue, so I can improve the game.</td>
+<td>Consent, where the law requires it (it follows your answer to the consent form). Otherwise legitimate interest: improving the game.</td>
+</tr>
+<tr>
+<td>Crash reports: stack traces, device model, OS version, app version, a random installation ID<br><span class="tag out">Via Firebase Crashlytics</span></td>
+<td>When the game crashes, a report is sent so I can find and fix the bug.</td>
+<td>Legitimate interest: keeping the game working.</td>
+</tr>
+<tr>
 <td>Your ad consent choice<br><span class="tag">Stays on your phone</span></td>
 <td>Google's consent tool saves your answer on your phone so you aren't asked every time you play.</td>
 <td>Legal obligation (recording consent).</td>
@@ -152,7 +163,7 @@ footer{padding:1.5rem 1.25rem}
 </table>
 </div>
 
-<p style="margin-top:1.25rem">Sugoi Fruit Merge <strong>does not</strong> collect your precise location, contacts, photos, camera, microphone, email address or real name. It has no accounts, no online profiles, no chat, and no analytics or crash reporting of its own.</p>
+<p style="margin-top:1.25rem">Sugoi Fruit Merge <strong>does not</strong> collect your precise location, contacts, photos, camera, microphone, email address or real name. It has no accounts, no online profiles and no chat.</p>
 </section>
 
 <section id="ads">
@@ -171,7 +182,7 @@ footer{padding:1.5rem 1.25rem}
 <h2 class="sec">Who gets your data</h2>
 <p>I don't sell your personal data or give it to anyone for their own marketing. It goes only to the services that run the game:</p>
 <ul>
-<li><strong>Google</strong>: ads and consent (AdMob and its consent tool), and payments and purchase records (Google Play Billing). <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Google's privacy policy</a>.</li>
+<li><strong>Google</strong>: ads and consent (AdMob and its consent tool), usage statistics and crash reports (Firebase Analytics and Crashlytics), and payments and purchase records (Google Play Billing). <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Google's privacy policy</a> · <a href="https://firebase.google.com/support/privacy" target="_blank" rel="noopener">Firebase privacy</a>.</li>
 <li><strong>Ad partners working through AdMob</strong>, as described under <a href="#ads">Ads</a>. They're listed in the consent form, or email me for the current list.</li>
 <li><strong>Unity Technologies</strong>: the game is built with Unity, and Unity In-App Purchasing connects it to Google Play Billing. <a href="https://unity.com/legal/privacy-policy" target="_blank" rel="noopener">Unity's privacy policy</a>.</li>
 <li><strong>Authorities</strong>, only if the law requires it.</li>
@@ -189,6 +200,8 @@ footer{padding:1.5rem 1.25rem}
 <ul>
 <li><strong>Game data and settings on your phone</strong>: until you uninstall the game or clear its data.</li>
 <li><strong>Purchase records</strong>: as long as tax and accounting law requires. In Spain that can be up to six years. Google keeps its own records as the seller.</li>
+<li><strong>Usage statistics</strong>: up to 14 months in Firebase / Google Analytics, then deleted automatically.</li>
+<li><strong>Crash reports</strong>: 90 days in Firebase Crashlytics.</li>
 <li><strong>Ad data</strong>: for the periods set by Google and its ad partners in their own privacy policies.</li>
 </ul>
 </section>
@@ -204,7 +217,7 @@ footer{padding:1.5rem 1.25rem}
 <li><strong>Take it with you</strong> in a common format (portability).</li>
 <li><strong>Withdraw consent</strong> at any time — for ads with the Privacy button in Settings, for reminders with the notifications switch. This doesn't affect anything done before you withdrew.</li>
 </ul>
-<p>Because the game has no accounts, I don't hold a profile about you: your game data lives on your phone, and ad data is held by Google and its partners. Email <a href="mailto:rafaelrivero6240@gmail.com">rafaelrivero6240@gmail.com</a> and I'll help with any request, including passing it on to Google where needed. I'll reply within one month. It's free, and I won't treat you differently for asking.</p>
+<p>Because the game has no accounts, I don't hold a profile about you: your game data lives on your phone, usage statistics and crash reports are tied only to a random ID, and ad data is held by Google and its partners. Email <a href="mailto:rafaelrivero6240@gmail.com">rafaelrivero6240@gmail.com</a> and I'll help with any request, including passing it on to Google where needed. I'll reply within one month. It's free, and I won't treat you differently for asking.</p>
 <p>If you're unhappy with my answer, you can complain to Spain's data protection authority, the <a href="https://www.aepd.es" target="_blank" rel="noopener">Agencia Española de Protección de Datos (AEPD)</a>, or to the authority where you live.</p>
 </section>
 
@@ -213,7 +226,7 @@ footer{padding:1.5rem 1.25rem}
 <p>There's no account to delete, so removing your data is in your hands:</p>
 <ol class="steps">
 <li>Uninstall the game, or clear its storage in Android's settings. This removes your scores, seeds and settings.</li>
-<li>Delete or reset your advertising ID in Android's settings, so ad data can no longer be linked to your phone.</li>
+<li>Delete or reset your advertising ID in Android's settings, so ad data can no longer be linked to your phone. Reinstalling the game also gives it a new random Firebase ID, so earlier statistics can't be linked to you.</li>
 <li>To ask Google about the ad and purchase data it holds, use <a href="https://myaccount.google.com/data-and-privacy" target="_blank" rel="noopener">your Google account's privacy settings</a>.</li>
 <li>Questions? Email <a href="mailto:rafaelrivero6240@gmail.com?subject=Sugoi%20Fruit%20Merge%20%E2%80%94%20my%20data">rafaelrivero6240@gmail.com</a> with the subject "Sugoi Fruit Merge — my data".</li>
 </ol>
@@ -228,7 +241,7 @@ footer{padding:1.5rem 1.25rem}
 
 <section id="security">
 <h2 class="sec">Security</h2>
-<p>Data travels to Google over encrypted connections. No system is perfectly secure, but the game only uses what it needs and keeps your game data on your own phone, which limits what could ever be exposed.</p>
+<p>Data travels to Google and Firebase over encrypted connections. No system is perfectly secure, but the game only uses what it needs and keeps your game data on your own phone, which limits what could ever be exposed.</p>
 </section>
 
 <section id="changes">

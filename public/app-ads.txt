@@ -1,0 +1,20 @@
+OWNERDOMAIN=rafavitriago.eu
+
+# Google AdMob
+google.com, pub-2108918118528688, DIRECT, f08c47fec0942fa0
+
+# ironSource Ads (LevelPlay)
+ironsrc.com, 520695, DIRECT
+media.net, 8CUH2L333, RESELLER
+sharethrough.com, 3817, RESELLER, d53b998a7bd4ecd2
+playdigo.com, 1956, RESELLER
+triplelift.com, 14594, RESELLER, 6c33edb13117fd86
+spinx.biz, 1373698901, RESELLER, 9f2711e9aaa9f992
+bold-win.com, 1139, RESELLER, 71746737d0bab951
+improvedigital.com, 1114, RESELLER
+appads.in, 105536, RESELLER
+pubmatic.com, 160456, RESELLER, 5d62403b186f2ace
+pokkt.com, 5536, RESELLER, c45702d9311e25fd
+smartadserver.com, 4237, RESELLER, 060d053dcf45cbf3
+sharethrough.com, 4237, RESELLER, d53b998a7bd4ecd2
+zmaticoo.com, 5135703, RESELLER

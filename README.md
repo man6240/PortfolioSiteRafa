@@ -125,6 +125,12 @@ normal full-height sections instead of pinning.
 - After deploying: add the site to Google Search Console and Bing Webmaster Tools, submit
   `https://rafavitriago.eu/sitemap.xml`, and link the site from LinkedIn, Upwork, Behance and ArtStation.
 
+## app-ads.txt
+
+`public/app-ads.txt` → `https://rafavitriago.eu/app-ads.txt`: the authorised-sellers file AdMob and LevelPlay
+(ironSource) check for Flag Fiesta and Sugoi Fruit Merge. It must stay at the root of rafavitriago.eu. When the
+LevelPlay reseller list changes (dashboard → Setup → app-ads.txt), update it here.
+
 ## Hidden pages
 
 - `public/flag-fiesta/privacy/index.html` → `https://rafavitriago.eu/flag-fiesta/privacy/`: Flag Fiesta's privacy

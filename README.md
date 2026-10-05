@@ -133,6 +133,8 @@ LevelPlay reseller list changes (dashboard → Setup → app-ads.txt), update it
 
 ## Hidden pages
 
+- `public/flag-fiesta/index.html` (+ `assets/`) → `https://rafavitriago.eu/flag-fiesta/`: Flag Fiesta's own landing page
+  (the Play Store website link). Standalone HTML, not part of the React app.
 - `public/flag-fiesta/privacy/index.html` → `https://rafavitriago.eu/flag-fiesta/privacy/`: Flag Fiesta's privacy
   policy (for Google Play). Not linked from the site, not in the sitemap, and marked `noindex`.
 - `public/sugoi-fruit-merge/privacy/index.html` → `https://rafavitriago.eu/sugoi-fruit-merge/privacy/`: Sugoi Fruit
